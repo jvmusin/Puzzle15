@@ -4,35 +4,30 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
+using static Puzzle15.Helpers;
+
 namespace Puzzle15
 {
     public class RectangularField<T> : IEnumerable<CellInfo<T>>
     {
-        private readonly T[][] field;
+        private readonly T[][] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
 
         public Size Size;
-        public int Height => field.GetLength(0);
-        public int Width => field.GetLength(1);
+        public int Height => Size.Height;
+        public int Width => Size.Width;
 
         #region Constructors
 
         public RectangularField(Size size)
         {
             Size = size;
-            field = new T[Height][];
-            locations = new Dictionary<T, List<CellLocation>> {{default(T), new List<CellLocation>()}};
+            table = CreateTable<T>(Height, Width);
+            locations = new Dictionary<T, List<CellLocation>>();
 
-            for (var rowIndex = 0; rowIndex < Height; rowIndex++)
-            {
-                var row = field[rowIndex] = new T[Width];
-                for (var columnIndex = 0; columnIndex < Width; columnIndex++)
-                {
-                    var value = row[columnIndex] = default(T);
-                    if (value != null)
-                        locations[value].Add(new CellLocation(rowIndex, columnIndex));
-                }
-            }
+            var defaultValue = default(T);
+            if (defaultValue != null)
+                locations[defaultValue] = EnumerateLocations().ToList();
         }
 
         public RectangularField(int height, int width) : this(new Size(width, height))
@@ -45,8 +40,8 @@ namespace Puzzle15
 
         public void Fill(Func<CellLocation, T> getValue)
         {
-            foreach (var position in EnumerateLocations())
-                this[position] = getValue(position);
+            EnumerateLocations()
+                .ForEach(loc => this[loc] = getValue(loc));
         }
 
         public void Swap(CellLocation position1, CellLocation position2)
@@ -59,20 +54,13 @@ namespace Puzzle15
         public RectangularField<T> Clone()
         {
             var newField = new RectangularField<T>(Height, Width);
-            newField.Fill(pos => this[pos]);
+            newField.Fill(location => this[location]);
             return newField;
         }
 
         public T[][] ToTable()
         {
-            var table = new T[Height][];
-            for (var rowIndex = 0; rowIndex < Height; rowIndex++)
-            {
-                var row = table[rowIndex] = new T[Width];
-                for (var columnIndex = 0; columnIndex < Width; columnIndex++)
-                    row[columnIndex] = this[rowIndex, columnIndex];
-            }
-            return table;
+            return table.Select(row => row.ToArray()).ToArray();
         }
 
         #endregion
@@ -103,11 +91,16 @@ namespace Puzzle15
 
         #region Indexers
 
+        private List<CellLocation> GetLocationsSafe(T value)
+        {
+            return locations.ComputeIfAbsent(value, () => new List<CellLocation>());
+        }
+
         public IEnumerable<CellLocation> GetLocations(T value)
         {
             return value == null
                 ? this.Where(x => x.Value == null).Select(x => x.Location)
-                : locations.ComputeIfAbsent(value, () => new List<CellLocation>());
+                : GetLocationsSafe(value);
         }
 
         public CellLocation GetLocation(T value)
@@ -123,17 +116,16 @@ namespace Puzzle15
 
         public T this[CellLocation location]
         {
-            get { return field[location.Row][location.Column]; }
+            get { return table[location.Row][location.Column]; }
             set
             {
                 var valueToRemove = this[location];
                 if (valueToRemove != null)
                     locations[valueToRemove].Remove(location);
-
-                field[location.Row][location.Column] = value;
+                
+                table.SetValue(location, value);
                 if (value != null)
-                    locations.ComputeIfAbsent(value, () => new List<CellLocation>())
-                        .Add(location);
+                    GetLocationsSafe(value).Add(location);
             }
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Puzzle15
+﻿namespace Puzzle15
 {
     public class CellInfo<T>
     {
@@ -36,7 +33,7 @@ namespace Puzzle15
 
         public override string ToString()
         {
-            return $"Position: {{{Location}}}, Value: {Value}";
+            return $"Location: {{{Location}}}, Value: {Value}";
         }
 
         #endregion

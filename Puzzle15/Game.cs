@@ -23,18 +23,18 @@ namespace Puzzle15
 
         private static void CheckTable(int[][] table)
         {
-            var height = table.Length;
-            var width = table[0].Length;
+            var height = table.GetLength(0);
+            var width = table.GetLength(1);
+            var elementCount = height*width;
 
-            if (height != width)
+            if (elementCount == 0)
                 throw new ArgumentException("Field doesn't have any cell");
             
             if (table.Any(row => row.Length != table[0].Length))
                 throw new ArgumentException("Field is not rectangular");
-
-            var countShouldBe = height*width;
+            
             var elements = table.SelectMany(row => row).Distinct().ToList();
-            if (elements.Count != countShouldBe)
+            if (elements.Count != elementCount)
                 throw new ArgumentException("Not all elements are distinct");
             
             if (elements.Min() != 0)
@@ -46,14 +46,14 @@ namespace Puzzle15
 
         public void Shift(int value)
         {
-            var zero = field.GetLocation(0);
+            var empty = field.GetLocation(0);
             var toShift = field.GetLocation(value);
 
-            var neighbour = zero.ByEdgeHeighbours.Contains(toShift);
+            var neighbour = empty.ByEdgeHeighbours.Contains(toShift);
             if (!neighbour)
                 throw new ArgumentException("Requested cell is not a neighbour of empty cell");
 
-            field.Swap(zero, toShift);
+            field.Swap(empty, toShift);
         }
 
         public int this[int row, int column]
