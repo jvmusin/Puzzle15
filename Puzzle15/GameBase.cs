@@ -56,7 +56,7 @@ namespace Puzzle15
 
         protected bool Equals(GameBase other)
         {
-            return Equals(Field, other.Field);
+            return Field.Equals(other.Field);
         }
 
         public override bool Equals(object obj)

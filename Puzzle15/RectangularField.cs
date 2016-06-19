@@ -56,11 +56,6 @@ namespace Puzzle15
             return newField;
         }
 
-        public T[][] ToTable()
-        {
-            return table.Select(row => row.ToArray()).ToArray();
-        }
-
         #endregion
 
         #region Enumerators
