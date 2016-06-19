@@ -78,7 +78,7 @@ namespace Puzzle15.Tests
             };
 
             Helpers.Equals(array1, array2).Should().BeFalse();
-//            object.Equals(array1, array2).Should().BeFalse();
+            object.Equals(array1, array2).Should().BeFalse();
 
             Helpers.Equals(new object(), new object()).Should().BeFalse();
             Helpers.Equals((object) null, null).Should().BeTrue();

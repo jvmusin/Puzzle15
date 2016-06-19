@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Puzzle15.Tests
 {
     [TestFixture]
-    public class GameBase_Should : TestBase
+    public class Game_Should : TestBase
     {
         [Test]
         public void CreateFieldCorrectly()
@@ -15,13 +15,13 @@ namespace Puzzle15.Tests
             var size = new Size(2, 2);
             var elements = new[]{0, 3, 1, 2};
             var field = FieldFromArray(size, elements);
-            new GameBaseImpl(field).Should().NotBeNull();
+            new GameImpl(field).Should().NotBeNull();
         }
 
         [Test, TestCaseSource(nameof(FailCreatingCases))]
         public void FailCreating_WhenFieldIsIncorrect(RectangularField<int> field)
         {
-            new Action(() => new GameBaseImpl(field)).ShouldThrow<Exception>();
+            new Action(() => new GameImpl(field)).ShouldThrow<Exception>();
         }
 
         private static IEnumerable<TestCaseData> FailCreatingCases

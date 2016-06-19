@@ -1,29 +1,59 @@
-﻿using System;
-using System.Linq;
-
-namespace Puzzle15
+﻿namespace Puzzle15
 {
-    public class Game : GameBase
+    public class Game : IGame
     {
-        public Game(RectangularField<int> field) : base(field)
+        protected RectangularField<int> Field { get; }
+        protected IShiftPerformer ShiftPerformer { get; }
+
+        public Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needClone = true)
         {
+            Field = needClone ? field.Clone() : field;
+            ShiftPerformer = shiftPerformer;
         }
 
-        protected Game(RectangularField<int> field, bool needCheck = true, bool needClone = true)
-            : base(field, needCheck, needClone)
+        public virtual IGame Shift(int value)
         {
+            return ShiftPerformer.Perform(this, Field, value);
         }
 
-        public override GameBase Shift(int value)
+        #region Indexers
+
+        public CellLocation GetLocation(int value)
         {
-            var empty = Field.GetLocation(0);
-            var toShift = Field.GetLocation(value);
-
-            if (!empty.ByEdgeHeighbours.Contains(toShift))
-                throw new ArgumentException("Requested cell is not a neighbour of empty cell");
-
-            Field.Swap(empty, toShift);
-            return this;
+            return Field.GetLocation(value);
         }
+
+        public int this[CellLocation location]
+        {
+            get { return Field[location]; }
+            protected set { Field[location] = value; }
+        }
+
+        #endregion
+
+        #region Equals, GetHashCode and ToString methods
+
+        protected bool Equals(Game other)
+        {
+            return Field.Equals(other.Field);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Game;
+            return other != null && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Field.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Field.ToString();
+        }
+
+        #endregion
     }
 }
