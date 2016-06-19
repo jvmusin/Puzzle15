@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -19,6 +16,8 @@ namespace Puzzle15.Tests
         {
             field = new Lazy<RectangularField<int>>(() => FromArray(DefaultFieldSize, DefaultFieldData));
         }
+
+        #region Size tests
 
         [Test]
         public void WorkWithDifferentSizesCorrectly(
@@ -39,8 +38,11 @@ namespace Puzzle15.Tests
                 field.Height.Should().Be(size.Height);
                 field.Width.Should().Be(size.Width);
             }
-
         }
+
+        #endregion
+
+        #region Swap tests
 
         [Test]
         public void SwapElements_WhenNotConnected()
@@ -57,7 +59,7 @@ namespace Puzzle15.Tests
                 9, 0, 0);
 
             oldField.Swap(new CellLocation(0, 0), new CellLocation(1, 2));
-            
+
             oldField.Should().BeEquivalentTo(expectedField);
         }
 
@@ -70,10 +72,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 4, 5, 17,
                 9, 0, 0);
-            var expectedField = FromArray(size,
-                1, 2, 3,
-                4, 5, 17,
-                9, 0, 0);
+            var expectedField = oldField.Clone();
 
             oldField.Swap(new CellLocation(1, 2), new CellLocation(1, 2));
 
@@ -81,11 +80,128 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void Fail_WhenElementNotOnField()
+        public void FailSwap_WhenElementNotOnField()
         {
             new Action(() => field.Value.Swap(new CellLocation(0, 0), new CellLocation(3, 0)))
                 .ShouldThrow<Exception>();
         }
+
+        [Test]
+        public void SwapElementsOnClonedField()
+        {
+            var size = new Size(3, 3);
+            var original = FromArray(size,
+                1, 2, 3,
+                5, 9, 1,
+                1, 1, 1);
+            var cloned = original.Clone();
+
+            cloned.Swap(new CellLocation(1, 1), new CellLocation(2, 1));
+
+            cloned.Should().BeEquivalentTo(FromArray(size,
+                1, 2, 3,
+                5, 1, 1,
+                1, 9, 1));
+            cloned.Should().NotBeEquivalentTo(original);
+        }
+
+        #endregion
+
+        #region Clone tests
+
+        [Test]
+        public void CloneCorrectly()
+        {
+            var original = field.Value;
+
+            var cloned = original.Clone();
+
+            cloned.Should().NotBeSameAs(original);
+            cloned.Should().BeEquivalentTo(original);
+        }
+
+        #endregion
+
+        #region Enumerate tests
+
+        [Test]
+        public void EnumerateLocationsCorrecly()
+        {
+            var field = this.field.Value;
+            var expected = new List<CellLocation>();
+            for (var row = 0; row < field.Height; row++)
+                for (var column = 0; column < field.Width; column++)
+                    expected.Add(new CellLocation(row, column));
+            field.EnumerateLocations().Should().BeEquivalentTo(expected);
+        }
+
+        [Test]
+        public void EnumerateCorrectly()
+        {
+            var field = this.field.Value;
+            var expected = new List<CellInfo<int>>();
+            for (var row = 0; row < field.Height; row++)
+                for (var column = 0; column < field.Width; column++)
+                    expected.Add(new CellInfo<int>(new CellLocation(row, column), field[row, column]));
+            field.Should().BeEquivalentTo(expected);
+        }
+
+        #endregion
+
+        #region GetLocations tests
+
+        [Test]
+        public void ReturnLocations_ForNonNulls()
+        {
+            var field = FromArray(new Size(3, 3),
+                "aa", "asda", null,
+                "rr", null, "asda",
+                "asda", "fdfg", "lel");
+
+            field.GetLocations("asda").Should()
+                .BeEquivalentTo(new CellLocation(0, 1), new CellLocation(1, 2), new CellLocation(2, 0));
+        }
+
+        [Test]
+        public void ReturnLocations_ForNulls()
+        {
+            var field = FromArray(new Size(3, 3),
+                "aa", "asda", null,
+                "rr", null, "asda",
+                "asda", "fdfg", "lel");
+
+            field.GetLocations(null).Should()
+                .BeEquivalentTo(new CellLocation(0, 2), new CellLocation(1, 1));
+        }
+
+        [Test]
+        public void ReturnLocations_WhenNotFound()
+        {
+            var field = FromArray(new Size(3, 3),
+                "aa", "asda", null,
+                "rr", null, "asda",
+                "asda", "fdfg", "lel");
+
+            field.GetLocations("some other string").Should().BeEmpty();
+        }
+
+        #endregion
+
+        #region Indexer tests
+
+        [Test]
+        public void ReturnCorrectValuesByIndex()
+        {
+            var field = this.field.Value;
+            foreach (var location in field.EnumerateLocations())
+            {
+                var real = field[location];
+                var expected = DefaultFieldData[location.Row*DefaultFieldSize.Width + location.Column];
+                real.Should().Be(expected);
+            }
+        }
+
+        #endregion
 
         #region Data preparing
 
@@ -101,7 +217,7 @@ namespace Puzzle15.Tests
         private static RectangularField<T> FromArray<T>(Size size, params T[] source)
         {
             var field = new RectangularField<T>(size);
-            field.Fill(location => source[location.Row * 3 + location.Column]);
+            field.Fill(location => source[location.Row*3 + location.Column]);
             return field;
         }
 
