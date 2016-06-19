@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +13,16 @@ namespace Puzzle15
                 .Range(0, height)
                 .Select(x => new T[width])
                 .ToArray();
+        }
+
+        public static bool Equals<T>(T obj1, T obj2)
+        {
+            return StructuralComparisons.StructuralEqualityComparer.Equals(obj1, obj2);
+        }
+
+        public static int GetHashCode<T>(T obj)
+        {
+            return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
         }
     }
 

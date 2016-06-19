@@ -50,6 +50,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="ImmutableGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangularField.cs" />

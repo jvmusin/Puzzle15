@@ -3,39 +3,27 @@ using System.Linq;
 
 namespace Puzzle15
 {
-    public class GameBase
+    public abstract class GameBase
     {
-        protected virtual RectangularField<int> Field { get; }
+        protected RectangularField<int> Field { get; }
 
-        public GameBase(int[][] table)
+        protected GameBase(RectangularField<int> field, bool needCheck = true, bool needClone = true)
         {
-            CheckTable(table);
-
-            var height = table.GetLength(0);
-            var width = table.GetLength(1);
-            var field = new RectangularField<int>(height, width);
-            field.Fill(location => table[location.Row][location.Column]);
-
-            Field = field;
+            if (needCheck)
+                CheckField(field);
+            Field = needClone ? field.Clone() : field;
         }
 
-        public GameBase(RectangularField<int> field) : this(field.ToTable())
+        protected void CheckField(RectangularField<int> field)
         {
-        }
+            if (field == null)
+                throw new ArgumentNullException(nameof(field), "Field shouldn't be null");
 
-        private static void CheckTable(int[][] table)
-        {
-            var height = table.GetLength(0);
-            var width = table.GetLength(1);
-            var elementCount = height * width;
-
+            var elementCount = field.Height*field.Width;
             if (elementCount == 0)
                 throw new ArgumentException("Field doesn't have any cell");
 
-            if (table.Any(row => row.Length != table[0].Length))
-                throw new ArgumentException("Field is not rectangular");
-
-            var elements = table.SelectMany(row => row).Distinct().ToList();
+            var elements = field.Select(x => x.Value).Distinct().ToList();
             if (elements.Count != elementCount)
                 throw new ArgumentException("Not all elements are distinct");
 
@@ -45,6 +33,10 @@ namespace Puzzle15
             if (elements.Max() != elements.Count - 1)
                 throw new ArgumentException("Some values are skipped");
         }
+
+        public abstract GameBase Shift(int value);
+
+        #region Indexers
 
         public int this[int row, int column]
         {
@@ -57,5 +49,32 @@ namespace Puzzle15
             get { return Field[location]; }
             protected set { Field[location] = value; }
         }
+
+        #endregion
+
+        #region Equals, GetHashCode and ToString methods
+
+        protected bool Equals(GameBase other)
+        {
+            return Equals(Field, other.Field);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as GameBase;
+            return other != null && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Field.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Field.ToString();
+        }
+
+        #endregion
     }
 }

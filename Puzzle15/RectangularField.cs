@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using static Puzzle15.Helpers;
-
 namespace Puzzle15
 {
     public class RectangularField<T> : IEnumerable<CellInfo<T>>
@@ -22,7 +20,7 @@ namespace Puzzle15
         public RectangularField(Size size)
         {
             Size = size;
-            table = CreateTable<T>(Height, Width);
+            table = Helpers.CreateTable<T>(Height, Width);
             locations = new Dictionary<T, List<CellLocation>>();
 
             var defaultValue = default(T);
@@ -41,7 +39,7 @@ namespace Puzzle15
         public void Fill(Func<CellLocation, T> getValue)
         {
             EnumerateLocations()
-                .ForEach(loc => this[loc] = getValue(loc));
+                .ForEach(location => this[location] = getValue(location));
         }
 
         public void Swap(CellLocation position1, CellLocation position2)
@@ -122,11 +120,44 @@ namespace Puzzle15
                 var valueToRemove = this[location];
                 if (valueToRemove != null)
                     locations[valueToRemove].Remove(location);
-                
+
                 table.SetValue(location, value);
                 if (value != null)
                     GetLocationsSafe(value).Add(location);
             }
+        }
+
+        #endregion
+
+        #region Equals, GetHashCode and ToString methods
+
+        protected bool Equals(RectangularField<T> other)
+        {
+            return Helpers.Equals(table, other.table);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as RectangularField<T>;
+            return other != null && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Helpers.GetHashCode(table);
+        }
+
+        public override string ToString()
+        {
+            return ToString(info => info.Value.ToString());
+        }
+
+        public string ToString(Func<CellInfo<T>, string> getCapture, string lineSeparator = "\n")
+        {
+            var result = Helpers.CreateTable<string>(Height, Width);
+            this.ForEach(info => result.SetValue(info.Location, getCapture(info)));
+            return string.Join(lineSeparator,
+                result.Select(row => string.Join(" ", row)));
         }
 
         #endregion

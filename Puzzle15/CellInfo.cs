@@ -17,7 +17,7 @@
         {
             return
                 Equals(Location, other.Location) &&
-                Equals(Value, other.Value);
+                Helpers.Equals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +28,7 @@
 
         public override int GetHashCode()
         {
-            return Location.GetHashCode() ^ Value.GetHashCode();
+            return Location.GetHashCode() ^ Helpers.GetHashCode(Value);
         }
 
         public override string ToString()

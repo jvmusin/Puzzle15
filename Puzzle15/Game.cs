@@ -5,24 +5,25 @@ namespace Puzzle15
 {
     public class Game : GameBase
     {
-        public Game(int[][] table) : base(table)
+        public Game(RectangularField<int> field) : base(field)
         {
         }
 
-        public Game(RectangularField<int> field) : this(field.ToTable())
+        protected Game(RectangularField<int> field, bool needCheck = true, bool needClone = true)
+            : base(field, needCheck, needClone)
         {
         }
 
-        public void Shift(int value)
+        public override GameBase Shift(int value)
         {
             var empty = Field.GetLocation(0);
             var toShift = Field.GetLocation(value);
 
-            var neighbour = empty.ByEdgeHeighbours.Contains(toShift);
-            if (!neighbour)
+            if (!empty.ByEdgeHeighbours.Contains(toShift))
                 throw new ArgumentException("Requested cell is not a neighbour of empty cell");
 
             Field.Swap(empty, toShift);
+            return this;
         }
     }
 }
