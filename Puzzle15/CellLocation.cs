@@ -23,7 +23,7 @@ namespace Puzzle15
             Deltas = Enum.GetValues(typeof(Direction))
                 .Cast<Direction>()
                 .Select(direction => direction.GetDelta())
-                .ToList();
+                .ToArray();
         }
 
         public static CellLocation operator +(CellLocation location, CellLocation delta)

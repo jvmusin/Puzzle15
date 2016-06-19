@@ -48,6 +48,7 @@
     <Compile Include="CellLocation.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameBase.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

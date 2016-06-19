@@ -39,21 +39,20 @@ namespace Puzzle15
 
     public static class ArrayExtensions
     {
+        public static int GetHeight<T>(this T[][] source) => source.GetLength(0);
+        public static int GetWidth<T>(this T[][] source) => source.GetLength(1);
+
+        public static T GetValue<T>(this T[][] source, CellLocation location)
+            => source[location.Row][location.Column];
+
+        public static void SetValue<T>(this T[][] source, CellLocation location, T value)
+            => source[location.Row][location.Column] = value;
+
         public static void Swap<T>(this T[] source, int position1, int position2)
         {
             var temp = source[position1];
             source[position1] = source[position2];
             source[position2] = temp;
-        }
-
-        public static T GetValue<T>(this T[][] source, CellLocation location)
-        {
-            return source[location.Row][location.Column];
-        }
-
-        public static void SetValue<T>(this T[][] source, CellLocation location, T value)
-        {
-            source[location.Row][location.Column] = value;
         }
     }
 }
