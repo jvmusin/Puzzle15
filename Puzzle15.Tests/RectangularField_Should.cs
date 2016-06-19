@@ -7,14 +7,14 @@ using NUnit.Framework;
 namespace Puzzle15.Tests
 {
     [TestFixture]
-    public class RectangularField_Should
+    public class RectangularField_Should : TestBase
     {
         private Lazy<RectangularField<int>> field;
 
         [SetUp]
         public void SetUp()
         {
-            field = new Lazy<RectangularField<int>>(() => FromArray(DefaultFieldSize, DefaultFieldData));
+            field = new Lazy<RectangularField<int>>(() => FieldFromArray(DefaultFieldSize, DefaultFieldData));
         }
 
         #region Size tests
@@ -49,11 +49,11 @@ namespace Puzzle15.Tests
         {
             var size = new Size(3, 3);
 
-            var oldField = FromArray(size,
+            var oldField = FieldFromArray(size,
                 1, 2, 3,
                 4, 5, 17,
                 9, 0, 0);
-            var expectedField = FromArray(size,
+            var expectedField = FieldFromArray(size,
                 17, 2, 3,
                 4, 5, 1,
                 9, 0, 0);
@@ -68,7 +68,7 @@ namespace Puzzle15.Tests
         {
             var size = new Size(3, 3);
 
-            var oldField = FromArray(size,
+            var oldField = FieldFromArray(size,
                 1, 2, 3,
                 4, 5, 17,
                 9, 0, 0);
@@ -90,7 +90,7 @@ namespace Puzzle15.Tests
         public void SwapElementsOnClonedField()
         {
             var size = new Size(3, 3);
-            var original = FromArray(size,
+            var original = FieldFromArray(size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
@@ -98,7 +98,7 @@ namespace Puzzle15.Tests
 
             cloned.Swap(new CellLocation(1, 1), new CellLocation(2, 1));
 
-            cloned.Should().BeEquivalentTo(FromArray(size,
+            cloned.Should().BeEquivalentTo(FieldFromArray(size,
                 1, 2, 3,
                 5, 1, 1,
                 1, 9, 1));
@@ -153,7 +153,7 @@ namespace Puzzle15.Tests
         [Test]
         public void ReturnLocations_ForNonNulls()
         {
-            var field = FromArray(new Size(3, 3),
+            var field = FieldFromArray(new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -165,7 +165,7 @@ namespace Puzzle15.Tests
         [Test]
         public void ReturnLocations_ForNulls()
         {
-            var field = FromArray(new Size(3, 3),
+            var field = FieldFromArray(new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -177,7 +177,7 @@ namespace Puzzle15.Tests
         [Test]
         public void ReturnLocations_WhenNotFound()
         {
-            var field = FromArray(new Size(3, 3),
+            var field = FieldFromArray(new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -199,26 +199,6 @@ namespace Puzzle15.Tests
                 var expected = DefaultFieldData[location.Row*DefaultFieldSize.Width + location.Column];
                 real.Should().Be(expected);
             }
-        }
-
-        #endregion
-
-        #region Data preparing
-
-        private static readonly Size DefaultFieldSize = new Size(3, 3);
-
-        private static readonly int[] DefaultFieldData =
-        {
-            1, 2, 3,
-            4, -1, 5,
-            6, 7, -2
-        };
-
-        private static RectangularField<T> FromArray<T>(Size size, params T[] source)
-        {
-            var field = new RectangularField<T>(size);
-            field.Fill(location => source[location.Row*3 + location.Column]);
-            return field;
         }
 
         #endregion

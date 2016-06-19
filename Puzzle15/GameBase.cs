@@ -27,7 +27,11 @@ namespace Puzzle15
             if (elements.Count != elementCount)
                 throw new ArgumentException("Not all elements are distinct");
 
-            if (elements.Min() != 0)
+            var min = elements.Min();
+            if (min < 0)
+                throw new ArgumentException("Field contain negative numbers");
+
+            if (min != 0)
                 throw new ArgumentException("Field doesn't contain an empty cell");
 
             if (elements.Max() != elements.Count - 1)
