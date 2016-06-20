@@ -1,25 +1,12 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using Puzzle15.Base;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
     public class ArraySpecification
     {
-        [Test]
-        public void SwapsItemsInOneDimensionalArray()
-        {
-            var array    = new[] {5, 16, -100, 5};
-            var expected = new[] {5, 5, -100, 16};
-
-            var index1 = 1;
-            var index2 = 3;
-            array.Swap(index1, index2);
-
-            for (var i = 0; i < array.Length; i++)
-                array[i].Should().Be(expected[i]);
-        }
-
         [Test]
         public void CalculatesHashForTwoDimensionalArray()
         {
@@ -36,8 +23,8 @@ namespace Puzzle15.Tests
                 null    //TODO WTF??
             };
             
-            var hash1 = Helpers.GetHashCode(array1);
-            var hash2 = Helpers.GetHashCode(array2);
+            var hash1 = Helpers.StructuralGetHashCode(array1);
+            var hash2 = Helpers.StructuralGetHashCode(array2);
 
             hash1.Should().Be(hash2);
         }
@@ -58,7 +45,7 @@ namespace Puzzle15.Tests
                 new int[0]
             };
 
-            Helpers.Equals(array1, array2).Should().BeTrue();
+            Helpers.StructuralEquals(array1, array2).Should().BeTrue();
         }
 
         [Test]
@@ -77,22 +64,27 @@ namespace Puzzle15.Tests
                 new int[0]
             };
 
-            Helpers.Equals(array1, array2).Should().BeFalse();
+            Helpers.StructuralEquals(array1, array2).Should().BeFalse();
             object.Equals(array1, array2).Should().BeFalse();
 
-            Helpers.Equals(new object(), new object()).Should().BeFalse();
-            Helpers.Equals((object) null, null).Should().BeTrue();
+            Helpers.StructuralEquals(new object(), new object()).Should().BeFalse();
+            Helpers.StructuralEquals((object) null, null).Should().BeTrue();
         }
 
         [Test]
         public void Something()
         {
-            Helpers.Equals(null, "s").Should().BeFalse();
-            Helpers.Equals("s", null).Should().BeFalse();
-            Helpers.Equals("aaa", "BBB").Should().BeFalse();
-            Helpers.Equals("aaa", "aaa").Should().BeTrue();
-            Helpers.Equals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 4)).Should().BeFalse();
-            Helpers.Equals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 5)).Should().BeTrue();
+//            var arr1 = new[,] {{1, 2, 3}, {4, 5, 6}};
+//            var arr2 = new[,] {{1, 2, 3}, {4, 5, 6}};
+//            Helpers.StructuralGetHashCode(arr1).Should().Be(Helpers.StructuralGetHashCode(arr2));
+//            Helpers.StructuralEquals(arr1, arr2).Should().BeTrue();
+
+            Helpers.StructuralEquals(null, "s").Should().BeFalse();
+            Helpers.StructuralEquals("s", null).Should().BeFalse();
+            Helpers.StructuralEquals("aaa", "BBB").Should().BeFalse();
+            Helpers.StructuralEquals("aaa", "aaa").Should().BeTrue();
+            Helpers.StructuralEquals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 4)).Should().BeFalse();
+            Helpers.StructuralEquals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 5)).Should().BeTrue();
         }
     }
 }

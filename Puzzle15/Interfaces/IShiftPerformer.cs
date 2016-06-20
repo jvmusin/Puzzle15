@@ -1,4 +1,6 @@
-namespace Puzzle15
+using Puzzle15.Base;
+
+namespace Puzzle15.Interfaces
 {
     public interface IShiftPerformer
     {

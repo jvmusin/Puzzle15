@@ -1,4 +1,4 @@
-﻿namespace Puzzle15
+﻿namespace Puzzle15.Base
 {
     public class CellInfo<T>
     {
@@ -17,7 +17,7 @@
         {
             return
                 Equals(Location, other.Location) &&
-                Helpers.Equals(Value, other.Value);
+                Helpers.StructuralEquals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +28,7 @@
 
         public override int GetHashCode()
         {
-            return Location.GetHashCode() ^ Helpers.GetHashCode(Value);
+            return Location.GetHashCode() ^ Helpers.StructuralGetHashCode(Value);
         }
 
         public override string ToString()

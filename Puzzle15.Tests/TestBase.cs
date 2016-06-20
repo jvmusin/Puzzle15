@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Puzzle15.Base;
 
 namespace Puzzle15.Tests
 {

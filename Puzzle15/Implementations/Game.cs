@@ -1,4 +1,7 @@
-﻿namespace Puzzle15
+﻿using Puzzle15.Base;
+using Puzzle15.Interfaces;
+
+namespace Puzzle15.Implementations
 {
     public class Game : IGame
     {
@@ -12,9 +15,7 @@
         }
 
         public virtual IGame Shift(int value)
-        {
-            return ShiftPerformer.Perform(this, Field, value);
-        }
+            => ShiftPerformer.Perform(this, Field, value);
 
         #region Indexers
 

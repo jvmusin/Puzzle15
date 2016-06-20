@@ -44,23 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellInfo.cs" />
-    <Compile Include="CellLocation.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="GameFactory.cs" />
-    <Compile Include="GameFieldValidator.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="IGame.cs" />
-    <Compile Include="IGameFactory.cs" />
-    <Compile Include="IGameFieldValidator.cs" />
-    <Compile Include="ImmutableGameShiftPerformer.cs" />
-    <Compile Include="IShiftPerformer.cs" />
+    <Compile Include="Base\CellInfo.cs" />
+    <Compile Include="Base\CellLocation.cs" />
+    <Compile Include="Base\Direction.cs" />
+    <Compile Include="Implementations\Game.cs" />
+    <Compile Include="Implementations\GameFactory.cs" />
+    <Compile Include="Implementations\GameFieldValidator.cs" />
+    <Compile Include="Base\Helpers.cs" />
+    <Compile Include="Interfaces\IGame.cs" />
+    <Compile Include="Interfaces\IGameFactory.cs" />
+    <Compile Include="Interfaces\IGameFieldValidator.cs" />
+    <Compile Include="Implementations\ImmutableGameShiftPerformer.cs" />
+    <Compile Include="Interfaces\IShiftPerformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RectangularField.cs" />
-    <Compile Include="ShiftPerformer.cs" />
-    <Compile Include="ValidationResult.cs" />
+    <Compile Include="Base\RectangularField.cs" />
+    <Compile Include="Implementations\ShiftPerformer.cs" />
+    <Compile Include="Implementations\ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

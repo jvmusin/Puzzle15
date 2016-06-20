@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Puzzle15
+namespace Puzzle15.Base
 {
     public class RectangularField<T> : IEnumerable<CellInfo<T>>
     {
-        private readonly T[][] table;
+        private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
 
-        public Size Size;
+        public Size Size { get; }
         public int Height => Size.Height;
         public int Width => Size.Width;
 
@@ -20,7 +20,7 @@ namespace Puzzle15
         public RectangularField(Size size)
         {
             Size = size;
-            table = Helpers.CreateTable<T>(Height, Width);
+            table = new T[Height,Width];
             locations = new Dictionary<T, List<CellLocation>>();
 
             var defaultValue = default(T);
@@ -51,7 +51,7 @@ namespace Puzzle15
 
         public RectangularField<T> Clone()
         {
-            var newField = new RectangularField<T>(Height, Width);
+            var newField = new RectangularField<T>(Size);
             newField.Fill(location => this[location]);
             return newField;
         }
@@ -86,7 +86,10 @@ namespace Puzzle15
 
         private List<CellLocation> GetLocationsSafe(T value)
         {
-            return locations.ComputeIfAbsent(value, () => new List<CellLocation>());
+            List<CellLocation> result;
+            if (!locations.TryGetValue(value, out result))
+                result = locations[value] = new List<CellLocation>();
+            return result;
         }
 
         public IEnumerable<CellLocation> GetLocations(T value)
@@ -101,22 +104,16 @@ namespace Puzzle15
             return GetLocations(value).FirstOrDefault();
         }
 
-        public T this[int row, int column]
-        {
-            get { return this[new CellLocation(row, column)]; }
-            set { this[new CellLocation(row, column)] = value; }
-        }
-
         public T this[CellLocation location]
         {
-            get { return table[location.Row][location.Column]; }
+            get { return table[location.Row, location.Column]; }
             set
             {
                 var valueToRemove = this[location];
                 if (valueToRemove != null)
                     locations[valueToRemove].Remove(location);
-
-                table.SetValue(location, value);
+                
+                table[location.Row, location.Column] = value;
                 if (value != null)
                     GetLocationsSafe(value).Add(location);
             }
@@ -128,7 +125,9 @@ namespace Puzzle15
 
         protected bool Equals(RectangularField<T> other)
         {
-            return Helpers.Equals(table, other.table);
+            var curTable = table.Cast<T>();
+            var otherTable = other.table.Cast<T>();
+            return Size == other.Size && curTable.SequenceEqual(otherTable);
         }
 
         public override bool Equals(object obj)
@@ -139,7 +138,7 @@ namespace Puzzle15
 
         public override int GetHashCode()
         {
-            return Helpers.GetHashCode(table);
+            return Helpers.StructuralGetHashCode(table.Cast<T>().ToArray());
         }
 
         public override string ToString()
@@ -150,7 +149,8 @@ namespace Puzzle15
         public string ToString(Func<CellInfo<T>, string> getCapture, string lineSeparator = "\n")
         {
             var result = Helpers.CreateTable<string>(Height, Width);
-            this.ForEach(info => result.SetValue(info.Location, getCapture(info)));
+            this.ForEach(info => result[info.Location.Row][info.Location.Column] = getCapture(info));
+
             return string.Join(lineSeparator,
                 result.Select(row => string.Join(" ", row)));
         }

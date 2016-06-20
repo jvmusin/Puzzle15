@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
+using Puzzle15.Base;
 
 namespace Puzzle15.Tests
 {
@@ -142,7 +143,10 @@ namespace Puzzle15.Tests
             var expected = new List<CellInfo<int>>();
             for (var row = 0; row < field.Height; row++)
                 for (var column = 0; column < field.Width; column++)
-                    expected.Add(new CellInfo<int>(new CellLocation(row, column), field[row, column]));
+                {
+                    var location = new CellLocation(row, column);
+                    expected.Add(new CellInfo<int>(location, field[location]));
+                }
             field.Should().BeEquivalentTo(expected);
         }
 

@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using Puzzle15.Base;
+using Puzzle15.Interfaces;
 
-namespace Puzzle15
+namespace Puzzle15.Implementations
 {
     public class GameFieldValidator : IGameFieldValidator
     {

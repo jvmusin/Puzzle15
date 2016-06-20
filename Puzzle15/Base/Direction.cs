@@ -1,4 +1,4 @@
-﻿namespace Puzzle15
+﻿namespace Puzzle15.Base
 {
     public enum Direction
     {

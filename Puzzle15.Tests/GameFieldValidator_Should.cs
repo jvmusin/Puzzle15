@@ -2,6 +2,8 @@
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
+using Puzzle15.Base;
+using Puzzle15.Implementations;
 
 namespace Puzzle15.Tests
 {
