@@ -18,7 +18,7 @@ namespace Puzzle15.Implementations
         public IGame Create(RectangularField<int> initialField)
         {
             var validationResult = GameFieldValidator.Validate(initialField);
-            if (validationResult != null)
+            if (!validationResult.Successful)
                 throw new ArgumentException(validationResult.Cause);
 
             return new Game(initialField, ShiftPerformerFactory.Create());
