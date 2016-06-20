@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Puzzle15
+﻿namespace Puzzle15
 {
     public interface IGameFieldValidator
     {
-        Exception Validate(RectangularField<int> field);
+        ValidationResult Validate(RectangularField<int> field);
     }
 }

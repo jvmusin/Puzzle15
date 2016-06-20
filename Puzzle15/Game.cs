@@ -3,7 +3,7 @@
     public class Game : IGame
     {
         protected RectangularField<int> Field { get; }
-        protected IShiftPerformer ShiftPerformer { get; }
+        public IShiftPerformer ShiftPerformer { get; }
 
         public Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needClone = true)
         {
@@ -17,11 +17,6 @@
         }
 
         #region Indexers
-
-        public CellLocation GetLocation(int value)
-        {
-            return Field.GetLocation(value);
-        }
 
         public int this[CellLocation location]
         {

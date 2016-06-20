@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArraySpecification.cs" />
-    <Compile Include="Game_Should.cs" />
+    <Compile Include="GameFieldValidator_Should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangularField_Should.cs" />
     <Compile Include="TestBase.cs" />

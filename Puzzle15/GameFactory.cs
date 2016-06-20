@@ -1,4 +1,6 @@
-﻿namespace Puzzle15
+﻿using System;
+
+namespace Puzzle15
 {
     public class GameFactory : IGameFactory
     {
@@ -13,8 +15,9 @@
 
         public IGame Create(RectangularField<int> initialField)
         {
-            var ex = GameFieldValidator.Validate(initialField);
-            if (ex != null) throw ex;
+            var validationResult = GameFieldValidator.Validate(initialField);
+            if (validationResult != null)
+                throw new ArgumentException(validationResult.Cause);
 
             return new Game(initialField, ShiftPerformer);
         }
