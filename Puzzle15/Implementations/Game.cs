@@ -8,16 +8,21 @@ namespace Puzzle15.Implementations
         protected RectangularField<int> Field { get; }
         public IShiftPerformer ShiftPerformer { get; }
 
-        public Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needClone = true)
+        internal Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
         {
-            Field = needClone ? field.Clone() : field;
+            Field = needCloneField ? field.Clone() : field;
             ShiftPerformer = shiftPerformer;
         }
 
-        public virtual IGame Shift(int value)
+        public IGame Shift(int value)
             => ShiftPerformer.Perform(this, Field, value);
 
         #region Indexers
+
+        public CellLocation GetLocation(int value)
+        {
+            return Field.GetLocation(value);
+        }
 
         public int this[CellLocation location]
         {

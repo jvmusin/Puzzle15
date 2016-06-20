@@ -1,9 +1,10 @@
 ﻿using System.Drawing;
+using FakeItEasy;
 using Puzzle15.Base;
 
 namespace Puzzle15.Tests
 {
-    public class TestBase
+    public abstract class TestBase
     {
         protected static readonly Size DefaultFieldSize = new Size(3, 3);
 
@@ -19,6 +20,11 @@ namespace Puzzle15.Tests
             var field = new RectangularField<T>(size);
             field.Fill(location => source[location.Row * size.Width + location.Column]);
             return field;
+        }
+
+        protected static T StrictFake<T>()
+        {
+            return A.Fake<T>(x => x.Strict());
         }
     }
 }
