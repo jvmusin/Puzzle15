@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using FakeItEasy;
 using Puzzle15.Base;
 
@@ -15,11 +16,24 @@ namespace Puzzle15.Tests
             6, 7, -2
         };
 
-        protected static RectangularField<T> FieldFromArray<T>(Size size, params T[] source)
+        protected static RectangularField<T> FieldFromArray<T>(Size size, params T[] values)
         {
-            var field = new RectangularField<T>(size);
-            field.Fill(location => source[location.Row * size.Width + location.Column]);
-            return field;
+            return new RectangularField<T>(size)
+                .Fill(location => values[location.Row*size.Width + location.Column]);
+        }
+
+        protected static RectangularField<T> FieldFromConstructor<T>(
+            Func<Size, RectangularField<T>> constructor, Size size, params T[] values)
+        {
+            return constructor(size)
+                .Fill(location => values[location.Row*size.Width + location.Column]);
+        }
+
+        protected static void Swap<T>(ref T obj1, ref T obj2)
+        {
+            var temp = obj1;
+            obj1 = obj2;
+            obj2 = temp;
         }
 
         protected static T StrictFake<T>()
