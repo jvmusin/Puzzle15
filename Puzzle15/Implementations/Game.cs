@@ -3,7 +3,7 @@ using Puzzle15.Interfaces;
 
 namespace Puzzle15.Implementations
 {
-    public class Game : IGame
+    internal class Game : IGame
     {
         private readonly RectangularField<int> field;
         private readonly IShiftPerformer shiftPerformer;

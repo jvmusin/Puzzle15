@@ -1,8 +1,8 @@
 ﻿using Puzzle15.Interfaces;
 
-namespace Puzzle15.Implementations
+namespace Puzzle15.Implementations.ShiftPerformerFactories
 {
-    public class ShiftPerformerFactory : IShiftPerformerFactory
+    public class MutableGameShiftPerformerFactory : IShiftPerformerFactory
     {
         public IShiftPerformer Create()
         {

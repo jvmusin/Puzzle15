@@ -5,7 +5,7 @@ using Puzzle15.Base;
 
 namespace Puzzle15.Implementations
 {
-    public class WrappedGameField : RectangularField<int>
+    internal class WrappedGameField : RectangularField<int>
     {
         private readonly RectangularField<int> parent;
         private readonly CellInfo<int>[] changedCells;

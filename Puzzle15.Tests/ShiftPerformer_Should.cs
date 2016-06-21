@@ -2,7 +2,7 @@
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Implementations;
+using Puzzle15.Implementations.ShiftPerformerFactories;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Tests
@@ -10,12 +10,12 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class ShiftPerformer_Should : TestBase
     {
-        private ShiftPerformer shiftPerformer;
+        private IShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
-            shiftPerformer = new ShiftPerformer();
+            shiftPerformer = new MutableGameShiftPerformerFactory().Create();
         }
         
         [Test]

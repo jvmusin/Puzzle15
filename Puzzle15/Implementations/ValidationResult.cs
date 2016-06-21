@@ -16,5 +16,12 @@
 
         public static ValidationResult Unsuccess(string cause)
             => new ValidationResult(false, cause);
+
+        public override string ToString()
+        {
+            var success = "Successful: " + Successful;
+            var cause = Successful ? "" : ", Cause: " + Cause;
+            return success + cause;
+        }
     }
 }

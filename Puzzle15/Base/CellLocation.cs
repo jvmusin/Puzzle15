@@ -10,7 +10,7 @@ namespace Puzzle15.Base
         public int Column { get; }
 
         private static readonly IEnumerable<CellLocation> Deltas;
-        public IEnumerable<CellLocation> ByEdgeHeighbours => Deltas.Select(delta => this + delta);
+        public IEnumerable<CellLocation> ByEdgeNeighbours => Deltas.Select(delta => this + delta);
 
         public CellLocation(int row, int column)
         {

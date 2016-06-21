@@ -1,4 +1,4 @@
-using Puzzle15.Base;
+﻿using Puzzle15.Base;
 
 namespace Puzzle15.Interfaces
 {

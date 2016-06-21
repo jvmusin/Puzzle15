@@ -5,6 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Base;
 using Puzzle15.Implementations;
+using Puzzle15.Implementations.ShiftPerformerFactories;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Tests
@@ -15,18 +16,16 @@ namespace Puzzle15.Tests
         private IGameFieldValidator gameFieldValidator;
         private IShiftPerformerFactory shiftPerformerFactory;
         private IGameFactory gameFactory;
-        private ImmutableGameShiftPerformer shiftPerformer;
+        private IShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
-            shiftPerformer = new ImmutableGameShiftPerformer();
-
             gameFieldValidator = StrictFake<IGameFieldValidator>();
             A.CallTo(() => gameFieldValidator.Validate(A<RectangularField<int>>._)).Returns(ValidationResult.Success());
 
-            shiftPerformerFactory = StrictFake<IShiftPerformerFactory>();
-            A.CallTo(() => shiftPerformerFactory.Create()).Returns(shiftPerformer);
+            shiftPerformerFactory = new ImmutableGameShiftPerformerFactory();
+            shiftPerformer = shiftPerformerFactory.Create();
 
             gameFactory = new GameFactory(gameFieldValidator, shiftPerformerFactory);
         }

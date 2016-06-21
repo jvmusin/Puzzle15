@@ -1,4 +1,6 @@
-﻿namespace Puzzle15.Interfaces
+﻿using Puzzle15.Implementations;
+
+namespace Puzzle15.Interfaces
 {
     public interface IShiftPerformerFactory
     {

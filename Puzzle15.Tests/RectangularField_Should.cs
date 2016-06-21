@@ -46,7 +46,7 @@ namespace Puzzle15.Tests
         #region Swap tests
 
         [Test]
-        public void SwapElements_WhenNotConnected()
+        public void SwapElements_WhenNotConnectedByEdge()
         {
             var size = new Size(3, 3);
 
