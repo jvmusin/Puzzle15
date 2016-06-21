@@ -5,29 +5,29 @@ namespace Puzzle15.Implementations
 {
     public class Game : IGame
     {
-        protected RectangularField<int> Field { get; }
-        public IShiftPerformer ShiftPerformer { get; }
+        private readonly RectangularField<int> field;
+        private readonly IShiftPerformer shiftPerformer;
 
         internal Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
         {
-            Field = needCloneField ? field.Clone() : field;
-            ShiftPerformer = shiftPerformer;
+            this.field = needCloneField ? field.Clone() : field;
+            this.shiftPerformer = shiftPerformer;
         }
 
         public IGame Shift(int value)
-            => ShiftPerformer.Perform(this, Field, value);
+            => shiftPerformer.Perform(this, field, value);
 
         #region Indexers
 
         public CellLocation GetLocation(int value)
         {
-            return Field.GetLocation(value);
+            return field.GetLocation(value);
         }
 
         public int this[CellLocation location]
         {
-            get { return Field[location]; }
-            protected set { Field[location] = value; }
+            get { return field[location]; }
+            protected set { field[location] = value; }
         }
 
         #endregion
@@ -36,7 +36,7 @@ namespace Puzzle15.Implementations
 
         protected bool Equals(Game other)
         {
-            return Field.Equals(other.Field);
+            return field.Equals(other.field);
         }
 
         public override bool Equals(object obj)
@@ -47,12 +47,12 @@ namespace Puzzle15.Implementations
 
         public override int GetHashCode()
         {
-            return Field.GetHashCode();
+            return field.GetHashCode();
         }
 
         public override string ToString()
         {
-            return Field.ToString();
+            return field.ToString();
         }
 
         #endregion

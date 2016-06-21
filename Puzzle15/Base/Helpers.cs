@@ -28,13 +28,4 @@ namespace Puzzle15.Base
             return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
         }
     }
-
-    public static class EnumerableExtensions
-    {
-        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-        {
-            foreach (var value in source)
-                action(value);
-        }
-    }
 }

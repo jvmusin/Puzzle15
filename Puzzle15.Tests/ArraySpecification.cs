@@ -85,6 +85,9 @@ namespace Puzzle15.Tests
             Helpers.StructuralEquals("aaa", "aaa").Should().BeTrue();
             Helpers.StructuralEquals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 4)).Should().BeFalse();
             Helpers.StructuralEquals(new RectangularField<int>(5, 5), new RectangularField<int>(5, 5)).Should().BeTrue();
+
+            new RectangularField<int>(5, 5).Equals(new RectangularField<int>(5, 4)).Should().BeFalse();
+            new RectangularField<int>(5, 5).Equals(new RectangularField<int>(5, 5)).Should().BeTrue();
         }
     }
 }

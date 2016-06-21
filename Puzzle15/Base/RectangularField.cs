@@ -17,18 +17,26 @@ namespace Puzzle15.Base
 
         #region Constructors
 
-        public RectangularField(Size size)
+        protected RectangularField(Size size, bool shouldInit)
         {
             Size = size;
-            table = new T[Height,Width];
-            locations = new Dictionary<T, List<CellLocation>>();
 
-            var defaultValue = default(T);
-            if (defaultValue != null)
-                locations[defaultValue] = EnumerateLocations().ToList();
+            if (shouldInit)
+            {
+                table = new T[Height, Width];
+                locations = new Dictionary<T, List<CellLocation>>();
+
+                var defaultValue = default(T);
+                if (defaultValue != null)
+                    locations[defaultValue] = EnumerateLocations().ToList();
+            }
         }
 
-        public RectangularField(int height, int width) : this(new Size(width, height))
+        public RectangularField(Size size) : this(size, true)
+        {
+        }
+
+        public RectangularField(int height, int width) : this(new Size(width, height), true)
         {
         }
 
@@ -36,23 +44,28 @@ namespace Puzzle15.Base
 
         #region Primary actions
 
-        public void Fill(Func<CellLocation, T> getValue)
+        public virtual RectangularField<T> Swap(CellLocation location1, CellLocation location2)
         {
-            EnumerateLocations()
-                .ForEach(location => this[location] = getValue(location));
+            var temp = this[location1];
+            this[location1] = this[location2];
+            this[location2] = temp;
+
+            return this;
         }
 
-        public void Swap(CellLocation position1, CellLocation position2)
+        public virtual RectangularField<T> Fill(Func<CellLocation, T> getValue)
         {
-            var temp = this[position1];
-            this[position1] = this[position2];
-            this[position2] = temp;
+            foreach (var location in EnumerateLocations())
+                this[location] = getValue(location);
+
+            return this;
         }
 
-        public RectangularField<T> Clone()
+        public virtual RectangularField<T> Clone()
         {
             var newField = new RectangularField<T>(Size);
             newField.Fill(location => this[location]);
+
             return newField;
         }
 
@@ -92,19 +105,19 @@ namespace Puzzle15.Base
             return result;
         }
 
-        public IEnumerable<CellLocation> GetLocations(T value)
+        public virtual IEnumerable<CellLocation> GetLocations(T value)
         {
             return value == null
                 ? this.Where(x => x.Value == null).Select(x => x.Location)
                 : GetLocationsSafe(value);
         }
 
-        public CellLocation GetLocation(T value)
+        public virtual CellLocation GetLocation(T value)
         {
             return GetLocations(value).FirstOrDefault();
         }
 
-        public T this[CellLocation location]
+        public virtual T this[CellLocation location]
         {
             get { return table[location.Row, location.Column]; }
             set
@@ -125,9 +138,7 @@ namespace Puzzle15.Base
 
         protected bool Equals(RectangularField<T> other)
         {
-            var curTable = table.Cast<T>();
-            var otherTable = other.table.Cast<T>();
-            return Size == other.Size && curTable.SequenceEqual(otherTable);
+            return Size == other.Size && this.SequenceEqual(other);
         }
 
         public override bool Equals(object obj)
@@ -138,7 +149,7 @@ namespace Puzzle15.Base
 
         public override int GetHashCode()
         {
-            return Helpers.StructuralGetHashCode(table.Cast<T>().ToArray());
+            return Helpers.StructuralGetHashCode(this.ToArray());
         }
 
         public override string ToString()
@@ -149,7 +160,8 @@ namespace Puzzle15.Base
         public string ToString(Func<CellInfo<T>, string> getCapture, string lineSeparator = "\n")
         {
             var result = Helpers.CreateTable<string>(Height, Width);
-            this.ForEach(info => result[info.Location.Row][info.Location.Column] = getCapture(info));
+            foreach (var info in this)
+                result[info.Location.Row][info.Location.Column] = getCapture(info);
 
             return string.Join(lineSeparator,
                 result.Select(row => string.Join(" ", row)));
