@@ -9,6 +9,8 @@ namespace Puzzle15.Base.Field
         private readonly IRectangularField<T> parent;
         private readonly CellInfo<T> changedCell;
 
+        public override bool Mutable => false;
+
         public WrappedRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell = null)
             : base(parent.Size)
         {

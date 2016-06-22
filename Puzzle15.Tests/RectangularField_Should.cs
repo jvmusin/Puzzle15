@@ -6,7 +6,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Base;
 using Puzzle15.Base.Field;
-using Puzzle15.Implementations;
 
 namespace Puzzle15.Tests
 {
@@ -22,9 +21,29 @@ namespace Puzzle15.Tests
             }
         }
 
+        private static IEnumerable<Func<Size, IRectangularField<string>>> CtorsWithString
+        {
+            get
+            {
+                yield return size => new RectangularField<string>(size);
+                yield return size => new WrappedRectangularField<string>(new RectangularField<string>(size));
+            }
+        }
+
         private static IEnumerable<IRectangularField<int>> Fields
         {
             get { return Ctors.Select(ctor => FieldFromConstructor(ctor, DefaultFieldSize, DefaultFieldData)); }
+        }
+
+        private static IEnumerable<IRectangularField<string>> FieldsWithString
+        {
+            get
+            {
+                var size = DefaultFieldSize;
+                var elementsCount = size.Height * size.Width;
+                var elements = new string[elementsCount];
+                return CtorsWithString.Select(ctor => FieldFromConstructor(ctor, size, elements));
+            }
         }
 
         #region Size tests
@@ -190,17 +209,19 @@ namespace Puzzle15.Tests
                 5, 9, 1,
                 1, 1, 1);
             var expected = FieldFromConstructor(ctor, size,
-                2, 9, 1,
+                10, 9, 1,
                 5, 3, 1,
-                1, 1, 1);
-            
+                1, 1, 11);
+
             original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2));
             original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0));
             original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2));
             original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2));
+            original = original.SetValue(10, new CellLocation(0, 1));
             original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0));
+            original = original.SetValue(11, new CellLocation(2, 2));
 
-            original.ToList().Should().BeEquivalentTo(expected.ToList());
+            original.ToList().Should().BeEquivalentTo(expected);
         }
 
         #endregion
@@ -208,9 +229,10 @@ namespace Puzzle15.Tests
         #region GetLocations tests
 
         [Test]
-        public void ReturnLocations_ForNonNulls()
+        public void ReturnLocations_ForNonNulls(
+            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
         {
-            var field = FieldFromArray(new Size(3, 3),
+            var field = FieldFromConstructor(ctor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -220,9 +242,10 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void ReturnLocations_ForNulls()
+        public void ReturnLocations_ForNulls(
+            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
         {
-            var field = FieldFromArray(new Size(3, 3),
+            var field = FieldFromConstructor(ctor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -232,9 +255,10 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void ReturnLocations_WhenNotFound()
+        public void ReturnLocations_WhenNotFound(
+            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
         {
-            var field = FieldFromArray(new Size(3, 3),
+            var field = FieldFromConstructor(ctor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -243,7 +267,7 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void ReturnLocations_AfterChanges(
+        public void ReturnLocations_AfterChangesByIndex(
             [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
@@ -251,21 +275,118 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
-            var expected = FieldFromConstructor(ctor, size,
-                2, 9, 1,
-                5, 3, 1,
+
+            var expectedLocations = new Dictionary<int, CellLocation[]>
+            {
+                {0, new[] {new CellLocation(2, 1)}},
+                {
+                    1,
+                    new[]
+                    {new CellLocation(0, 0), new CellLocation(0, 2), new CellLocation(2, 0), new CellLocation(2, 2)}
+                },
+                {2, new[] {new CellLocation(0, 1)}},
+                {5, new[] {new CellLocation(1, 0)}},
+                {9, new[] {new CellLocation(1, 1)}},
+                {200, new[] {new CellLocation(1, 2)}}
+            };
+
+            original = original.SetValue(1, new CellLocation(0, 2));
+            original = original.SetValue(0, new CellLocation(2, 1));
+            original = original.SetValue(200, new CellLocation(1, 2));
+            original = original.SetValue(1, new CellLocation(2, 0));
+
+            //  Should be
+            //  1 2 1
+            //  5 9 200
+            //  1 0 1
+
+            var realLocations = new Dictionary<int, CellLocation[]>();
+            foreach (var value in original.Select(x => x.Value))
+                realLocations[value] = original.GetLocations(value).ToArray();
+
+            realLocations.Count.Should().Be(expectedLocations.Count);
+            foreach (var numberAndLocations in realLocations)
+                // ReSharper disable once CoVariantArrayConversion
+                numberAndLocations.Value.Should().BeEquivalentTo(expectedLocations[numberAndLocations.Key]);
+        }
+
+        [Test]
+        public void ReturnLocations_AfterSwaps(
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+        {
+            var size = new Size(3, 3);
+            var original = FieldFromConstructor(ctor, size,
+                1, 2, 3,
+                5, 9, 1,
                 1, 1, 1);
 
-            var changes = new List<IRectangularField<int>> {original};
-            changes.Add(original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2)));
-            changes.Add(original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0)));
-            changes.Add(original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2)));
-            changes.Add(original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2)));
-            changes.Add(original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0)));
+            var expectedLocations = new Dictionary<int, CellLocation[]>
+            {
+                {
+                    1,
+                    new[]
+                    {
+                        new CellLocation(0, 2),
+                        new CellLocation(1, 2),
+                        new CellLocation(2, 0), new CellLocation(2, 1), new CellLocation(2, 2)
+                    }
+                },
+                {2, new[] {new CellLocation(0, 1)}},
+                {3, new[] {new CellLocation(1, 1)}},
+                {5, new[] {new CellLocation(1, 0)}},
+                {9, new[] {new CellLocation(0, 0)}}
+            };
 
-            original.Should().BeEquivalentTo(expected);
-            if (original is WrappedRectangularField<int>)
-                changes.Distinct(new SameObjectsComparer<IRectangularField<int>>()).Count().Should().Be(changes.Count);
+            original = original.Swap(new CellLocation(0, 0), new CellLocation(1, 1));
+            original = original.Swap(new CellLocation(2, 1), new CellLocation(2, 0));
+            original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(1, 1), new CellLocation(1, 1));
+
+            //  Should be
+            //  9 2 1
+            //  5 3 1
+            //  1 1 1
+
+            var realLocations = new Dictionary<int, CellLocation[]>();
+            foreach (var value in original.Select(x => x.Value))
+                realLocations[value] = original.GetLocations(value).ToArray();
+
+            realLocations.Count.Should().Be(expectedLocations.Count);
+            foreach (var numberAndLocations in realLocations)
+                // ReSharper disable once CoVariantArrayConversion
+                numberAndLocations.Value.Should().BeEquivalentTo(expectedLocations[numberAndLocations.Key]);
+        }
+
+        [Test]
+        public void ReturnLocations_WithoutChangingClonedField(
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+        {
+            var size = new Size(3, 3);
+            var original = FieldFromConstructor(ctor, size,
+                1, 5, 3,
+                0, 2, 8,
+                7, 4, 6);
+            var cloned = original.Clone();
+            original.Should().BeEquivalentTo(cloned);
+
+            original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0));
+            original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2));
+            original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0));
+
+            var expectedOrder = new[] { 5, 2, 8, 0, 3, 1, 6, 4, 7 };
+            original.EnumerateLocations()
+                .OrderBy(x => x)
+                .Zip(expectedOrder, (location, number) => new
+                {
+                    RealLocation = original.GetLocation(number),
+                    ExpectedLocation = location
+                })
+                .Select(x => x.RealLocation.Equals(x.ExpectedLocation))
+                .ShouldAllBeEquivalentTo(true);
+
+            original.Should().NotBeEquivalentTo(cloned);
         }
 
         #endregion
@@ -273,15 +394,72 @@ namespace Puzzle15.Tests
         #region Indexer tests
 
         [Test]
-        public void ReturnCorrectValuesByIndex(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        public void ReturnCorrectValues(
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
-            foreach (var location in field.EnumerateLocations())
+            var size = new Size(3, 3);
+            var values = new[]
             {
-                var value = field[location];
-                var expected = DefaultFieldData[location.Row*DefaultFieldSize.Width + location.Column];
-                value.Should().Be(expected);
-            }
+                1, 2, 3,
+                5, 9, 1,
+                1, 1, 1
+            };
+            var original = FieldFromConstructor(ctor, size, values.ToArray());
+
+            foreach (var location in original.EnumerateLocations())
+                original[location].Should().Be(values[location.Row * size.Width + location.Column]);
+        }
+
+        [Test]
+        public void ReturnCorrectValuesByIndex_AfterChanges(
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+        {
+            var size = new Size(3, 3);
+            var original = FieldFromConstructor(ctor, size,
+                1, 2, 3,
+                5, 9, 1,
+                1, 1, 1);
+            original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0));
+            original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2));
+            original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0));
+
+            var expected = new[]
+            {
+                2, 9, 1,
+                5, 3, 1,
+                1, 1, 1
+            };
+
+            foreach (var location in original.EnumerateLocations())
+                original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
+        }
+
+        [Test]
+        public void ReturnCorrectValuesByIndex_OnClonedField(
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+        {
+            var size = new Size(3, 3);
+            var original = FieldFromConstructor(ctor, size,
+                1, 2, 3,
+                5, 9, 1,
+                1, 1, 1).Clone();
+            original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0));
+            original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2));
+            original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2));
+            original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0));
+
+            var expected = new[]
+            {
+                2, 9, 1,
+                5, 3, 1,
+                1, 1, 1
+            };
+
+            foreach (var location in original.EnumerateLocations())
+                original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
         }
 
         #endregion

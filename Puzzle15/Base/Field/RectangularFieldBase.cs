@@ -12,6 +12,8 @@ namespace Puzzle15.Base.Field
         public int Height => Size.Height;
         public int Width => Size.Width;
 
+        public abstract bool Mutable { get; }
+
         protected RectangularFieldBase(Size size)
         {
             Size = size;

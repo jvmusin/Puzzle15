@@ -10,6 +10,8 @@ namespace Puzzle15.Base.Field
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
 
+        public override bool Mutable => true;
+
         #region Constructors
 
         public RectangularField(Size size) : base(size)

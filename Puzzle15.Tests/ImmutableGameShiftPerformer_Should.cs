@@ -3,9 +3,7 @@ using System.Drawing;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base;
 using Puzzle15.Base.Field;
-using Puzzle15.Implementations;
 using Puzzle15.Implementations.GameFieldValidating;
 using Puzzle15.Implementations.ShiftPerforming;
 using Puzzle15.Interfaces;
@@ -17,7 +15,6 @@ namespace Puzzle15.Tests
     {
         private IGameFieldValidator gameFieldValidator;
         private IShiftPerformerFactory shiftPerformerFactory;
-        private IGameFactory gameFactory;
         private IShiftPerformer shiftPerformer;
 
         [SetUp]
@@ -28,8 +25,6 @@ namespace Puzzle15.Tests
 
             shiftPerformerFactory = new ImmutableGameShiftPerformerFactory();
             shiftPerformer = shiftPerformerFactory.Create();
-
-            gameFactory = new GameFactory(gameFieldValidator, shiftPerformerFactory);
         }
 
         [Test]

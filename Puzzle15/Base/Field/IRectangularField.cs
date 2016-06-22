@@ -10,6 +10,8 @@ namespace Puzzle15.Base.Field
         int Height { get; }
         int Width { get; }
 
+        bool Mutable { get; }
+
         IRectangularField<T> Swap(CellLocation location1, CellLocation location2);
         IRectangularField<T> Fill(Func<CellLocation, T> getValue);
         IRectangularField<T> Clone();
