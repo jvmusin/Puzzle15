@@ -23,7 +23,7 @@ namespace Puzzle15.Implementations.ShiftPerforming
         public static ShiftPerformer Mutable() => new ShiftPerformer(true);
         public static ShiftPerformer Immutable(FieldCloner fieldCloner) => new ShiftPerformer(false, fieldCloner);
 
-        public IGame Perform(IGame game, RectangularField<int> gameField, int value)
+        public IGame Perform(IGame game, IRectangularField<int> gameField, int value)
         {
             var empty = gameField.GetLocation(0);
             var toShift = gameField.GetLocation(value);

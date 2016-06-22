@@ -4,6 +4,6 @@ namespace Puzzle15.Interfaces
 {
     public interface IGameFactory
     {
-        IGame Create(RectangularField<int> initialField);
+        IGame Create(IRectangularField<int> initialField);
     }
 }

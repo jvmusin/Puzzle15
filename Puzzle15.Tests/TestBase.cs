@@ -16,14 +16,14 @@ namespace Puzzle15.Tests
             6, 7, -2
         };
 
-        protected static RectangularField<T> FieldFromArray<T>(Size size, params T[] values)
+        protected static IRectangularField<T> FieldFromArray<T>(Size size, params T[] values)
         {
             return new RectangularField<T>(size)
                 .Fill(location => values[location.Row*size.Width + location.Column]);
         }
 
-        protected static RectangularField<T> FieldFromConstructor<T>(
-            Func<Size, RectangularField<T>> constructor, Size size, params T[] values)
+        protected static IRectangularField<T> FieldFromConstructor<T>(
+            Func<Size, IRectangularField<T>> constructor, Size size, params T[] values)
         {
             return constructor(size)
                 .Fill(location => values[location.Row*size.Width + location.Column]);

@@ -6,7 +6,7 @@ namespace Puzzle15.Implementations.GameFieldValidating
 {
     public class GameFieldValidator : IGameFieldValidator
     {
-        public ValidationResult Validate(RectangularField<int> field)
+        public ValidationResult Validate(IRectangularField<int> field)
         {
             var errorMessage = GetErrorMessage(field);
             return errorMessage == null
@@ -14,7 +14,7 @@ namespace Puzzle15.Implementations.GameFieldValidating
                 : ValidationResult.Unsuccess(errorMessage);
         }
 
-        private static string GetErrorMessage(RectangularField<int> field)
+        private static string GetErrorMessage(IRectangularField<int> field)
         {
             if (field == null)
                 return "Field shouldn't be null";

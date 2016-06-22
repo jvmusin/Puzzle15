@@ -15,7 +15,7 @@ namespace Puzzle15.Implementations
             ShiftPerformerFactory = shiftPerformerFactory;
         }
 
-        public IGame Create(RectangularField<int> initialField)
+        public IGame Create(IRectangularField<int> initialField)
         {
             var validationResult = GameFieldValidator.Validate(initialField);
             if (!validationResult.Successful)

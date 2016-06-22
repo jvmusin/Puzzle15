@@ -50,6 +50,8 @@
     <Compile Include="Base\CellInfo.cs" />
     <Compile Include="Base\CellLocation.cs" />
     <Compile Include="Base\Direction.cs" />
+    <Compile Include="Base\IRectangularField.cs" />
+    <Compile Include="Base\RectangularFieldBase.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
     <Compile Include="Implementations\GameFieldValidating\GameFieldValidator.cs" />
@@ -57,7 +59,7 @@
     <Compile Include="Implementations\ShiftPerforming\FieldCloner.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
     <Compile Include="Implementations\ShiftPerforming\WrappableGameShiftPerformerFactory.cs" />
-    <Compile Include="Implementations\WrappedGameField.cs" />
+    <Compile Include="Base\WrappedRectangularField.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
     <Compile Include="Interfaces\IGameFieldValidator.cs" />

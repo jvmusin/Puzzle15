@@ -12,16 +12,16 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class RectangularField_Should : TestBase
     {
-        private static IEnumerable<Func<Size, RectangularField<int>>> Ctors
+        private static IEnumerable<Func<Size, IRectangularField<int>>> Ctors
         {
             get
             {
                 yield return size => new RectangularField<int>(size);
-                yield return size => new WrappedGameField(new RectangularField<int>(size));
+                yield return size => new WrappedRectangularField<int>(new RectangularField<int>(size));
             }
         }
 
-        private static IEnumerable<RectangularField<int>> Impls
+        private static IEnumerable<IRectangularField<int>> Fields
         {
             get { return Ctors.Select(ctor => FieldFromConstructor(ctor, DefaultFieldSize, DefaultFieldData)); }
         }
@@ -30,7 +30,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void WorkWithDifferentSizesCorrectly(
-            [ValueSource(nameof(Ctors))] Func<Size, RectangularField<int>> ctor,
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor,
             [Values(-1232, 0, 133)] int width,
             [Values(-13123, 0, 2)] int height)
         {
@@ -56,7 +56,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElements_WhenNotConnectedByEdge(
-            [ValueSource(nameof(Ctors))] Func<Size,RectangularField<int>> ctor)
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
 
@@ -76,7 +76,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElementAtSamePlace(
-            [ValueSource(nameof(Ctors))] Func<Size, RectangularField<int>> ctor)
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
 
@@ -93,7 +93,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void FailSwap_WhenElementNotOnField(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             new Action(() => field.Swap(new CellLocation(0, 0), new CellLocation(3, 0)))
                 .ShouldThrow<Exception>();
@@ -101,7 +101,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElementsOnClonedField(
-            [ValueSource(nameof(Ctors))] Func<Size, RectangularField<int>> ctor)
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
             var original = FieldFromConstructor(ctor, size,
@@ -126,7 +126,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void CloneCorrectly(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             var cloned = field.Clone();
 
@@ -136,7 +136,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void NotChangeOriginalField_AfterChangingClonedField(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             var original = field.ToArray();
             var cloned = field.Clone();
@@ -156,7 +156,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void EnumerateLocationsCorrecly(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             var expected = new List<CellLocation>();
             for (var row = 0; row < field.Height; row++)
@@ -167,7 +167,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void EnumerateCorrectly(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             var expected = new List<CellInfo<int>>();
             for (var row = 0; row < field.Height; row++)
@@ -181,7 +181,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void EnumerateCorrectly_AfterChanges(
-            [ValueSource(nameof(Ctors))] Func<Size, RectangularField<int>> ctor)
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
             var original = FieldFromConstructor(ctor, size,
@@ -243,7 +243,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_AfterChanges(
-            [ValueSource(nameof(Ctors))] Func<Size, RectangularField<int>> ctor)
+            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
         {
             var size = new Size(3, 3);
             var original = FieldFromConstructor(ctor, size,
@@ -255,7 +255,7 @@ namespace Puzzle15.Tests
                 5, 3, 1,
                 1, 1, 1);
 
-            var changes = new List<RectangularField<int>> {original};
+            var changes = new List<IRectangularField<int>> {original};
             changes.Add(original = original.Swap(new CellLocation(0, 0), new CellLocation(0, 2)));
             changes.Add(original = original.Swap(new CellLocation(1, 1), new CellLocation(0, 0)));
             changes.Add(original = original.Swap(new CellLocation(2, 0), new CellLocation(2, 2)));
@@ -263,8 +263,8 @@ namespace Puzzle15.Tests
             changes.Add(original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0)));
 
             original.Should().BeEquivalentTo(expected);
-            if (original is WrappedGameField)
-                changes.Distinct(new SameObjectsComparer<RectangularField<int>>()).Count().Should().Be(changes.Count);
+            if (original is WrappedRectangularField<int>)
+                changes.Distinct(new SameObjectsComparer<IRectangularField<int>>()).Count().Should().Be(changes.Count);
         }
 
         #endregion
@@ -273,7 +273,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnCorrectValuesByIndex(
-            [ValueSource(nameof(Impls))] RectangularField<int> field)
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             foreach (var location in field.EnumerateLocations())
             {

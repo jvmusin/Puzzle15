@@ -5,10 +5,10 @@ namespace Puzzle15.Implementations
 {
     internal class Game : IGame
     {
-        private readonly RectangularField<int> field;
+        private readonly IRectangularField<int> field;
         public IShiftPerformer ShiftPerformer { get; }
 
-        internal Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
+        internal Game(IRectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
         {
             this.field = needCloneField ? field.Clone() : field;
             ShiftPerformer = shiftPerformer;

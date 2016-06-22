@@ -1,4 +1,5 @@
-﻿using Puzzle15.Interfaces;
+﻿using Puzzle15.Base;
+using Puzzle15.Interfaces;
 
 namespace Puzzle15.Implementations.ShiftPerforming
 {
@@ -7,9 +8,9 @@ namespace Puzzle15.Implementations.ShiftPerforming
         public IShiftPerformer Create()
         {
             return ShiftPerformer.Immutable(
-                field => field is WrappedGameField
+                field => field is WrappedRectangularField<int>
                     ? field
-                    : new WrappedGameField(field));
+                    : new WrappedRectangularField<int>(field));
         }
     }
 }

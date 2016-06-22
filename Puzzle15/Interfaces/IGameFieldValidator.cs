@@ -6,6 +6,6 @@ namespace Puzzle15.Interfaces
 {
     public interface IGameFieldValidator
     {
-        ValidationResult Validate(RectangularField<int> field);
+        ValidationResult Validate(IRectangularField<int> field);
     }
 }
