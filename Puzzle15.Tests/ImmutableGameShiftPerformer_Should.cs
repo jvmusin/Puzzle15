@@ -39,8 +39,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            var game = gameFactory.Create(field);
-            var result = shiftPerformer.Perform(game, field, 4);
+            var result = shiftPerformer.Perform(field, 4);
 
             var expectedField = FieldFromArray(new Size(3, 3),
                 1, 2, 3,
@@ -66,7 +65,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            new Action(() => shiftPerformer.Perform(null, field, value)).ShouldThrow<Exception>();
+            new Action(() => shiftPerformer.Perform(field, value)).ShouldThrow<Exception>();
         }
 
         [Test]
@@ -76,12 +75,11 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            var game = gameFactory.Create(field);
-            var result = shiftPerformer.Perform(game, field, 4);
-            result.Should().NotBeSameAs(game);
+            var cloned = field.Clone();
+            shiftPerformer.Perform(field, 4);
 
             foreach (var location in field.EnumerateLocations())
-                game[location].Should().Be(field[location]);
+                field[location].Should().Be(cloned[location]);
         }
     }
 }

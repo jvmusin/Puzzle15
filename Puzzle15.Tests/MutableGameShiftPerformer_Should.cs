@@ -25,7 +25,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            shiftPerformer.Perform(null, field, 4);
+            shiftPerformer.Perform(field, 4);
 
             field.Should().BeEquivalentTo(FieldFromArray(new Size(3, 3),
                 1, 2, 3,
@@ -40,20 +40,19 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            new Action(() => shiftPerformer.Perform(null, field, value)).ShouldThrow<Exception>();
+            new Action(() => shiftPerformer.Perform(field, value)).ShouldThrow<Exception>();
         }
 
         [Test]
-        public void ReturnSameGameAfterPerforming()
+        public void ReturnSameFieldAfterPerforming()
         {
             var field = FieldFromArray(new Size(3, 3),
                 1, 2, 3,
                 6, 8, 7,
                 5, 0, 4);
-            var game = StrictFake<IGame>();
 
-            var result = shiftPerformer.Perform(game, field, 8);
-            result.Should().BeSameAs(game);
+            var result = shiftPerformer.Perform(field, 8);
+            result.Should().BeSameAs(field);
         }
     }
 }

@@ -16,7 +16,12 @@ namespace Puzzle15.Implementations
         }
 
         public IGame Shift(int value)
-            => ShiftPerformer.Perform(this, field, value);
+        {
+            var newField = ShiftPerformer.Perform(field, value);
+            return ShiftPerformer.MutatesGame
+                ? this
+                : new Game(newField, ShiftPerformer, false);
+        }
 
         #region Indexers
 
