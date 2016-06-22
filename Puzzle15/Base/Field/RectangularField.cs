@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Puzzle15.Base
+namespace Puzzle15.Base.Field
 {
     public class RectangularField<T> : RectangularFieldBase<T>
     {
@@ -12,10 +12,8 @@ namespace Puzzle15.Base
 
         #region Constructors
 
-        protected RectangularField(Size size, bool shouldInit) : base(size)
+        public RectangularField(Size size) : base(size)
         {
-            if (!shouldInit) return;
-
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
 
@@ -24,11 +22,7 @@ namespace Puzzle15.Base
                 locations[defaultValue] = EnumerateLocations().ToList();
         }
 
-        public RectangularField(Size size) : this(size, true)
-        {
-        }
-
-        public RectangularField(int height, int width) : this(new Size(width, height), true)
+        public RectangularField(int height, int width) : this(new Size(width, height))
         {
         }
 

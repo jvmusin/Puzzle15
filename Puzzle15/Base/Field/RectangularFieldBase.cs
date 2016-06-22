@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace Puzzle15.Base
+namespace Puzzle15.Base.Field
 {
     public abstract class RectangularFieldBase<T> : IRectangularField<T>
     {

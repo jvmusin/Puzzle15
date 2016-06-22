@@ -2,6 +2,7 @@
 using System.Drawing;
 using FakeItEasy;
 using Puzzle15.Base;
+using Puzzle15.Base.Field;
 
 namespace Puzzle15.Tests
 {

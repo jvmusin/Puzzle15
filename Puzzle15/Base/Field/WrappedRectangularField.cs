@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Puzzle15.Base
+namespace Puzzle15.Base.Field
 {
-    public class WrappedRectangularField<T> : RectangularField<T>
+    public class WrappedRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly IRectangularField<T> parent;
         private readonly CellInfo<T> changedCell;
 
         public WrappedRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell = null)
-            : base(parent.Size, false)
+            : base(parent.Size)
         {
             this.parent = parent;
             this.changedCell = changedCell;

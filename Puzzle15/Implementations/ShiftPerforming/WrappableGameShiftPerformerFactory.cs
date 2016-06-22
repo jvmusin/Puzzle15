@@ -1,4 +1,5 @@
 ﻿using Puzzle15.Base;
+using Puzzle15.Base.Field;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Implementations.ShiftPerforming

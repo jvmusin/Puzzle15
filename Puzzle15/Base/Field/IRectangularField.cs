@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace Puzzle15.Base
+namespace Puzzle15.Base.Field
 {
     public interface IRectangularField<T> : IEnumerable<CellInfo<T>>
     {
