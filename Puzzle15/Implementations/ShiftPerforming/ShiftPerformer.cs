@@ -20,10 +20,8 @@ namespace Puzzle15.Implementations.ShiftPerforming
             cloneField = fieldCloner;
         }
 
-        public static ShiftPerformer Mutable() 
-            => new ShiftPerformer(true);
-        public static ShiftPerformer Immutable(FieldCloner fieldCloner) 
-            => new ShiftPerformer(false, fieldCloner);
+        public static ShiftPerformer Mutable() => new ShiftPerformer(true);
+        public static ShiftPerformer Immutable(FieldCloner fieldCloner) => new ShiftPerformer(false, fieldCloner);
 
         public IGame Perform(IGame game, RectangularField<int> gameField, int value)
         {
