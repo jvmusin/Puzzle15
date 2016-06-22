@@ -54,6 +54,7 @@
     <Compile Include="Implementations\GameFactory.cs" />
     <Compile Include="Implementations\GameFieldValidating\GameFieldValidator.cs" />
     <Compile Include="Base\Helpers.cs" />
+    <Compile Include="Implementations\ShiftPerforming\FieldCloner.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
     <Compile Include="Implementations\ShiftPerforming\WrappableGameShiftPerformerFactory.cs" />
     <Compile Include="Implementations\WrappedGameField.cs" />

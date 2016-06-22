@@ -37,6 +37,4 @@ namespace Puzzle15.Implementations.ShiftPerforming
                 : new Game(newField, this, false);
         }
     }
-
-    public delegate RectangularField<int> FieldCloner(RectangularField<int> original);
 }
