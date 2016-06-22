@@ -84,7 +84,7 @@ namespace Puzzle15.Base.Field
                 var valueToRemove = this[location];
                 if (valueToRemove != null)
                     locations[valueToRemove].Remove(location);
-                
+
                 table[location.Row, location.Column] = value;
                 if (value != null)
                     GetLocationsSafe(value).Add(location);
