@@ -52,21 +52,21 @@
     <Compile Include="Base\Direction.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
-    <Compile Include="Implementations\GameFieldValidator.cs" />
+    <Compile Include="Implementations\GameFieldValidating\GameFieldValidator.cs" />
     <Compile Include="Base\Helpers.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
-    <Compile Include="Implementations\ShiftPerformerFactories\WrappableGameShiftPerformerFactory.cs" />
+    <Compile Include="Implementations\ShiftPerforming\WrappableGameShiftPerformerFactory.cs" />
     <Compile Include="Implementations\WrappedGameField.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
     <Compile Include="Interfaces\IGameFieldValidator.cs" />
-    <Compile Include="Implementations\ShiftPerformer.cs" />
-    <Compile Include="Implementations\ShiftPerformerFactories\ImmutableGameShiftPerformerFactory.cs" />
+    <Compile Include="Implementations\ShiftPerforming\ShiftPerformer.cs" />
+    <Compile Include="Implementations\ShiftPerforming\ImmutableGameShiftPerformerFactory.cs" />
     <Compile Include="Interfaces\IShiftPerformerFactory.cs" />
-    <Compile Include="Implementations\ShiftPerformerFactories\MutableGameShiftPerformerFactory.cs" />
+    <Compile Include="Implementations\ShiftPerforming\MutableGameShiftPerformerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base\RectangularField.cs" />
-    <Compile Include="Implementations\ValidationResult.cs" />
+    <Compile Include="Implementations\GameFieldValidating\ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

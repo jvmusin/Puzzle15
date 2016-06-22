@@ -1,12 +1,12 @@
 ﻿using Puzzle15.Interfaces;
 
-namespace Puzzle15.Implementations.ShiftPerformerFactories
+namespace Puzzle15.Implementations.ShiftPerforming
 {
     public class WrappableGameShiftPerformerFactory : IShiftPerformerFactory
     {
         public IShiftPerformer Create()
         {
-            return new ShiftPerformer(true,
+            return ShiftPerformer.Immutable(
                 field => field is WrappedGameField
                     ? field
                     : new WrappedGameField(field));

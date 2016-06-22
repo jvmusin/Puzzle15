@@ -6,16 +6,16 @@ namespace Puzzle15.Implementations
     internal class Game : IGame
     {
         private readonly RectangularField<int> field;
-        private readonly IShiftPerformer shiftPerformer;
+        public IShiftPerformer ShiftPerformer { get; }
 
         internal Game(RectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
         {
             this.field = needCloneField ? field.Clone() : field;
-            this.shiftPerformer = shiftPerformer;
+            ShiftPerformer = shiftPerformer;
         }
 
         public IGame Shift(int value)
-            => shiftPerformer.Perform(this, field, value);
+            => ShiftPerformer.Perform(this, field, value);
 
         #region Indexers
 

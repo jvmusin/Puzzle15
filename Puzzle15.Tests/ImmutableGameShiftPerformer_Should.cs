@@ -5,7 +5,8 @@ using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Base;
 using Puzzle15.Implementations;
-using Puzzle15.Implementations.ShiftPerformerFactories;
+using Puzzle15.Implementations.GameFieldValidating;
+using Puzzle15.Implementations.ShiftPerforming;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Tests

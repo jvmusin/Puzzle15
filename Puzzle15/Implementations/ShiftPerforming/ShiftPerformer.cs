@@ -3,21 +3,27 @@ using System.Linq;
 using Puzzle15.Base;
 using Puzzle15.Interfaces;
 
-namespace Puzzle15.Implementations
+namespace Puzzle15.Implementations.ShiftPerforming
 {
     public class ShiftPerformer : IShiftPerformer
     {
-        private readonly bool createNewGame;
         private readonly FieldCloner cloneField;
 
-        internal ShiftPerformer(bool createNewGame = false, FieldCloner fieldCloner = null)
+        public bool MutatesGame { get; }
+
+        public ShiftPerformer(bool mutatesGame, FieldCloner fieldCloner = null)
         {
             if (fieldCloner == null)
                 fieldCloner = field => field;
 
-            this.createNewGame = createNewGame;
+            MutatesGame = mutatesGame;
             cloneField = fieldCloner;
         }
+
+        public static ShiftPerformer Mutable() 
+            => new ShiftPerformer(true);
+        public static ShiftPerformer Immutable(FieldCloner fieldCloner) 
+            => new ShiftPerformer(false, fieldCloner);
 
         public IGame Perform(IGame game, RectangularField<int> gameField, int value)
         {
@@ -28,9 +34,9 @@ namespace Puzzle15.Implementations
                 throw new ArgumentException("Requested cell is not a neighbour of empty cell");
 
             var newField = cloneField(gameField).Swap(empty, toShift);
-            return createNewGame
-                ? new Game(newField, this, false)
-                : game;
+            return MutatesGame
+                ? game
+                : new Game(newField, this, false);
         }
     }
 

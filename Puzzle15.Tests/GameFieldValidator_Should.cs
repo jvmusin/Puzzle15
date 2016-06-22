@@ -4,6 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Base;
 using Puzzle15.Implementations;
+using Puzzle15.Implementations.GameFieldValidating;
 
 namespace Puzzle15.Tests
 {

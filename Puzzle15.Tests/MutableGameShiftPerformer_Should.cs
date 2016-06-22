@@ -2,13 +2,13 @@
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Implementations.ShiftPerformerFactories;
+using Puzzle15.Implementations.ShiftPerforming;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
-    public class ShiftPerformer_Should : TestBase
+    public class MutableGameShiftPerformer_Should : TestBase
     {
         private IShiftPerformer shiftPerformer;
 
@@ -52,7 +52,8 @@ namespace Puzzle15.Tests
                 5, 0, 4);
             var game = StrictFake<IGame>();
 
-            shiftPerformer.Perform(game, field, 8).Should().BeSameAs(game);
+            var result = shiftPerformer.Perform(game, field, 8);
+            result.Should().BeSameAs(game);
         }
     }
 }

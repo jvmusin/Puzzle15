@@ -2,7 +2,7 @@
 using Puzzle15.Base;
 using Puzzle15.Interfaces;
 
-namespace Puzzle15.Implementations
+namespace Puzzle15.Implementations.GameFieldValidating
 {
     public class GameFieldValidator : IGameFieldValidator
     {
