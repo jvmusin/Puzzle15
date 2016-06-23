@@ -7,12 +7,10 @@ namespace Puzzle15.Implementations
     public class GameFactory : IGameFactory
     {
         public IGameFieldValidator GameFieldValidator { get; }
-        public IShiftPerformerFactory ShiftPerformerFactory { get; }
 
-        public GameFactory(IGameFieldValidator gameFieldValidator, IShiftPerformerFactory shiftPerformerFactory)
+        public GameFactory(IGameFieldValidator gameFieldValidator)
         {
             GameFieldValidator = gameFieldValidator;
-            ShiftPerformerFactory = shiftPerformerFactory;
         }
 
         public IGame Create(IRectangularField<int> initialField)
@@ -21,7 +19,7 @@ namespace Puzzle15.Implementations
             if (!validationResult.Successful)
                 throw new ArgumentException(validationResult.Cause);
 
-            return new Game(initialField, ShiftPerformerFactory.Create());
+            return new Game(initialField);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Puzzle15.Base.Field;
+﻿using System;
+using System.Linq;
+using Puzzle15.Base.Field;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Implementations
@@ -6,20 +8,28 @@ namespace Puzzle15.Implementations
     internal class Game : IGame
     {
         private readonly IRectangularField<int> field;
-        private readonly IShiftPerformer shiftPerformer;
 
-        internal Game(IRectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
+        private Game(IRectangularField<int> field, bool needCloneField)
         {
             this.field = needCloneField ? field.Clone() : field;
-            this.shiftPerformer = shiftPerformer;
+        }
+
+        internal Game(IRectangularField<int> field) : this(field, true)
+        {
         }
 
         public IGame Shift(int value)
         {
-            var newField = shiftPerformer.Perform(field, value);
+            var empty = field.GetLocation(0);
+            var toShift = field.GetLocation(value);
+
+            if (!empty.ByEdgeNeighbours.Contains(toShift))
+                throw new ArgumentException("Requested cell is not a neighbour of empty cell");
+
+            var newField = field.Swap(empty, toShift);
 
             return field.Immutable
-                ? new Game(newField, shiftPerformer, false)
+                ? new Game(newField, false)
                 : this;
         }
 
