@@ -67,14 +67,6 @@ namespace Puzzle15.Base.Field
 
         public override T this[CellLocation location]
         {
-            get
-            {
-                CheckLocation(location);
-
-                return changedCell.Location.Equals(location)
-                    ? changedCell.Value
-                    : (parent == null ? default(T) : parent[location]);
-            }
             set
             {
                 throw new NotSupportedException(
@@ -83,10 +75,18 @@ namespace Puzzle15.Base.Field
             }
         }
 
-        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        public override T GetValue(CellLocation location)
         {
             CheckLocation(location);
 
+            return changedCell.Location.Equals(location)
+                ? changedCell.Value
+                : (parent == null ? default(T) : parent[location]);
+        }
+
+        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        {
+            CheckLocation(location);
             return new WrappingRectangularField<T>(this, new CellInfo<T>(location, value));
         }
 

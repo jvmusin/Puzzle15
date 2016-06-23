@@ -71,18 +71,15 @@ namespace Puzzle15.Base.Field
 
         public abstract CellLocation GetLocation(T value);
 
-        public abstract T this[CellLocation location] { get; set; }
-
-        public virtual T GetValue(CellLocation location)
+        public virtual T this[CellLocation location]
         {
-            return this[location];
+            get { return GetValue(location); }
+            set { SetValue(value, location); }
         }
 
-        public virtual IRectangularField<T> SetValue(T value, CellLocation location)
-        {
-            this[location] = value;
-            return this;
-        }
+        public abstract T GetValue(CellLocation location);
+
+        public abstract IRectangularField<T> SetValue(T value, CellLocation location);
 
         #endregion
 

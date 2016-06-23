@@ -80,12 +80,6 @@ namespace Puzzle15.Base.Field
 
         public override T this[CellLocation location]
         {
-            get
-            {
-                CheckLocation(location);
-
-                return table[location.Row, location.Column];
-            }
             set
             {
                 throw new NotSupportedException(
@@ -94,10 +88,15 @@ namespace Puzzle15.Base.Field
             }
         }
 
+        public override T GetValue(CellLocation location)
+        {
+            CheckLocation(location);
+            return table[location.Row, location.Column];
+        }
+
         public override IRectangularField<T> SetValue(T value, CellLocation location)
         {
             CheckLocation(location);
-
             return ((ImmutableRectangularField<T>) Clone()).SetValue0(value, location);
         }
 

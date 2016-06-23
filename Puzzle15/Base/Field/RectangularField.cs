@@ -77,26 +77,25 @@ namespace Puzzle15.Base.Field
             return GetLocations(value).FirstOrDefault();
         }
 
-        public override T this[CellLocation location]
+        public override T GetValue(CellLocation location)
         {
-            get
-            {
-                CheckLocation(location);
+            CheckLocation(location);
+            return table[location.Row, location.Column];
+        }
 
-                return table[location.Row, location.Column];
-            }
-            set
-            {
-                CheckLocation(location);
+        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        {
+            CheckLocation(location);
 
-                var valueToRemove = this[location];
-                if (valueToRemove != null)
-                    locations[valueToRemove].Remove(location);
+            var valueToRemove = this[location];
+            if (valueToRemove != null)
+                locations[valueToRemove].Remove(location);
 
-                table[location.Row, location.Column] = value;
-                if (value != null)
-                    GetLocationsSafe(value).Add(location);
-            }
+            table[location.Row, location.Column] = value;
+            if (value != null)
+                GetLocationsSafe(value).Add(location);
+
+            return this;
         }
 
         #endregion
