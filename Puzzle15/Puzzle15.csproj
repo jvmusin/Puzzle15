@@ -47,9 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\CellInfo.cs" />
-    <Compile Include="Base\CellLocation.cs" />
+    <Compile Include="Base\Field\CellInfo.cs" />
+    <Compile Include="Base\Field\CellLocation.cs" />
     <Compile Include="Base\Direction.cs" />
+    <Compile Include="Base\Field\CellConverter.cs" />
+    <Compile Include="Base\Field\ImmutableRectangularField.cs" />
     <Compile Include="Base\Field\IRectangularField.cs" />
     <Compile Include="Base\Field\RectangularFieldBase.cs" />
     <Compile Include="Implementations\Game.cs" />

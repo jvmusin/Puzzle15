@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Puzzle15.Base
+namespace Puzzle15.Base.Field
 {
     public class CellLocation : IComparable<CellLocation>
     {

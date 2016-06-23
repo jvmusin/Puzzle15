@@ -1,19 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
 namespace Puzzle15.Base.Field
 {
-    public class RectangularField<T> : RectangularFieldBase<T>
+    public class ImmutableRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
 
-        public override bool Immutable => false;
+        public override bool Immutable => true;
 
         #region Constructors
 
-        public RectangularField(Size size) : base(size)
+        public ImmutableRectangularField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -23,7 +24,7 @@ namespace Puzzle15.Base.Field
                 locations[defaultValue] = EnumerateLocations().ToList();
         }
 
-        public RectangularField(int height, int width) : this(new Size(width, height))
+        public ImmutableRectangularField(int height, int width) : this(new Size(width, height))
         {
         }
 
@@ -33,31 +34,31 @@ namespace Puzzle15.Base.Field
 
         public override IRectangularField<T> Swap(CellLocation location1, CellLocation location2)
         {
-            var temp = this[location1];
-            this[location1] = this[location2];
-            this[location2] = temp;
+            var value1 = this[location1];
+            var value2 = this[location2];
 
-            return this;
+            return ((ImmutableRectangularField<T>) Clone())
+                .SetValue0(value1, location2)
+                .SetValue0(value2, location1);
         }
 
         public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
         {
-            foreach (var cellInfo in this)
-                this[cellInfo.Location] = getValue(cellInfo);
-
-            return this;
+            return this
+                .Aggregate(Clone() as ImmutableRectangularField<T>,
+                    (field, cellInfo) => field.SetValue0(getValue(cellInfo), cellInfo.Location));
         }
 
         public override IRectangularField<T> Clone()
         {
-            return new RectangularField<T>(Size).Fill(cellInfo => this[cellInfo.Location]);
+            return Fill(cellInfo => this[cellInfo.Location]);
         }
 
         #endregion
 
         #region Indexers
 
-        private List<CellLocation> GetLocationsSafe(T value)
+        private IEnumerable<CellLocation> GetLocationsSafe(T value)
         {
             List<CellLocation> result;
             if (!locations.TryGetValue(value, out result))
@@ -82,14 +83,26 @@ namespace Puzzle15.Base.Field
             get { return table[location.Row, location.Column]; }
             set
             {
-                var valueToRemove = this[location];
-                if (valueToRemove != null)
-                    locations[valueToRemove].Remove(location);
-
-                table[location.Row, location.Column] = value;
-                if (value != null)
-                    GetLocationsSafe(value).Add(location);
+                throw new NotSupportedException(
+                    "The field is immutable. " +
+                    "To change the value, use SetValue() method instead of indexer.");
             }
+        }
+
+        public override T GetValue(CellLocation location)
+        {
+            return this[location];
+        }
+
+        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        {
+            return ((ImmutableRectangularField<T>) Clone()).SetValue0(value, location);
+        }
+
+        private ImmutableRectangularField<T> SetValue0(T value, CellLocation location)
+        {
+            table[location.Row, location.Column] = value;
+            return this;
         }
 
         #endregion

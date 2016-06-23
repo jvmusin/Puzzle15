@@ -9,13 +9,17 @@ namespace Puzzle15.Base.Field
         private readonly IRectangularField<T> parent;
         private readonly CellInfo<T> changedCell;
 
-        public override bool Mutable => false;
+        public override bool Immutable => true;
 
-        public WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell = null)
+        private WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell)
             : base(parent.Size)
         {
             this.parent = parent;
             this.changedCell = changedCell;
+        }
+
+        public WrappingRectangularField(IRectangularField<T> parent) : this(parent, null)
+        {
         }
 
         #region Primary actions
@@ -30,10 +34,11 @@ namespace Puzzle15.Base.Field
                 .SetValue(value2, location1);
         }
 
-        public override IRectangularField<T> Fill(Func<CellLocation, T> getValue)
+        public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
         {
-            return EnumerateLocations().Aggregate(this as IRectangularField<T>,
-                (current, location) => current.SetValue(getValue(location), location));
+            return this
+                .Aggregate(this as IRectangularField<T>,
+                    (field, cellInfo) => field.SetValue(getValue(cellInfo), cellInfo.Location));
         }
 
         public override IRectangularField<T> Clone()
@@ -65,7 +70,12 @@ namespace Puzzle15.Base.Field
                     ? changedCell.Value
                     : parent[location];
             }
-            set { throw new NotImplementedException(); }
+            set
+            {
+                throw new NotSupportedException(
+                    "The field is immutable. " +
+                    "To change the value, use SetValue() method instead of indexer.");
+            }
         }
 
         public override T GetValue(CellLocation location)

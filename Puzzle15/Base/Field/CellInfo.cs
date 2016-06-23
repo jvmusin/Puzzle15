@@ -1,4 +1,4 @@
-﻿namespace Puzzle15.Base
+﻿namespace Puzzle15.Base.Field
 {
     public class CellInfo<T>
     {

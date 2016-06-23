@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace Puzzle15.Base.Field
         public int Height => Size.Height;
         public int Width => Size.Width;
 
-        public abstract bool Mutable { get; }
+        public abstract bool Immutable { get; }
 
         protected RectangularFieldBase(Size size)
         {
@@ -23,7 +22,7 @@ namespace Puzzle15.Base.Field
 
         public abstract IRectangularField<T> Swap(CellLocation location1, CellLocation location2);
 
-        public abstract IRectangularField<T> Fill(Func<CellLocation, T> getValue);
+        public abstract IRectangularField<T> Fill(CellConverter<T, T> getValue);
 
         public abstract IRectangularField<T> Clone();
 
@@ -97,11 +96,11 @@ namespace Puzzle15.Base.Field
             return ToString(info => info.Value.ToString());
         }
 
-        public string ToString(Func<CellInfo<T>, string> getCapture, string lineSeparator = "\n")
+        public string ToString(CellConverter<T, string> toString, string lineSeparator = "\n")
         {
             var result = Helpers.CreateTable<string>(Height, Width);
             foreach (var info in this)
-                result[info.Location.Row][info.Location.Column] = getCapture(info);
+                result[info.Location.Row][info.Location.Column] = toString(info);
 
             return string.Join(lineSeparator,
                 result.Select(row => string.Join(" ", row)));

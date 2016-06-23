@@ -18,15 +18,20 @@ namespace Puzzle15.Tests
 
         protected static IRectangularField<T> FieldFromArray<T>(Size size, params T[] values)
         {
-            return new RectangularField<T>(size)
-                .Fill(location => values[location.Row*size.Width + location.Column]);
+            return FieldFromConstructor(sz => new RectangularField<T>(sz), size, values);
         }
 
         protected static IRectangularField<T> FieldFromConstructor<T>(
-            Func<Size, IRectangularField<T>> constructor, Size size, params T[] values)
+            Func<Size, IRectangularField<T>> createInstance, Size size, params T[] values)
         {
-            return constructor(size)
-                .Fill(location => values[location.Row*size.Width + location.Column]);
+            return createInstance(size)
+                .Fill(cellInfo =>
+                {
+                    var location = cellInfo.Location;
+                    var row = location.Row;
+                    var column = location.Column;
+                    return values[row * size.Width + column];
+                });
         }
 
         protected static void Swap<T>(ref T obj1, ref T obj2)
