@@ -18,7 +18,7 @@ namespace Puzzle15.Implementations
         public IGame Shift(int value)
         {
             var newField = ShiftPerformer.Perform(field, value);
-            return ShiftPerformer.MutatesGame
+            return ShiftPerformer.MutatesField
                 ? this
                 : new Game(newField, ShiftPerformer, false);
         }

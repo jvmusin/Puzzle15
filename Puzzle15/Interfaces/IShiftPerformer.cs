@@ -4,7 +4,7 @@ namespace Puzzle15.Interfaces
 {
     public interface IShiftPerformer
     {
-        bool MutatesGame { get; }
+        bool MutatesField { get; }
         IRectangularField<int> Perform(IRectangularField<int> field, int value);
     }
 }

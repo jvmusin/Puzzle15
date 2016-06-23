@@ -9,14 +9,14 @@ namespace Puzzle15.Implementations.ShiftPerforming
     {
         private readonly FieldCloner cloneField;
 
-        public bool MutatesGame { get; }
+        public bool MutatesField { get; }
 
-        public ShiftPerformer(bool mutatesGame, FieldCloner fieldCloner = null)
+        public ShiftPerformer(bool mutatesField, FieldCloner fieldCloner = null)
         {
             if (fieldCloner == null)
                 fieldCloner = field => field;
 
-            MutatesGame = mutatesGame;
+            MutatesField = mutatesField;
             cloneField = fieldCloner;
         }
 
