@@ -1,5 +1,4 @@
-﻿using Puzzle15.Base;
-using Puzzle15.Base.Field;
+﻿using Puzzle15.Base.Field;
 using Puzzle15.Interfaces;
 
 namespace Puzzle15.Implementations
@@ -7,20 +6,21 @@ namespace Puzzle15.Implementations
     internal class Game : IGame
     {
         private readonly IRectangularField<int> field;
-        public IShiftPerformer ShiftPerformer { get; }
+        private readonly IShiftPerformer shiftPerformer;
 
         internal Game(IRectangularField<int> field, IShiftPerformer shiftPerformer, bool needCloneField = true)
         {
             this.field = needCloneField ? field.Clone() : field;
-            ShiftPerformer = shiftPerformer;
+            this.shiftPerformer = shiftPerformer;
         }
 
         public IGame Shift(int value)
         {
-            var newField = ShiftPerformer.Perform(field, value);
-            return ShiftPerformer.MutatesField
+            var newField = shiftPerformer.Perform(field, value);
+
+            return field.Immutable
                 ? this
-                : new Game(newField, ShiftPerformer, false);
+                : new Game(newField, shiftPerformer, false);
         }
 
         #region Indexers

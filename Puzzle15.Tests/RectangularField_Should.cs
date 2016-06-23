@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base;
 using Puzzle15.Base.Field;
 
 namespace Puzzle15.Tests

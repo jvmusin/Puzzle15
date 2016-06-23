@@ -1,30 +1,20 @@
 ﻿using System;
 using System.Drawing;
-using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base.Field;
-using Puzzle15.Implementations.GameFieldValidating;
-using Puzzle15.Implementations.ShiftPerforming;
-using Puzzle15.Interfaces;
+using Puzzle15.Implementations;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
     public class ImmutableGameShiftPerformer_Should : TestBase
     {
-        private IGameFieldValidator gameFieldValidator;
-        private IShiftPerformerFactory shiftPerformerFactory;
-        private IShiftPerformer shiftPerformer;
+        private ShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
-            gameFieldValidator = StrictFake<IGameFieldValidator>();
-            A.CallTo(() => gameFieldValidator.Validate(A<RectangularField<int>>._)).Returns(ValidationResult.Success());
-
-            shiftPerformerFactory = new ImmutableGameShiftPerformerFactory();
-            shiftPerformer = shiftPerformerFactory.Create();
+            shiftPerformer = new ShiftPerformer();
         }
 
         [Test]
