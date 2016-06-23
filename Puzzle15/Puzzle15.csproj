@@ -59,7 +59,7 @@
     <Compile Include="Implementations\ShiftPerforming\FieldCloner.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
     <Compile Include="Implementations\ShiftPerforming\WrappableGameShiftPerformerFactory.cs" />
-    <Compile Include="Base\Field\WrappedRectangularField.cs" />
+    <Compile Include="Base\Field\WrappingRectangularField.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
     <Compile Include="Interfaces\IGameFieldValidator.cs" />

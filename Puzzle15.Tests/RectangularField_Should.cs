@@ -17,7 +17,7 @@ namespace Puzzle15.Tests
             get
             {
                 yield return size => new RectangularField<int>(size);
-                yield return size => new WrappedRectangularField<int>(new RectangularField<int>(size));
+                yield return size => new WrappingRectangularField<int>(new RectangularField<int>(size));
             }
         }
 
@@ -26,7 +26,7 @@ namespace Puzzle15.Tests
             get
             {
                 yield return size => new RectangularField<string>(size);
-                yield return size => new WrappedRectangularField<string>(new RectangularField<string>(size));
+                yield return size => new WrappingRectangularField<string>(new RectangularField<string>(size));
             }
         }
 

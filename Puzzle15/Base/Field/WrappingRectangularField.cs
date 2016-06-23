@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace Puzzle15.Base.Field
 {
-    public class WrappedRectangularField<T> : RectangularFieldBase<T>
+    public class WrappingRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly IRectangularField<T> parent;
         private readonly CellInfo<T> changedCell;
 
         public override bool Mutable => false;
 
-        public WrappedRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell = null)
+        public WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell = null)
             : base(parent.Size)
         {
             this.parent = parent;
@@ -38,7 +38,7 @@ namespace Puzzle15.Base.Field
 
         public override IRectangularField<T> Clone()
         {
-            return new WrappedRectangularField<T>(this);
+            return new WrappingRectangularField<T>(this);
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace Puzzle15.Base.Field
 
         public override IRectangularField<T> SetValue(T value, CellLocation location)
         {
-            return new WrappedRectangularField<T>(this, new CellInfo<T>(location, value));
+            return new WrappingRectangularField<T>(this, new CellInfo<T>(location, value));
         }
 
         #endregion

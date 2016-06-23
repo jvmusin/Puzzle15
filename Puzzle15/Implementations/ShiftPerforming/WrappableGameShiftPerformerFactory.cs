@@ -8,9 +8,9 @@ namespace Puzzle15.Implementations.ShiftPerforming
         public IShiftPerformer Create()
         {
             return ShiftPerformer.Immutable(
-                field => field is WrappedRectangularField<int>
+                field => field is WrappingRectangularField<int>
                     ? field
-                    : new WrappedRectangularField<int>(field));
+                    : new WrappingRectangularField<int>(field));
         }
     }
 }
