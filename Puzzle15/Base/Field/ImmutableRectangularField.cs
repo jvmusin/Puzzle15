@@ -58,7 +58,7 @@ namespace Puzzle15.Base.Field
 
         #region Indexers
 
-        private IEnumerable<CellLocation> GetLocationsSafe(T value)
+        private List<CellLocation> GetLocationsSafe(T value)
         {
             List<CellLocation> result;
             if (!locations.TryGetValue(value, out result))
@@ -80,7 +80,12 @@ namespace Puzzle15.Base.Field
 
         public override T this[CellLocation location]
         {
-            get { return table[location.Row, location.Column]; }
+            get
+            {
+                CheckLocation(location);
+
+                return table[location.Row, location.Column];
+            }
             set
             {
                 throw new NotSupportedException(
@@ -89,19 +94,23 @@ namespace Puzzle15.Base.Field
             }
         }
 
-        public override T GetValue(CellLocation location)
-        {
-            return this[location];
-        }
-
         public override IRectangularField<T> SetValue(T value, CellLocation location)
         {
+            CheckLocation(location);
+
             return ((ImmutableRectangularField<T>) Clone()).SetValue0(value, location);
         }
 
         private ImmutableRectangularField<T> SetValue0(T value, CellLocation location)
         {
+            var valueToRemove = this[location];
+            if (valueToRemove != null)
+                locations[valueToRemove].Remove(location);
+
             table[location.Row, location.Column] = value;
+            if (value != null)
+                GetLocationsSafe(value).Add(location);
+
             return this;
         }
 

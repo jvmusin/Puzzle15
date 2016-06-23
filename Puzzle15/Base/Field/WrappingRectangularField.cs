@@ -18,8 +18,11 @@ namespace Puzzle15.Base.Field
             this.changedCell = changedCell;
         }
 
-        public WrappingRectangularField(IRectangularField<T> parent) : this(parent, null)
+        public WrappingRectangularField(IRectangularField<T> parent)
+            : this(parent, new CellInfo<T>(new CellLocation(-1, -1), default(T)))
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
         }
 
         #region Primary actions
@@ -52,23 +55,25 @@ namespace Puzzle15.Base.Field
 
         public override IEnumerable<CellLocation> GetLocations(T value)
         {
-            return EnumerateLocations().Where(x => Helpers.StructuralEquals(this[x], value));
+            return EnumerateLocations().Where(x => this[x].Equals(value));
         }
 
         public override CellLocation GetLocation(T value)
         {
-            return changedCell != null && Helpers.StructuralEquals(changedCell.Value, value)
+            return changedCell.Value.Equals(value)
                 ? changedCell.Location
-                : parent.GetLocation(value);
+                : parent?.GetLocation(value);
         }
 
         public override T this[CellLocation location]
         {
             get
             {
-                return changedCell != null && changedCell.Location.Equals(location)
+                CheckLocation(location);
+
+                return changedCell.Location.Equals(location)
                     ? changedCell.Value
-                    : parent[location];
+                    : (parent == null ? default(T) : parent[location]);
             }
             set
             {
@@ -78,13 +83,10 @@ namespace Puzzle15.Base.Field
             }
         }
 
-        public override T GetValue(CellLocation location)
-        {
-            return this[location];
-        }
-
         public override IRectangularField<T> SetValue(T value, CellLocation location)
         {
+            CheckLocation(location);
+
             return new WrappingRectangularField<T>(this, new CellInfo<T>(location, value));
         }
 

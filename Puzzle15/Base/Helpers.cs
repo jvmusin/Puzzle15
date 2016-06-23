@@ -1,30 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Drawing;
 using System.Linq;
 
 namespace Puzzle15.Base
 {
     public static class Helpers
     {
-        public static T[][] CreateTable<T>(int height, int width)
+        public static T[][] CreateTable<T>(Size size)
         {
-            if (height < 0) throw new ArgumentOutOfRangeException(nameof(height));
-            if (width < 0)  throw new ArgumentOutOfRangeException(nameof(width));
-
-            return Enumerable
-                .Range(0, height)
-                .Select(x => new T[width])
+            return Enumerable.Range(0, size.Height)
+                .Select(x => new T[size.Width])
                 .ToArray();
-        }
-
-        public static bool StructuralEquals<T>(T obj1, T obj2)
-        {
-            return StructuralComparisons.StructuralEqualityComparer.Equals(obj1, obj2);
-        }
-
-        public static int StructuralGetHashCode<T>(T obj)
-        {
-            return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
         }
     }
 }

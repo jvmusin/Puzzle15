@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArraySpecification.cs" />
     <Compile Include="GameFieldValidator_Should.cs" />
     <Compile Include="ImmutableGameShiftPerformer_Should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

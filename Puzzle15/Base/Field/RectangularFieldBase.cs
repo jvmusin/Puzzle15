@@ -26,6 +26,19 @@ namespace Puzzle15.Base.Field
 
         public abstract IRectangularField<T> Clone();
 
+        public bool Contains(CellLocation location)
+        {
+            return
+                0 <= location.Row && location.Row < Height &&
+                0 <= location.Column && location.Column < Width;
+        }
+
+        protected void CheckLocation(CellLocation location)
+        {
+            if (!Contains(location))
+                throw new InvalidLocationException(location);
+        }
+
         #endregion
 
         #region Enumerators
@@ -88,7 +101,7 @@ namespace Puzzle15.Base.Field
 
         public override int GetHashCode()
         {
-            return Helpers.StructuralGetHashCode(this.ToArray());
+            return ToString().GetHashCode();
         }
 
         public override string ToString()
@@ -98,7 +111,8 @@ namespace Puzzle15.Base.Field
 
         public string ToString(CellConverter<T, string> toString, string lineSeparator = "\n")
         {
-            var result = Helpers.CreateTable<string>(Height, Width);
+            var result = Helpers.CreateTable<string>(Size);
+
             foreach (var info in this)
                 result[info.Location.Row][info.Location.Column] = toString(info);
 

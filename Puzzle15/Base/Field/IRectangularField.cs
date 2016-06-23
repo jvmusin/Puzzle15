@@ -15,6 +15,8 @@ namespace Puzzle15.Base.Field
         IRectangularField<T> Fill(CellConverter<T, T> getValue);
         IRectangularField<T> Clone();
 
+        bool Contains(CellLocation location);
+
         IEnumerable<CellLocation> EnumerateLocations();
 
         IEnumerable<CellLocation> GetLocations(T value);

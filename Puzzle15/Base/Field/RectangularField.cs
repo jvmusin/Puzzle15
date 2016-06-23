@@ -79,9 +79,16 @@ namespace Puzzle15.Base.Field
 
         public override T this[CellLocation location]
         {
-            get { return table[location.Row, location.Column]; }
+            get
+            {
+                CheckLocation(location);
+
+                return table[location.Row, location.Column];
+            }
             set
             {
+                CheckLocation(location);
+
                 var valueToRemove = this[location];
                 if (valueToRemove != null)
                     locations[valueToRemove].Remove(location);

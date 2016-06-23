@@ -52,12 +52,13 @@
     <Compile Include="Base\Direction.cs" />
     <Compile Include="Base\Field\CellConverter.cs" />
     <Compile Include="Base\Field\ImmutableRectangularField.cs" />
+    <Compile Include="Base\Field\InvalidLocationException.cs" />
     <Compile Include="Base\Field\IRectangularField.cs" />
     <Compile Include="Base\Field\RectangularFieldBase.cs" />
+    <Compile Include="Base\Helpers.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
     <Compile Include="Implementations\GameFieldValidator.cs" />
-    <Compile Include="Base\Helpers.cs" />
     <Compile Include="Base\Field\WrappingRectangularField.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
