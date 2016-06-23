@@ -19,8 +19,8 @@ namespace Puzzle15.Implementations
             var newField = shiftPerformer.Perform(field, value);
 
             return field.Immutable
-                ? this
-                : new Game(newField, shiftPerformer, false);
+                ? new Game(newField, shiftPerformer, false)
+                : this;
         }
 
         #region Indexers
