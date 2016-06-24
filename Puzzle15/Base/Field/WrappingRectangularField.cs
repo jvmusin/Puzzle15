@@ -14,15 +14,16 @@ namespace Puzzle15.Base.Field
         private WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell)
             : base(parent.Size)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
+
             this.parent = parent;
             this.changedCell = changedCell;
         }
 
         public WrappingRectangularField(IRectangularField<T> parent)
-            : this(parent, new CellInfo<T>(new CellLocation(-1, -1), default(T)))
+            : this(parent, null)
         {
-            if (parent == null)
-                throw new ArgumentNullException(nameof(parent));
         }
 
         #region Primary actions
@@ -60,9 +61,9 @@ namespace Puzzle15.Base.Field
 
         public override CellLocation GetLocation(T value)
         {
-            return changedCell.Value.Equals(value)
-                ? changedCell.Location
-                : parent?.GetLocation(value);
+            if (changedCell != null && changedCell.Value.Equals(value))
+                return changedCell.Location;
+            return parent.GetLocation(value);
         }
 
         public override T this[CellLocation location]
@@ -79,9 +80,9 @@ namespace Puzzle15.Base.Field
         {
             CheckLocation(location);
 
-            return changedCell.Location.Equals(location)
-                ? changedCell.Value
-                : (parent == null ? default(T) : parent[location]);
+            if (changedCell != null && changedCell.Location.Equals(location))
+                return changedCell.Value;
+            return parent.GetValue(location);
         }
 
         public override IRectangularField<T> SetValue(T value, CellLocation location)

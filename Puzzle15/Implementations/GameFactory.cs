@@ -10,6 +10,8 @@ namespace Puzzle15.Implementations
 
         public GameFactory(IGameFieldValidator gameFieldValidator)
         {
+            if (gameFieldValidator == null)
+                throw new ArgumentNullException(nameof(gameFieldValidator));
             GameFieldValidator = gameFieldValidator;
         }
 
@@ -17,7 +19,7 @@ namespace Puzzle15.Implementations
         {
             var validationResult = GameFieldValidator.Validate(initialField);
             if (!validationResult.Successful)
-                throw new ArgumentException(validationResult.Cause);
+                throw new ArgumentException(validationResult.Cause, nameof(initialField));
 
             return new Game(initialField);
         }
