@@ -19,7 +19,7 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void NotFail_WheneFieldIsCorrect()
+        public void NotFail_WhenFieldIsCorrect()
         {
             var size = new Size(2, 2);
             var elements = new[]{0, 3, 1, 2};
