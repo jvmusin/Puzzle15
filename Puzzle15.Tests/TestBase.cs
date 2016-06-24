@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using FakeItEasy;
 using Puzzle15.Base.Field;
 
@@ -22,7 +21,7 @@ namespace Puzzle15.Tests
         }
 
         protected static IRectangularField<T> FieldFromConstructor<T>(
-            Func<Size, IRectangularField<T>> createInstance, Size size, params T[] values)
+            FieldConstructor<T> createInstance, Size size, params T[] values)
         {
             return createInstance(size)
                 .Fill(cellInfo =>

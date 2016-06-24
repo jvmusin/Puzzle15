@@ -20,6 +20,7 @@ namespace Puzzle15.Base
                 case Direction.Left:  return new CellLocation(0, -1);
                 case Direction.Up:    return new CellLocation(-1, 0);
                 case Direction.Right: return new CellLocation(0, 1);
+                // ReSharper disable once PossibleNullReferenceException
                 default: throw null;    // Never throws
             }
         }

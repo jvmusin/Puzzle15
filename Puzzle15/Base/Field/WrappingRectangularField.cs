@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,9 +14,6 @@ namespace Puzzle15.Base.Field
         private WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell)
             : base(parent.Size)
         {
-            if (parent == null)
-                throw new ArgumentNullException(nameof(parent));
-
             this.parent = parent;
             this.changedCell = changedCell;
         }
@@ -25,6 +21,8 @@ namespace Puzzle15.Base.Field
         public WrappingRectangularField(IRectangularField<T> parent)
             : this(parent, null)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent));
         }
 
         #region Primary actions

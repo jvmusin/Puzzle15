@@ -11,47 +11,33 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class RectangularField_Should : TestBase
     {
-        private static IEnumerable<Func<Size, IRectangularField<int>>> Ctors
+        #region Constructors and fields
+
+        private static IEnumerable<FieldConstructor<T>> GetConstructors<T>()
         {
-            get
-            {
-                yield return size => new RectangularField<int>(size);
-                yield return size => new ImmutableRectangularField<int>(size);
-                yield return size => new WrappingRectangularField<int>(new RectangularField<int>(size));
-            }
+            yield return size => new RectangularField<T>(size);
+            yield return size => new ImmutableRectangularField<T>(size);
+            yield return size => new WrappingRectangularField<T>(new RectangularField<T>(size));
         }
 
-        private static IEnumerable<Func<Size, IRectangularField<string>>> CtorsWithString
-        {
-            get
-            {
-                yield return size => new RectangularField<string>(size);
-                yield return size => new ImmutableRectangularField<string>(size);
-                yield return size => new WrappingRectangularField<string>(new RectangularField<string>(size));
-            }
-        }
+        private static IEnumerable<FieldConstructor<int>> Constructors => GetConstructors<int>();
+
+        private static IEnumerable<FieldConstructor<string>> ConstructorsWithString => GetConstructors<string>();
+
+        private static IEnumerable<FieldConstructor<int[]>> ConstructorsWithArray => GetConstructors<int[]>();
 
         private static IEnumerable<IRectangularField<int>> Fields
         {
-            get { return Ctors.Select(ctor => FieldFromConstructor(ctor, DefaultFieldSize, DefaultFieldData)); }
+            get { return Constructors.Select(constructor => FieldFromConstructor(constructor, DefaultFieldSize, DefaultFieldData)); }
         }
 
-        private static IEnumerable<IRectangularField<string>> FieldsWithString
-        {
-            get
-            {
-                var size = DefaultFieldSize;
-                var elementsCount = size.Height * size.Width;
-                var elements = new string[elementsCount];
-                return CtorsWithString.Select(ctor => FieldFromConstructor(ctor, size, elements));
-            }
-        }
+        #endregion
 
         #region Size tests
 
         [Test]
         public void WorkWithDifferentSizesCorrectly(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor,
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor,
             [Values(-1232, 0, 133)] int width,
             [Values(-13123, 0, 2)] int height)
         {
@@ -59,11 +45,11 @@ namespace Puzzle15.Tests
 
             if (size.Height <= 0 || size.Width <= 0)
             {
-                new Action(() => ctor(size)).ShouldThrow<Exception>();
+                new Action(() => constructor(size)).ShouldThrow<Exception>();
             }
             else
             {
-                var field = ctor(size);
+                var field = constructor(size);
 
                 field.Size.Should().Be(size);
                 field.Height.Should().Be(size.Height);
@@ -77,15 +63,15 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElements_WhenNotConnectedByEdge(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
 
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 4, 5, 17,
                 9, 0, 0);
-            var expected = FieldFromConstructor(ctor, size,
+            var expected = FieldFromConstructor(constructor, size,
                 17, 2, 3,
                 4, 5, 1,
                 9, 0, 0);
@@ -97,11 +83,11 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElementAtSamePlace(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
 
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 4, 5, 17,
                 9, 0, 0);
@@ -122,15 +108,15 @@ namespace Puzzle15.Tests
 
         [Test]
         public void SwapElementsOnClonedField(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
             var cloned = original.Clone();
-            var expected = FieldFromConstructor(ctor, size,
+            var expected = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 1, 1,
                 1, 9, 1);
@@ -202,14 +188,14 @@ namespace Puzzle15.Tests
 
         [Test]
         public void EnumerateCorrectly_AfterChanges(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
-            var expected = FieldFromConstructor(ctor, size,
+            var expected = FieldFromConstructor(constructor, size,
                 10, 9, 1,
                 5, 3, 1,
                 1, 1, 11);
@@ -231,17 +217,12 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_ForNonNulls(
-            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
+            [ValueSource(nameof(ConstructorsWithString))] FieldConstructor<string> constructor)
         {
-            var field = FieldFromConstructor(ctor, new Size(3, 3),
+            var field = FieldFromConstructor(constructor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
-
-            if (field is WrappingRectangularField<string>)
-            {
-                Console.WriteLine("aaa");
-            }
 
             field.GetLocations("asda").Should()
                 .BeEquivalentTo(new CellLocation(0, 1), new CellLocation(1, 2), new CellLocation(2, 0));
@@ -249,9 +230,9 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_ForNulls(
-            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
+            [ValueSource(nameof(ConstructorsWithString))] FieldConstructor<string> constructor)
         {
-            var field = FieldFromConstructor(ctor, new Size(3, 3),
+            var field = FieldFromConstructor(constructor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -262,9 +243,9 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_WhenNotFound(
-            [ValueSource(nameof(CtorsWithString))] Func<Size, IRectangularField<string>> ctor)
+            [ValueSource(nameof(ConstructorsWithString))] FieldConstructor<string> constructor)
         {
-            var field = FieldFromConstructor(ctor, new Size(3, 3),
+            var field = FieldFromConstructor(constructor, new Size(3, 3),
                 "aa", "asda", null,
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
@@ -274,10 +255,10 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_AfterChangesByIndex(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
@@ -318,10 +299,10 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_AfterSwaps(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
@@ -365,10 +346,10 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnLocations_WithoutChangingClonedField(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 5, 3,
                 0, 2, 8,
                 7, 4, 6);
@@ -401,7 +382,7 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnCorrectValues(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
             var values = new[]
@@ -410,7 +391,7 @@ namespace Puzzle15.Tests
                 5, 9, 1,
                 1, 1, 1
             };
-            var original = FieldFromConstructor(ctor, size, values.ToArray());
+            var original = FieldFromConstructor(constructor, size, values.ToArray());
 
             foreach (var location in original.EnumerateLocations())
                 original[location].Should().Be(values[location.Row * size.Width + location.Column]);
@@ -418,10 +399,10 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnCorrectValuesByIndex_AfterChanges(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1);
@@ -444,10 +425,10 @@ namespace Puzzle15.Tests
 
         [Test]
         public void ReturnCorrectValuesByIndex_OnClonedField(
-            [ValueSource(nameof(Ctors))] Func<Size, IRectangularField<int>> ctor)
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
-            var original = FieldFromConstructor(ctor, size,
+            var original = FieldFromConstructor(constructor, size,
                 1, 2, 3,
                 5, 9, 1,
                 1, 1, 1).Clone();
@@ -466,6 +447,144 @@ namespace Puzzle15.Tests
 
             foreach (var location in original.EnumerateLocations())
                 original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
+        }
+
+        #endregion
+
+        #region Equals tests
+
+        [Test]
+        public void BeEqual_ToSelf(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            // ReSharper disable once EqualExpressionComparison
+            field.Equals(field).Should().BeTrue();
+        }
+
+        [Test]
+        public void BeEqual_ToClonedField(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            field.Equals(field.Clone()).Should().BeTrue();
+        }
+
+        [Test]
+        public void BeEqual_ToEquivalentField(
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
+        {
+            var size = new Size(3, 3);
+            var field1 = FieldFromConstructor(constructor, size,
+                1, 2, 3,
+                4, 9, 0,
+                -1, 6, 9);
+            var field2 = FieldFromConstructor(constructor, size,
+                1, 2, 3,
+                4, 9, 0,
+                -1, 6, 9);
+
+            field1.Equals(field2).Should().BeTrue();
+        }
+
+        [Test]
+        public void NotBeEqual_ToNotEquivalentField(
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
+        {
+            var size = new Size(3, 3);
+            var field1 = FieldFromConstructor(constructor, size,
+                1, 2, 3,
+                4, 9, 0,
+                -1, 6, 8);
+            var field2 = FieldFromConstructor(constructor, size,
+                1, 2, 3,
+                4, 9, 0,
+                -1, 6, 9);
+
+            field1.Equals(field2).Should().BeFalse();
+        }
+
+        [Test]
+        public void NotBeEqual_ToNull(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            field.Equals(null).Should().BeFalse();
+        }
+
+        [Test]
+        public void BeEqual_WhenEqualArraysUsed(
+            [ValueSource(nameof(ConstructorsWithArray))] FieldConstructor<int[]> constructor)
+        {
+            var size = new Size(2, 2);
+
+            var field1 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, null);
+            var field2 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, null);
+
+            field1.Equals(field2).Should().BeTrue();
+        }
+
+        [Test]
+        public void BeNotEqual_WhenNotEqualArraysUsed(
+            [ValueSource(nameof(ConstructorsWithArray))] FieldConstructor<int[]> constructor)
+        {
+            var size = new Size(2, 2);
+
+            var field1 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, new int[0]);
+            var field2 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, null);
+
+            field1.Equals(field2).Should().BeFalse();
+        }
+
+        #endregion
+
+        #region GetHashCode tests
+
+        [Test]
+        public void ReturnSameHash_WhenCalledTwice(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            var hash1 = field.GetHashCode();
+            var hash2 = field.GetHashCode();
+
+            hash1.Should().Be(hash2);
+        }
+
+        [Test]
+        public void ReturnSameHash_ForEqualFields(
+            [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
+        {
+            var field1 = FieldFromConstructor(constructor, DefaultFieldSize, DefaultFieldData);
+            var field2 = FieldFromConstructor(constructor, DefaultFieldSize, DefaultFieldData);
+
+            var hash1 = field1.GetHashCode();
+            var hash2 = field2.GetHashCode();
+
+            hash1.Should().Be(hash2);
+        }
+
+        [Test]
+        public void ReturnSameHash_ForFieldsWithArray(
+            [ValueSource(nameof(ConstructorsWithArray))] FieldConstructor<int[]> constructor)
+        {
+            var size = new Size(2, 2);
+
+            var field1 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, null);
+            var field2 = FieldFromConstructor(constructor, size,
+                new[] { 1, 2 }, new[] { 3, 4 },
+                new[] { 4, 4 }, null);
+
+            var hash1 = field1.GetHashCode();
+            var hash2 = field2.GetHashCode();
+
+            hash1.Should().Be(hash2);
         }
 
         #endregion

@@ -15,9 +15,8 @@
 
         protected bool Equals(CellInfo<T> other)
         {
-            return
-                Equals(Location, other.Location) &&
-                Value.Equals(other.Value);
+            return Location.Equals(other.Location) &&
+                   Helpers.Equals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +27,7 @@
 
         public override int GetHashCode()
         {
-            return Location.GetHashCode() ^ Value.GetHashCode();
+            return Location.GetHashCode() ^ Helpers.GetHashCode(Value);
         }
 
         public override string ToString()

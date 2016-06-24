@@ -20,14 +20,19 @@ namespace Puzzle15.Base
 
         public static T[][] CreateTable<T>(Size size) => CreateTable<T>(size.Height, size.Width);
 
-        public static bool Equals<T>(T obj1, T obj2)
+        public static bool Equals<T>(T x, T y)
         {
-            return StructuralComparisons.StructuralEqualityComparer.Equals(obj1, obj2);
+            return StructuralComparisons.StructuralEqualityComparer.Equals(x, y);
         }
 
         public static int GetHashCode<T>(T obj)
         {
             return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
+        }
+
+        public static int Compare(object x, object y)
+        {
+            return StructuralComparisons.StructuralComparer.Compare(x, y);
         }
     }
 }

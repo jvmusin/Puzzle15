@@ -101,7 +101,7 @@ namespace Puzzle15.Base.Field
 
         public override int GetHashCode()
         {
-            return ToString().GetHashCode();
+            return Helpers.GetHashCode(this.ToArray());
         }
 
         public override string ToString()
