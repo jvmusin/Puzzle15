@@ -19,12 +19,12 @@ namespace Puzzle15.Implementations
             if (field == null)
                 return "Field shouldn't be null";
 
-            var elementCount = field.Height * field.Width;
-            if (elementCount == 0)
-                return "Field doesn't have any cell";
+            var fieldSize = field.Size;
+            if (fieldSize.Height <= 0 || fieldSize.Width <= 0)
+                return "Field should have positive size";
 
             var elements = field.Select(x => x.Value).Distinct().ToList();
-            if (elements.Count != elementCount)
+            if (elements.Count != field.Count())
                 return "Not all elements are distinct";
 
             var min = elements.Min();

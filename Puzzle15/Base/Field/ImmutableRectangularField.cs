@@ -45,7 +45,7 @@ namespace Puzzle15.Base.Field
         public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
         {
             return this
-                .Aggregate(Clone() as ImmutableRectangularField<T>,
+                .Aggregate(new ImmutableRectangularField<T>(Size),
                     (field, cellInfo) => field.SetValue0(getValue(cellInfo), cellInfo.Location));
         }
 

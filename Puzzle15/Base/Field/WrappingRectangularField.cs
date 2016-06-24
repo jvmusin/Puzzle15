@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,7 +57,7 @@ namespace Puzzle15.Base.Field
 
         public override IEnumerable<CellLocation> GetLocations(T value)
         {
-            return EnumerateLocations().Where(x => this[x].Equals(value));
+            return EnumerateLocations().Where(x => Helpers.Equals(this[x], value));
         }
 
         public override CellLocation GetLocation(T value)

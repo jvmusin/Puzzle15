@@ -238,6 +238,11 @@ namespace Puzzle15.Tests
                 "rr", null, "asda",
                 "asda", "fdfg", "lel");
 
+            if (field is WrappingRectangularField<string>)
+            {
+                Console.WriteLine("aaa");
+            }
+
             field.GetLocations("asda").Should()
                 .BeEquivalentTo(new CellLocation(0, 1), new CellLocation(1, 2), new CellLocation(2, 0));
         }
