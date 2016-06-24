@@ -19,7 +19,7 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void CreateFieldCorrectly()
+        public void NotFail_WheneFieldIsCorrect()
         {
             var size = new Size(2, 2);
             var elements = new[]{0, 3, 1, 2};
@@ -32,7 +32,7 @@ namespace Puzzle15.Tests
         }
 
         [Test, TestCaseSource(nameof(FailCreatingCases))]
-        public void FailCreating_WhenFieldIsIncorrect(RectangularField<int> field)
+        public void Fail_WhenFieldIsIncorrect(RectangularField<int> field)
         {
             var validationResult = gameFieldValidator.Validate(field);
 

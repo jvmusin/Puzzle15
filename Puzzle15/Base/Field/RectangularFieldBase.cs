@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Puzzle15.Base.Field
 
         protected RectangularFieldBase(Size size)
         {
+            if (size.Height < 1 || size.Width < 1)
+                throw new ArgumentException("Field should have positive size", nameof(size));
             Size = size;
         }
 

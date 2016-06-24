@@ -16,6 +16,7 @@ namespace Puzzle15.Tests
             get
             {
                 yield return size => new RectangularField<int>(size);
+                yield return size => new ImmutableRectangularField<int>(size);
                 yield return size => new WrappingRectangularField<int>(new RectangularField<int>(size));
             }
         }
@@ -25,6 +26,7 @@ namespace Puzzle15.Tests
             get
             {
                 yield return size => new RectangularField<string>(size);
+                yield return size => new ImmutableRectangularField<string>(size);
                 yield return size => new WrappingRectangularField<string>(new RectangularField<string>(size));
             }
         }
@@ -55,7 +57,7 @@ namespace Puzzle15.Tests
         {
             var size = new Size(width, height);
 
-            if (size.Height < 0 || size.Width < 0)
+            if (size.Height <= 0 || size.Width <= 0)
             {
                 new Action(() => ctor(size)).ShouldThrow<Exception>();
             }
