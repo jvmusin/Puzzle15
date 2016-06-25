@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using RectangularField.Core;
+using RectangularField.Utils;
 
-namespace Puzzle15.Base.Field
+namespace RectangularField.Implementations
 {
     public abstract class RectangularFieldBase<T> : IRectangularField<T>
     {
@@ -16,7 +18,7 @@ namespace Puzzle15.Base.Field
 
         protected RectangularFieldBase(Size size)
         {
-            if (size.Height < 1 || size.Width < 1)
+            if (size.Height < 0 || size.Width < 0)
                 throw new ArgumentException("Field should have positive size", nameof(size));
             Size = size;
         }

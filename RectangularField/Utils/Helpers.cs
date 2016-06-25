@@ -3,14 +3,14 @@ using System.Collections;
 using System.Drawing;
 using System.Linq;
 
-namespace Puzzle15.Base
+namespace RectangularField.Utils
 {
     public static class Helpers
     {
         public static T[][] CreateTable<T>(int height, int width)
         {
-            if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-            if (width <= 0)  throw new ArgumentOutOfRangeException(nameof(width));
+            if (height < 0) throw new ArgumentOutOfRangeException(nameof(height));
+            if (width < 0)  throw new ArgumentOutOfRangeException(nameof(width));
 
             return Enumerable
                 .Range(0, height)

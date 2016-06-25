@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Puzzle15.Base.Field
+namespace RectangularField.Core
 {
     public class InvalidLocationException : ArgumentOutOfRangeException
     {

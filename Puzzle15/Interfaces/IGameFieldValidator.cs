@@ -1,5 +1,5 @@
-﻿using Puzzle15.Base.Field;
-using Puzzle15.Implementations;
+﻿using Puzzle15.Implementations;
+using RectangularField.Core;
 
 namespace Puzzle15.Interfaces
 {

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using Puzzle15.Base.Field;
+using RectangularField.Core;
 
-namespace Puzzle15.Tests
+namespace RectangularField.Utils
 {
     public delegate IRectangularField<T> FieldConstructor<T>(Size size);
 }

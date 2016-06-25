@@ -1,6 +1,6 @@
-﻿using Puzzle15.Base.Field;
+﻿using RectangularField.Core;
 
-namespace Puzzle15.Base
+namespace RectangularField.Utils
 {
     public enum Direction
     {

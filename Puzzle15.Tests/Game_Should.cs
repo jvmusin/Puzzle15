@@ -2,9 +2,10 @@
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base.Field;
 using Puzzle15.Implementations;
 using Puzzle15.Interfaces;
+using RectangularField.Implementations;
+using RectangularField.Utils;
 
 namespace Puzzle15.Tests
 {
@@ -29,11 +30,13 @@ namespace Puzzle15.Tests
             gameFactory = new GameFactory(new GameFieldValidator());
         }
 
+        #region Consistency tests
+
         [Test]
         public void NotChangeOurField_AfterCreating()
         {
             var fieldConstructor = GetMutableFieldConstructor<int>();
-            var field = FieldFromConstructor(fieldConstructor, new Size(3,3),
+            var field = FieldFromConstructor(fieldConstructor, new Size(3, 3),
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
@@ -47,6 +50,10 @@ namespace Puzzle15.Tests
             game.Should().NotBeEquivalentTo(field);
             field.Should().BeEquivalentTo(clonedField);
         }
+
+        #endregion
+
+        #region Shift tests
 
         [Test]
         public void ShiftCorrectly_WhenValueOnFieldAndConnectedByEdge()
@@ -84,6 +91,10 @@ namespace Puzzle15.Tests
             game.Should().BeEquivalentTo(field);
         }
 
+        #endregion
+
+        #region Creating new game on shift tests
+
         [Test]
         public void ReturnSameGameOnShift_WhenFieldIsMutable()
         {
@@ -117,5 +128,7 @@ namespace Puzzle15.Tests
                 7, 0, 8);
             newGame.Should().BeEquivalentTo(expectedField);
         }
+
+        #endregion
     }
 }

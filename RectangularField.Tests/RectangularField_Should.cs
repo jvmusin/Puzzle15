@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base.Field;
+using RectangularField.Core;
+using RectangularField.Implementations;
+using RectangularField.Utils;
 
-namespace Puzzle15.Tests
+namespace RectangularField.Tests
 {
     [TestFixture]
     public class RectangularField_Should : TestBase
@@ -28,7 +30,11 @@ namespace Puzzle15.Tests
 
         private static IEnumerable<IRectangularField<int>> Fields
         {
-            get { return Constructors.Select(constructor => FieldFromConstructor(constructor, DefaultFieldSize, DefaultFieldData)); }
+            get
+            {
+                return Constructors.Select(
+                    constructor => FieldFromConstructor(constructor, DefaultFieldSize, DefaultFieldData));
+            }
         }
 
         #endregion
@@ -43,7 +49,7 @@ namespace Puzzle15.Tests
         {
             var size = new Size(width, height);
 
-            if (size.Height <= 0 || size.Width <= 0)
+            if (size.Height < 0 || size.Width < 0)
             {
                 new Action(() => constructor(size)).ShouldThrow<Exception>();
             }
@@ -362,7 +368,7 @@ namespace Puzzle15.Tests
             original = original.Swap(new CellLocation(1, 2), new CellLocation(0, 2));
             original = original.Swap(new CellLocation(0, 1), new CellLocation(0, 0));
 
-            var expectedOrder = new[] { 5, 2, 8, 0, 3, 1, 6, 4, 7 };
+            var expectedOrder = new[] {5, 2, 8, 0, 3, 1, 6, 4, 7};
             original.EnumerateLocations()
                 .OrderBy(x => x)
                 .Zip(expectedOrder, (location, number) => new
@@ -394,7 +400,7 @@ namespace Puzzle15.Tests
             var original = FieldFromConstructor(constructor, size, values.ToArray());
 
             foreach (var location in original.EnumerateLocations())
-                original[location].Should().Be(values[location.Row * size.Width + location.Column]);
+                original[location].Should().Be(values[location.Row*size.Width + location.Column]);
         }
 
         [Test]
@@ -420,7 +426,7 @@ namespace Puzzle15.Tests
             };
 
             foreach (var location in original.EnumerateLocations())
-                original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
+                original[location].Should().Be(expected[location.Row*size.Width + location.Column]);
         }
 
         [Test]
@@ -446,7 +452,7 @@ namespace Puzzle15.Tests
             };
 
             foreach (var location in original.EnumerateLocations())
-                original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
+                original[location].Should().Be(expected[location.Row*size.Width + location.Column]);
         }
 
         [Test]
@@ -561,11 +567,11 @@ namespace Puzzle15.Tests
             var size = new Size(2, 2);
 
             var field1 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, null);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, null);
             var field2 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, null);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, null);
 
             field1.Equals(field2).Should().BeTrue();
         }
@@ -577,11 +583,11 @@ namespace Puzzle15.Tests
             var size = new Size(2, 2);
 
             var field1 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, new int[0]);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, new int[0]);
             var field2 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, null);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, null);
 
             field1.Equals(field2).Should().BeFalse();
         }
@@ -618,11 +624,11 @@ namespace Puzzle15.Tests
             var size = new Size(2, 2);
 
             var field1 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, null);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, null);
             var field2 = FieldFromConstructor(constructor, size,
-                new[] { 1, 2 }, new[] { 3, 4 },
-                new[] { 4, 4 }, null);
+                new[] {1, 2}, new[] {3, 4},
+                new[] {4, 4}, null);
 
             var hash1 = field1.GetHashCode();
             var hash2 = field2.GetHashCode();

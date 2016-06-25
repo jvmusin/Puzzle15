@@ -1,4 +1,6 @@
-﻿namespace Puzzle15.Base.Field
+﻿using RectangularField.Utils;
+
+namespace RectangularField.Core
 {
     public class CellInfo<T>
     {

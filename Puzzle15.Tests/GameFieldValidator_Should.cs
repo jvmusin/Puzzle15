@@ -3,8 +3,8 @@ using System.Drawing;
 using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
-using Puzzle15.Base.Field;
 using Puzzle15.Implementations;
+using RectangularField.Core;
 
 namespace Puzzle15.Tests
 {

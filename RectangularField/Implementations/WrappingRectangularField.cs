@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RectangularField.Core;
+using RectangularField.Utils;
 
-namespace Puzzle15.Base.Field
+namespace RectangularField.Implementations
 {
     public class WrappingRectangularField<T> : RectangularFieldBase<T>
     {

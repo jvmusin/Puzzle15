@@ -1,6 +1,6 @@
 ﻿using System;
-using Puzzle15.Base.Field;
 using Puzzle15.Interfaces;
+using RectangularField.Core;
 
 namespace Puzzle15.Implementations
 {

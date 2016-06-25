@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using RectangularField.Core;
 
-namespace Puzzle15.Base.Field
+namespace RectangularField.Implementations
 {
     public class RectangularField<T> : RectangularFieldBase<T>
     {

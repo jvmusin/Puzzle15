@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15", "Puzzle15\Puzzle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.Tests", "Puzzle15.Tests\Puzzle15.Tests.csproj", "{D067F660-B710-4DE8-805F-5FAD5A31360C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField", "RectangularField\RectangularField.csproj", "{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField.Tests", "RectangularField.Tests\RectangularField.Tests.csproj", "{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{D067F660-B710-4DE8-805F-5FAD5A31360C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D067F660-B710-4DE8-805F-5FAD5A31360C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D067F660-B710-4DE8-805F-5FAD5A31360C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

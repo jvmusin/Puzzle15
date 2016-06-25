@@ -1,4 +1,4 @@
-﻿namespace Puzzle15.Base.Field
+﻿namespace RectangularField.Core
 {
     public delegate TResult CellConverter<TValue, out TResult>(CellInfo<TValue> cellInfo);
 }
