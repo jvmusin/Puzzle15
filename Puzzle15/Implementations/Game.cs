@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Puzzle15.Base.Field;
 using Puzzle15.Interfaces;
@@ -32,6 +34,15 @@ namespace Puzzle15.Implementations
                 ? new Game(newField, false)
                 : this;
         }
+
+
+        #region Enumerators
+
+        public IEnumerator<CellInfo<int>> GetEnumerator() => field.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        #endregion
 
         #region Indexers
 
