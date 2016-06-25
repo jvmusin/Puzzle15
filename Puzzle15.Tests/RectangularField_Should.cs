@@ -62,7 +62,7 @@ namespace Puzzle15.Tests
         #region Swap tests
 
         [Test]
-        public void SwapElements_WhenNotConnectedByEdge(
+        public void SwapElements(
             [ValueSource(nameof(Constructors))] FieldConstructor<int> constructor)
         {
             var size = new Size(3, 3);
@@ -103,7 +103,7 @@ namespace Puzzle15.Tests
             [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
             new Action(() => field.Swap(new CellLocation(0, 0), new CellLocation(3, 0)))
-                .ShouldThrow<Exception>();
+                .ShouldThrowExactly<InvalidLocationException>();
         }
 
         [Test]
@@ -449,6 +449,51 @@ namespace Puzzle15.Tests
                 original[location].Should().Be(expected[location.Row * size.Width + location.Column]);
         }
 
+        [Test]
+        public void FailSetIndexer_WhenFieldIsImmutable(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            var cloned = field.Clone();
+            var set = new Action(() => field[new CellLocation(0, 0)] = 123);
+
+            if (field.Immutable)
+            {
+                set.ShouldThrow<Exception>();
+            }
+            else
+            {
+                set.ShouldNotThrow();
+                field.Should().NotBeEquivalentTo(cloned);
+                cloned[new CellLocation(0, 0)] = 123;
+            }
+
+            field.Should().BeEquivalentTo(cloned);
+        }
+
+        [Test]
+        public void FailSetValue_WhenLocationOutOfRange(
+            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+        {
+            var cloned = field.Clone();
+            var size = field.Size;
+
+            var failingLocations = new[]
+            {
+                new CellLocation(-1, -1),
+                new CellLocation(size.Height, 0),
+                new CellLocation(0, size.Width),
+                new CellLocation(size.Height + 100500, size.Width + 15),
+                new CellLocation(-1, 0),
+                new CellLocation(0, -1)
+            };
+
+            foreach (var location in failingLocations)
+            {
+                new Action(() => field = field.SetValue(0, location)).ShouldThrowExactly<InvalidLocationException>();
+                field.Should().BeEquivalentTo(cloned);
+            }
+        }
+
         #endregion
 
         #region Equals tests
@@ -549,10 +594,8 @@ namespace Puzzle15.Tests
         public void ReturnSameHash_WhenCalledTwice(
             [ValueSource(nameof(Fields))] IRectangularField<int> field)
         {
-            var hash1 = field.GetHashCode();
-            var hash2 = field.GetHashCode();
-
-            hash1.Should().Be(hash2);
+            field.GetHashCode().Should()
+                .Be(field.GetHashCode());
         }
 
         [Test]
