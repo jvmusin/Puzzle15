@@ -16,21 +16,8 @@ namespace Puzzle15.Implementations
         public int Turns { get; }
         public bool Finished => field.Equals(target);
         public IGame<TCell> PreviousState => GetPreviousState();
+        public IReadOnlyRectangularField<TCell> Target => GetTarget();
 
-        public IReadOnlyRectangularField<TCell> Target
-        {
-            get
-            {
-                var readOnlyTarget = target as IReadOnlyRectangularField<TCell>;
-
-                if (readOnlyTarget == null)
-                    throw new NotSupportedException(
-                        $"Target should implement {nameof(IReadOnlyRectangularField<TCell>)} interface");
-
-                return readOnlyTarget;
-            }
-        }
-        
         private Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer,
             IGame<TCell> previousState)
         {
@@ -68,6 +55,17 @@ namespace Puzzle15.Implementations
                 throw new NotSupportedException("Previous state is available only for immutable fields");
 
             return previousState;
+        }
+
+        private IReadOnlyRectangularField<TCell> GetTarget()
+        {
+            var readOnlyTarget = target as IReadOnlyRectangularField<TCell>;
+
+            if (readOnlyTarget == null)
+                throw new NotSupportedException(
+                    $"Target should implement {nameof(IReadOnlyRectangularField<TCell>)} interface");
+
+            return readOnlyTarget;
         }
 
         #region Enumerators
