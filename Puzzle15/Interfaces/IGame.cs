@@ -3,11 +3,17 @@ using RectangularField.Core;
 
 namespace Puzzle15.Interfaces
 {
-    public interface IGame : IEnumerable<CellInfo<int>>
+    public interface IGame<TCell> : IEnumerable<CellInfo<TCell>>
     {
-        IGame Shift(int value);
+        int Turns { get; }
+        bool Finished { get; }
+        IGame<TCell> PreviousState { get; }
+        IReadOnlyRectangularField<TCell> Target { get; }
 
-        CellLocation GetLocation(int value);
-        int this[CellLocation location] { get; }
+        IGame<TCell> Shift(TCell value);
+        IGame<TCell> Shift(CellLocation valueLocation);
+
+        CellLocation GetLocation(TCell value);
+        TCell this[CellLocation location] { get; }
     }
 }

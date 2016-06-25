@@ -50,9 +50,13 @@
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
     <Compile Include="Implementations\GameFieldValidator.cs" />
+    <Compile Include="Interfaces\IShiftPerformerFactory.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
     <Compile Include="Interfaces\IGameFieldValidator.cs" />
+    <Compile Include="Interfaces\IShiftPerformer.cs" />
+    <Compile Include="Implementations\ShiftPerformer.cs" />
+    <Compile Include="Implementations\ShiftPerformerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Implementations\ValidationResult.cs" />
   </ItemGroup>

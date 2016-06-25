@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\IReadOnlyRectangularField.cs" />
     <Compile Include="Utils\Direction.cs" />
     <Compile Include="Core\CellConverter.cs" />
     <Compile Include="Core\CellInfo.cs" />

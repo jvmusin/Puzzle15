@@ -26,7 +26,7 @@ namespace Puzzle15.Tests
             var elements = new[]{0, 3, 1, 2};
             var field = FieldFromArray(size, elements);
 
-            var validationResult = gameFieldValidator.Validate(field);
+            var validationResult = gameFieldValidator.Validate(field, field);
 
             validationResult.Successful.Should().BeTrue();
             validationResult.Cause.Should().BeNull();
@@ -35,7 +35,7 @@ namespace Puzzle15.Tests
         [Test, TestCaseSource(nameof(FailCreatingCases))]
         public void Fail_WhenFieldIsIncorrect(IRectangularField<int> field)
         {
-            var validationResult = gameFieldValidator.Validate(field);
+            var validationResult = gameFieldValidator.Validate(field, field);
 
             validationResult.Successful.Should().BeFalse();
             validationResult.Cause.Should().NotBeNullOrEmpty();

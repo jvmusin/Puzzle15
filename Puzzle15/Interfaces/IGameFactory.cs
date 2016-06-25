@@ -2,8 +2,8 @@
 
 namespace Puzzle15.Interfaces
 {
-    public interface IGameFactory
+    public interface IGameFactory<TCell>
     {
-        IGame Create(IRectangularField<int> initialField);
+        IGame<TCell> Create(IRectangularField<TCell> initialField, IRectangularField<TCell> target);
     }
 }

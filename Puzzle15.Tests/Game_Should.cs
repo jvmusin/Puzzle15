@@ -4,6 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Implementations;
 using Puzzle15.Interfaces;
+using RectangularField.Core;
 using RectangularField.Implementations;
 using RectangularField.Utils;
 
@@ -12,7 +13,9 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class Game_Should : TestBase
     {
-        private IGameFactory gameFactory;
+        private IGameFieldValidator<int> gameFieldValidator;
+        private IShiftPerformerFactory<int> shiftPerformerFactory;
+        private IGameFactory<int> gameFactory;
 
         private static FieldConstructor<T> GetImmutableFieldConstructor<T>()
         {
@@ -27,8 +30,12 @@ namespace Puzzle15.Tests
         [SetUp]
         public void SetUp()
         {
-            gameFactory = new GameFactory(new GameFieldValidator());
+            gameFieldValidator = new GameFieldValidator();
+            shiftPerformerFactory = new ShiftPerformerFactory();
+            gameFactory = new GameFactory<int>(gameFieldValidator, shiftPerformerFactory);
         }
+
+        private IGame<int> CreateGame(IRectangularField<int> field) => gameFactory.Create(field, field);
 
         #region Consistency tests
 
@@ -41,7 +48,7 @@ namespace Puzzle15.Tests
                 6, 0, 4,
                 7, 5, 8);
             var clonedField = field.Clone();
-            var game = gameFactory.Create(field);
+            var game = CreateGame(field);
 
             field.Should().BeEquivalentTo(clonedField);
 
@@ -64,7 +71,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
-            var game = gameFactory.Create(field);
+            var game = CreateGame(field);
 
             game.Shift(5);
 
@@ -85,7 +92,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 7, 5, 8,
                 6, 0, 4);
-            var game = gameFactory.Create(field);
+            var game = CreateGame(field);
 
             new Action(() => game.Shift(value)).ShouldThrow<Exception>();
             game.Should().BeEquivalentTo(field);
@@ -96,19 +103,6 @@ namespace Puzzle15.Tests
         #region Creating new game on shift tests
 
         [Test]
-        public void ReturnSameGameOnShift_WhenFieldIsMutable()
-        {
-            var fieldConstructor = GetMutableFieldConstructor<int>();
-            var field = FieldFromConstructor(fieldConstructor, new Size(3, 3),
-                1, 2, 3,
-                6, 0, 4,
-                7, 5, 8);
-            var game = gameFactory.Create(field);
-
-            game.Shift(5).Should().BeSameAs(game);
-        }
-
-        [Test]
         public void ReturnNewGameOnShift_WhenFieldIsImmutable()
         {
             var fieldConstructor = GetImmutableFieldConstructor<int>();
@@ -117,7 +111,7 @@ namespace Puzzle15.Tests
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
-            var game = gameFactory.Create(field);
+            var game = CreateGame(field);
 
             var newGame = game.Shift(5);
             newGame.Should().NotBeSameAs(game);

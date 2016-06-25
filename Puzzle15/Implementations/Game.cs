@@ -1,44 +1,78 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Puzzle15.Interfaces;
 using RectangularField.Core;
 
 namespace Puzzle15.Implementations
 {
-    internal class Game : IGame
+    internal class Game<TCell> : IGame<TCell>
     {
-        private readonly IRectangularField<int> field;
+        private readonly IRectangularField<TCell> field;
+        private readonly IRectangularField<TCell> target;
+        private readonly IShiftPerformer<TCell> shiftPerformer;
+        private readonly IGame<TCell> previousState;
 
-        private Game(IRectangularField<int> field, bool needCloneField)
+        public int Turns { get; }
+        public bool Finished => field.Equals(target);
+        public IGame<TCell> PreviousState => GetPreviousState();
+
+        public IReadOnlyRectangularField<TCell> Target
         {
-            this.field = needCloneField ? field.Clone() : field;
+            get
+            {
+                var readOnlyTarget = target as IReadOnlyRectangularField<TCell>;
+
+                if (readOnlyTarget == null)
+                    throw new NotSupportedException(
+                        $"Target should implement {nameof(IReadOnlyRectangularField<TCell>)} interface");
+
+                return readOnlyTarget;
+            }
+        }
+        
+        private Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer,
+            IGame<TCell> previousState)
+        {
+            field = initialField;
+            this.target = target;
+
+            this.shiftPerformer = shiftPerformer;
+
+            Turns = previousState?.Turns + 1 ?? 0;
+            this.previousState = previousState;
         }
 
-        internal Game(IRectangularField<int> field) : this(field, true)
+        public Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
+            : this(initialField.Clone(), target.Clone(), shiftPerformer, null)
         {
+            if (shiftPerformer == null)
+                throw new ArgumentNullException(nameof(shiftPerformer));
         }
 
-        public IGame Shift(int value)
+        public IGame<TCell> Shift(TCell value)
         {
-            var empty = field.GetLocation(0);
-            var toShift = field.GetLocation(value);
-
-            if (!empty.ByEdgeNeighbours.Contains(toShift))
-                throw new ArgumentException("Requested cell is not a neighbour of empty cell");
-
-            var newField = field.Swap(empty, toShift);
-
-            return field.Immutable
-                ? new Game(newField, false)
-                : this;
+            var newField = shiftPerformer.Perform(field, value);
+            return new Game<TCell>(newField, target, shiftPerformer, this);
         }
 
+        public IGame<TCell> Shift(CellLocation valueLocation)
+        {
+            var newField = shiftPerformer.Perform(field, valueLocation);
+            return new Game<TCell>(newField, target, shiftPerformer, this);
+        }
+
+        private IGame<TCell> GetPreviousState()
+        {
+            if (!field.Immutable)
+                throw new NotSupportedException("Previous state is available only for immutable fields");
+
+            return previousState;
+        }
 
         #region Enumerators
 
-        public IEnumerator<CellInfo<int>> GetEnumerator() => field.GetEnumerator();
+        public IEnumerator<CellInfo<TCell>> GetEnumerator() => field.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -46,34 +80,9 @@ namespace Puzzle15.Implementations
 
         #region Indexers
 
-        public CellLocation GetLocation(int value) => field.GetLocation(value);
+        public CellLocation GetLocation(TCell value) => field.GetLocation(value);
 
-        public int this[CellLocation location] => field[location];
-
-        #endregion
-
-        #region Equals, GetHashCode and ToString methods
-
-        protected bool Equals(Game other)
-        {
-            return field.Equals(other.field);
-        }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as Game;
-            return other != null && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return field.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return field.ToString();
-        }
+        public TCell this[CellLocation location] => field[location];
 
         #endregion
     }
