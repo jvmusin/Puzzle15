@@ -35,16 +35,9 @@ namespace Puzzle15.Implementations
 
         #region Indexers
 
-        public CellLocation GetLocation(int value)
-        {
-            return field.GetLocation(value);
-        }
+        public CellLocation GetLocation(int value) => field.GetLocation(value);
 
-        public int this[CellLocation location]
-        {
-            get { return field[location]; }
-            protected set { field[location] = value; }
-        }
+        public int this[CellLocation location] => field[location];
 
         #endregion
 
