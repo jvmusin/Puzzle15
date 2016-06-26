@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField", "Rectang
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField.Tests", "RectangularField.Tests\RectangularField.Tests.csproj", "{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15GUI", "Puzzle15GUI\Puzzle15GUI.csproj", "{49DC02D7-51E1-4F8B-9B19-1B10F5E11960}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49DC02D7-51E1-4F8B-9B19-1B10F5E11960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49DC02D7-51E1-4F8B-9B19-1B10F5E11960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49DC02D7-51E1-4F8B-9B19-1B10F5E11960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49DC02D7-51E1-4F8B-9B19-1B10F5E11960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
