@@ -1,5 +1,6 @@
 ﻿using Ninject;
 using Puzzle15.Implementations;
+using Puzzle15.Implementations.ClassicGame;
 using Puzzle15.Interfaces;
 using RectangularField.Factories;
 

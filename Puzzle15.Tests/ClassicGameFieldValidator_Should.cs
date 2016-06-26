@@ -5,6 +5,7 @@ using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Implementations;
+using Puzzle15.Implementations.ClassicGame;
 using RectangularField.Core;
 
 namespace Puzzle15.Tests

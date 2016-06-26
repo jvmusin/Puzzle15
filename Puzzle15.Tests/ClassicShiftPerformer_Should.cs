@@ -3,6 +3,7 @@ using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Implementations;
+using Puzzle15.Implementations.ClassicGame;
 
 namespace Puzzle15.Tests
 {

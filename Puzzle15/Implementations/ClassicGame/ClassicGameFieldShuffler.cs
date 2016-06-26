@@ -1,7 +1,7 @@
 ﻿using Puzzle15.Interfaces;
 using RectangularField.Core;
 
-namespace Puzzle15.Implementations
+namespace Puzzle15.Implementations.ClassicGame
 {
     public class ClassicGameFieldShuffler: IGameFieldShuffler<int>
     {
