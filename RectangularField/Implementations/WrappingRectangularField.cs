@@ -6,7 +6,7 @@ using RectangularField.Utils;
 
 namespace RectangularField.Implementations
 {
-    public class WrappingRectangularField<T> : RectangularFieldBase<T>
+    internal class WrappingRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly IRectangularField<T> parent;
         private readonly CellInfo<T> changedCell;

@@ -7,10 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="78*"/>
-            <ColumnDefinition Width="439*"/>
-        </Grid.ColumnDefinitions>
+        <Button x:Name="Button" Content="Click me" Click="button_Click" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Width="75"/>
 
     </Grid>
 </Window>

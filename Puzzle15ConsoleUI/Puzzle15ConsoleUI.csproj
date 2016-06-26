@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{607D3BAB-5C75-493E-8407-6692728AA88E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RectangularField</RootNamespace>
-    <AssemblyName>RectangularField</AssemblyName>
+    <RootNamespace>Puzzle15ConsoleUI</RootNamespace>
+    <AssemblyName>Puzzle15ConsoleUI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -41,24 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\IReadOnlyRectangularField.cs" />
-    <Compile Include="Factories\ImmutableRectangularFieldFactory.cs" />
-    <Compile Include="Factories\IRectangularFieldFactory.cs" />
-    <Compile Include="Factories\RectangularFieldFactory.cs" />
-    <Compile Include="Factories\WrappingRectangularFieldFactory.cs" />
-    <Compile Include="Utils\Direction.cs" />
-    <Compile Include="Core\CellConverter.cs" />
-    <Compile Include="Core\CellInfo.cs" />
-    <Compile Include="Core\CellLocation.cs" />
-    <Compile Include="Implementations\ImmutableRectangularField.cs" />
-    <Compile Include="Core\InvalidLocationException.cs" />
-    <Compile Include="Core\IRectangularField.cs" />
-    <Compile Include="Implementations\RectangularField.cs" />
-    <Compile Include="Implementations\RectangularFieldBase.cs" />
-    <Compile Include="Implementations\WrappingRectangularField.cs" />
-    <Compile Include="Utils\Helpers.cs" />
+    <Compile Include="ClassicGameConsoleUI.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\RectangularFieldFactoryExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Puzzle15\Puzzle15.csproj">
+      <Project>{4429B0DC-6535-486E-A5BE-3C12E643C794}</Project>
+      <Name>Puzzle15</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RectangularField\RectangularField.csproj">
+      <Project>{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}</Project>
+      <Name>RectangularField</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

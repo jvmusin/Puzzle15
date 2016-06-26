@@ -8,20 +8,21 @@ namespace Puzzle15.Implementations
 {
     public class Game<TCell> : IGame<TCell>
     {
-        private readonly IRectangularField<TCell> field;
+        private readonly IRectangularField<TCell> currentField;
         private readonly IRectangularField<TCell> target;
         private readonly IShiftPerformer<TCell> shiftPerformer;
         private readonly IGame<TCell> previousState;
 
         public int Turns { get; }
-        public bool Finished => field.Equals(target);
+        public bool Finished => currentField.Equals(target);
         public IGame<TCell> PreviousState => GetPreviousState();
-        public IReadOnlyRectangularField<TCell> Target => GetTarget();
+        public IReadOnlyRectangularField<TCell> CurrentField => GetAsReadOnlyField(currentField);
+        public IReadOnlyRectangularField<TCell> Target => GetAsReadOnlyField(target);
 
         private Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer,
             IGame<TCell> previousState)
         {
-            field = initialField;
+            currentField = initialField;
             this.target = target;
 
             this.shiftPerformer = shiftPerformer;
@@ -39,38 +40,38 @@ namespace Puzzle15.Implementations
 
         public IGame<TCell> Shift(TCell value)
         {
-            var newField = shiftPerformer.PerformShift(field, value);
+            var newField = shiftPerformer.PerformShift(currentField, value);
             return new Game<TCell>(newField, target, shiftPerformer, this);
         }
 
         public IGame<TCell> Shift(CellLocation valueLocation)
         {
-            var newField = shiftPerformer.PerformShift(field, valueLocation);
+            var newField = shiftPerformer.PerformShift(currentField, valueLocation);
             return new Game<TCell>(newField, target, shiftPerformer, this);
         }
 
         private IGame<TCell> GetPreviousState()
         {
-            if (!field.Immutable)
+            if (!currentField.Immutable)
                 throw new NotSupportedException("Previous state is available only for immutable fields");
 
             return previousState;
         }
 
-        private IReadOnlyRectangularField<TCell> GetTarget()
+        private IReadOnlyRectangularField<TCell> GetAsReadOnlyField(IRectangularField<TCell> field)
         {
-            var readOnlyTarget = target as IReadOnlyRectangularField<TCell>;
+            var readOnlyField = field as IReadOnlyRectangularField<TCell>;
 
-            if (readOnlyTarget == null)
+            if (readOnlyField == null)
                 throw new NotSupportedException(
                     $"Target should implement {nameof(IReadOnlyRectangularField<TCell>)} interface");
 
-            return readOnlyTarget;
+            return readOnlyField;
         }
 
         #region Enumerators
 
-        public IEnumerator<CellInfo<TCell>> GetEnumerator() => field.GetEnumerator();
+        public IEnumerator<CellInfo<TCell>> GetEnumerator() => currentField.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -78,9 +79,9 @@ namespace Puzzle15.Implementations
 
         #region Indexers
 
-        public CellLocation GetLocation(TCell value) => field.GetLocation(value);
+        public CellLocation GetLocation(TCell value) => currentField.GetLocation(value);
 
-        public TCell this[CellLocation location] => field[location];
+        public TCell this[CellLocation location] => currentField[location];
 
         #endregion
     }

@@ -5,7 +5,7 @@ using RectangularField.Core;
 
 namespace RectangularField.Implementations
 {
-    public class RectangularField<T> : RectangularFieldBase<T>
+    internal class RectangularField<T> : RectangularFieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
