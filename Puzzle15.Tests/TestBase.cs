@@ -8,12 +8,17 @@ namespace Puzzle15.Tests
 {
     public abstract class TestBase
     {
-        protected static IRectangularField<T> FieldFromArray<T>(Size size, params T[] values)
+        protected static IRectangularField<T> CreateMutableField<T>(Size size, params T[] values)
         {
-            return FieldFromConstructor(sz => new RectangularField<T>(sz), size, values);
+            return CreateField(sz => new RectangularField<T>(sz), size, values);
         }
 
-        protected static IRectangularField<T> FieldFromConstructor<T>(
+        protected static IRectangularField<T> CreateImmutableField<T>(Size size, params T[] values)
+        {
+            return CreateField(sz => new ImmutableRectangularField<T>(sz), size, values);
+        }
+
+        protected static IRectangularField<T> CreateField<T>(
             FieldConstructor<T> createInstance, Size size, params T[] values)
         {
             return createInstance(size)

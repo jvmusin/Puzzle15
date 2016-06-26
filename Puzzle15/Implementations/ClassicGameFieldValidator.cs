@@ -4,7 +4,7 @@ using RectangularField.Core;
 
 namespace Puzzle15.Implementations
 {
-    public class GameFieldValidator : IGameFieldValidator<int>
+    public class ClassicGameFieldValidator : IGameFieldValidator<int>
     {
         public ValidationResult Validate(IRectangularField<int> initialField, IRectangularField<int> target)
         {

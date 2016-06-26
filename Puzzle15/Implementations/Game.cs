@@ -6,7 +6,7 @@ using RectangularField.Core;
 
 namespace Puzzle15.Implementations
 {
-    internal class Game<TCell> : IGame<TCell>
+    public class Game<TCell> : IGame<TCell>
     {
         private readonly IRectangularField<TCell> field;
         private readonly IRectangularField<TCell> target;
@@ -30,7 +30,7 @@ namespace Puzzle15.Implementations
             this.previousState = previousState;
         }
 
-        public Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
+        internal Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
             : this(initialField.Clone(), target.Clone(), shiftPerformer, null)
         {
             if (shiftPerformer == null)
@@ -39,13 +39,13 @@ namespace Puzzle15.Implementations
 
         public IGame<TCell> Shift(TCell value)
         {
-            var newField = shiftPerformer.Perform(field, value);
+            var newField = shiftPerformer.PerformShift(field, value);
             return new Game<TCell>(newField, target, shiftPerformer, this);
         }
 
         public IGame<TCell> Shift(CellLocation valueLocation)
         {
-            var newField = shiftPerformer.Perform(field, valueLocation);
+            var newField = shiftPerformer.PerformShift(field, valueLocation);
             return new Game<TCell>(newField, target, shiftPerformer, this);
         }
 

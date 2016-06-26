@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using Puzzle15.Implementations;
 using Puzzle15.Interfaces;
 using RectangularField.Core;
-using RectangularField.Implementations;
-using RectangularField.Utils;
 
 namespace Puzzle15.Tests
 {
@@ -17,21 +18,16 @@ namespace Puzzle15.Tests
         private IShiftPerformerFactory<int> shiftPerformerFactory;
         private IGameFactory<int> gameFactory;
 
-        private static FieldConstructor<T> GetImmutableFieldConstructor<T>()
-        {
-            return sz => new ImmutableRectangularField<T>(sz);
-        }
-
-        private static FieldConstructor<T> GetMutableFieldConstructor<T>()
-        {
-            return sz => new RectangularField<T>(sz);
-        }
-
         [SetUp]
         public void SetUp()
         {
-            gameFieldValidator = new GameFieldValidator();
-            shiftPerformerFactory = new ShiftPerformerFactory();
+            gameFieldValidator = StrictFake<IGameFieldValidator<int>>();
+            A.CallTo(() => gameFieldValidator.Validate(null, null))
+                .WhenArgumentsMatch(x => true)
+                .Returns(ValidationResult.Success());
+
+            shiftPerformerFactory = new ClassicShiftPerformerFactory();
+
             gameFactory = new GameFactory<int>(gameFieldValidator, shiftPerformerFactory);
         }
 
@@ -40,10 +36,9 @@ namespace Puzzle15.Tests
         #region Consistency tests
 
         [Test]
-        public void NotChangeOurField_AfterCreating()
+        public void NotChangeInitialField_AfterActions()
         {
-            var fieldConstructor = GetMutableFieldConstructor<int>();
-            var field = FieldFromConstructor(fieldConstructor, new Size(3, 3),
+            var field = CreateMutableField(new Size(3, 3),
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
@@ -58,44 +53,205 @@ namespace Puzzle15.Tests
             field.Should().BeEquivalentTo(clonedField);
         }
 
-        #endregion
-
-        #region Shift tests
-
         [Test]
-        public void ShiftCorrectly_WhenValueOnFieldAndConnectedByEdge()
+        public void HasZeroTurns_AfterCreating()
         {
-            var fieldConstructor = GetMutableFieldConstructor<int>();
-            var size = new Size(3, 3);
-            var field = FieldFromConstructor(fieldConstructor, size,
-                1, 2, 3,
-                6, 0, 4,
-                7, 5, 8);
+            var field = CreateMutableField(new Size(3, 3),
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
             var game = CreateGame(field);
 
-            game.Shift(5);
-
-            var expectedField = FieldFromConstructor(fieldConstructor, size,
-                1, 2, 3,
-                6, 5, 4,
-                7, 0, 8);
-            game.Should().BeEquivalentTo(expectedField);
+            game.Turns.Should().Be(0);
         }
 
         [Test]
-        public void FailShift_WhenValueNotOnFieldOrNotConnectdByEdge(
-            [Values(-1, 10, 100, 8, 1, 2, 0)] int value)
+        public void IncrementTurns_OnShift()
         {
-            var fieldConstructor = GetMutableFieldConstructor<int>();
-            var size = new Size(3, 3);
-            var field = FieldFromConstructor(fieldConstructor, size,
+            var field = CreateMutableField(new Size(3, 3),
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
+            var game = CreateGame(field);
+            var shifts = new[] { 2, 3, 4, 8, 8 };
+
+            for (var i = 0; i < shifts.Length; i++)
+            {
+                game = game.Shift(shifts[i]);
+                game.Turns.Should().Be(i + 1);
+            }
+        }
+
+        [Test]
+        public void RememberTarget()
+        {
+            var initialField = CreateImmutableField(new Size(3, 3),
                 1, 2, 3,
-                7, 5, 8,
-                6, 0, 4);
+                6, 0, 4,
+                7, 5, 8);
+            var target = CreateMutableField(new Size(3, 3),
+                1, 0, 5,
+                6, 7, 2,
+                3, 4, 8);
+            var game = gameFactory.Create(initialField, target);
+            var shifts = new[] {2, 3, 4, 8, 8};
+
+            game.Target.Should().Be(target);
+            foreach (var valueToShift in shifts)
+            {
+                game = game.Shift(valueToShift);
+                game.Target.Should().Be(target);
+            }
+            for (var i = shifts.Length; i > 0; i--)
+            {
+                game = game.PreviousState;
+                game.Target.Should().Be(target);
+            }
+        }
+
+        [Test]
+        public void FailOnGettingTarget_IfTargetIsNotReadOnlyRectangularField()
+        {
+            var initialField = CreateImmutableField(new Size(3, 3),
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
+            var target = StrictFake<IRectangularField<int>>();
+            A.CallTo(() => target.Clone()).Returns(target);
+            var game = gameFactory.Create(initialField, target);
+
+            new Action(() =>
+            {
+                // ReSharper disable once UnusedVariable
+                var x = game.Target;
+            }).ShouldThrow<Exception>();
+        }
+
+        #endregion
+
+        #region Using new field in games created by Shift tests
+
+        [Test]
+        public void CreateNewGameWithShiftedElement()
+        {
+            var size = new Size(3, 3);
+            var field = CreateMutableField(size,
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
             var game = CreateGame(field);
 
-            new Action(() => game.Shift(value)).ShouldThrow<Exception>();
-            game.Should().BeEquivalentTo(field);
+            var toShiftElement = 5;
+            var expectedField = CreateMutableField(size,
+                1, 2, 3,
+                6, 5, 4,
+                7, 0, 8);
+            game.Shift(toShiftElement).Should().BeEquivalentTo(expectedField);
+        }
+
+        [Test]
+        public void CreateNewGamesWithShiftedElements()
+        {
+            var size = new Size(3, 3);
+            var initialField = CreateImmutableField(size,
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
+            var allFields = new[]
+            {
+                initialField,
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 4,
+                    7, 0, 8),
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 4,
+                    7, 8, 0),
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 0,
+                    7, 8, 4),
+                CreateImmutableField(size,
+                    1, 2, 0,
+                    6, 5, 3,
+                    7, 8, 4)
+            };
+            var shifts = new[] { 5, 8, 4, 3 };
+
+            var game = CreateGame(initialField);
+
+            var results = new List<IGame<int>> { game };
+            results.AddRange(shifts.Select(value => game = game.Shift(value)));
+
+            for (var i = 0; i < allFields.Length; i++)
+                results[i].Should().BeEquivalentTo(allFields[i]);
+        }
+
+        [Test]
+        public void MutateFirstCreatedGame_IfFieldNotImmutable()
+        {
+            var size = new Size(3, 3);
+            var initialField = CreateMutableField(size,
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
+            var game = CreateGame(initialField);
+            var shifts = new[] { 5, 8, 4, 3 };
+
+            var allGames = new List<IGame<int>> { game };
+            allGames.AddRange(shifts.Select(value => game = game.Shift(value)));
+
+            for (var i = 0; i < allGames.Count; i++)
+                for (var j = i + 1; j < allGames.Count; j++)
+                    allGames[i].Should().BeEquivalentTo(allGames[j]);
+        }
+
+        #endregion
+
+        #region Returning previous game tests
+
+        [Test]
+        public void ReturnPreviousStatesCorrectly()
+        {
+            var size = new Size(3, 3);
+            var initialField = CreateImmutableField(size,
+                   1, 2, 3,
+                   6, 0, 4,
+                   7, 5, 8);
+            var allFields = new[]
+            {
+                initialField,
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 4,
+                    7, 0, 8),
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 4,
+                    7, 8, 0),
+                CreateImmutableField(size,
+                    1, 2, 3,
+                    6, 5, 0,
+                    7, 8, 4),
+                CreateImmutableField(size,
+                    1, 2, 0,
+                    6, 5, 3,
+                    7, 8, 4)
+            };
+            var shifts = new[] { 5, 8, 4, 3 };
+            
+            var game = shifts.Aggregate(CreateGame(initialField), 
+                (currentGame, valueToShift) => currentGame.Shift(valueToShift));
+
+            for (var i = allFields.Length - 2; i >= 0; i--)
+            {
+                game = game.PreviousState;
+                game.Should().BeEquivalentTo(allFields[i]);
+                game.Turns.Should().Be(i);
+            }
+
+            game.PreviousState.Should().BeNull();
         }
 
         #endregion
@@ -103,24 +259,16 @@ namespace Puzzle15.Tests
         #region Creating new game on shift tests
 
         [Test]
-        public void ReturnNewGameOnShift_WhenFieldIsImmutable()
+        public void ReturnNewGameOnShift()
         {
-            var fieldConstructor = GetImmutableFieldConstructor<int>();
             var size = new Size(3, 3);
-            var field = FieldFromConstructor(fieldConstructor, size,
+            var field = CreateMutableField(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
             var game = CreateGame(field);
 
-            var newGame = game.Shift(5);
-            newGame.Should().NotBeSameAs(game);
-
-            var expectedField = FieldFromConstructor(fieldConstructor, size,
-                1, 2, 3,
-                6, 5, 4,
-                7, 0, 8);
-            newGame.Should().BeEquivalentTo(expectedField);
+            game.Shift(5).Should().NotBeSameAs(game);
         }
 
         #endregion

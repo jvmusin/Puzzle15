@@ -57,9 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameFieldValidator_Should.cs" />
+    <Compile Include="ClassicGameFieldValidator_Should.cs" />
     <Compile Include="Game_Should.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ClassicShiftPerformer_Should.cs" />
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>

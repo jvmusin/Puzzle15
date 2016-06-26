@@ -5,14 +5,16 @@ using RectangularField.Core;
 
 namespace Puzzle15.Implementations
 {
-    public class ShiftPerformer : IShiftPerformer<int>
+    public class ClassicShiftPerformer : IShiftPerformer<int>
     {
-        public IRectangularField<int> Perform(IRectangularField<int> field, int value)
+        internal ClassicShiftPerformer() { }
+
+        public IRectangularField<int> PerformShift(IRectangularField<int> field, int value)
         {
-            return Perform(field, field.GetLocation(value));
+            return PerformShift(field, field.GetLocation(value));
         }
 
-        public IRectangularField<int> Perform(IRectangularField<int> field, CellLocation valueLocation)
+        public IRectangularField<int> PerformShift(IRectangularField<int> field, CellLocation valueLocation)
         {
             var emptyLocation = field.GetLocation(0);
 
