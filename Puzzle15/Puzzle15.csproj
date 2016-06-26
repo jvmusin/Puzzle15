@@ -50,13 +50,13 @@
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
-    <Compile Include="Implementations\ClassicGame\ClassicGameFieldValidator.cs" />
+    <Compile Include="Implementations\ClassicGame\ClassicFieldValidator.cs" />
     <Compile Include="Implementations\ClassicGame\ClassicGameFieldShuffler.cs" />
     <Compile Include="Interfaces\IGameFieldShuffler.cs" />
     <Compile Include="Interfaces\IShiftPerformerFactory.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
-    <Compile Include="Interfaces\IGameFieldValidator.cs" />
+    <Compile Include="Interfaces\IFieldValidator.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
     <Compile Include="Implementations\ClassicGame\ClassicShiftPerformer.cs" />
     <Compile Include="Implementations\ClassicGame\ClassicShiftPerformerFactory.cs" />

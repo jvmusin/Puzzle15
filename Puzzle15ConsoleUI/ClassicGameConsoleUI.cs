@@ -12,15 +12,15 @@ namespace Puzzle15ConsoleUI
     {
         private readonly IRectangularFieldFactory<int> rectangularFieldFactory;
         private readonly IGameFactory<int> gameFactory;
-        private readonly IGameFieldValidator<int> gameFieldValidator;
+        private readonly IFieldValidator<int> fieldValidator;
         private readonly IShiftPerformerFactory<int> shiftPerformer;
         private readonly IGameFieldShuffler<int> gameFieldShuffler;
 
-        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IGameFieldValidator<int> gameFieldValidator, IShiftPerformerFactory<int> shiftPerformer, IGameFieldShuffler<int> gameFieldShuffler)
+        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IFieldValidator<int> fieldValidator, IShiftPerformerFactory<int> shiftPerformer, IGameFieldShuffler<int> gameFieldShuffler)
         {
             this.rectangularFieldFactory = rectangularFieldFactory;
             this.gameFactory = gameFactory;
-            this.gameFieldValidator = gameFieldValidator;
+            this.fieldValidator = fieldValidator;
             this.shiftPerformer = shiftPerformer;
             this.gameFieldShuffler = gameFieldShuffler;
         }

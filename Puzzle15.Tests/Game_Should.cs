@@ -15,21 +15,21 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class Game_Should : TestBase
     {
-        private IGameFieldValidator<int> gameFieldValidator;
+        private IFieldValidator<int> fieldValidator;
         private IShiftPerformerFactory<int> shiftPerformerFactory;
         private IGameFactory<int> gameFactory;
 
         [SetUp]
         public void SetUp()
         {
-            gameFieldValidator = StrictFake<IGameFieldValidator<int>>();
-            A.CallTo(() => gameFieldValidator.Validate(null, null))
+            fieldValidator = StrictFake<IFieldValidator<int>>();
+            A.CallTo(() => fieldValidator.Validate(null, null))
                 .WhenArgumentsMatch(x => true)
                 .Returns(ValidationResult.Success());
 
             shiftPerformerFactory = new ClassicShiftPerformerFactory();
 
-            gameFactory = new GameFactory<int>(gameFieldValidator, shiftPerformerFactory);
+            gameFactory = new GameFactory<int>(fieldValidator, shiftPerformerFactory);
         }
 
         private IGame<int> CreateGame(IRectangularField<int> field) => gameFactory.Create(field, field);

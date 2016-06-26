@@ -12,7 +12,7 @@ namespace Puzzle15ConsoleUI
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<IGameFieldValidator<int>>().To<ClassicGameFieldValidator>();
+            kernel.Bind<IFieldValidator<int>>().To<ClassicFieldValidator>();
             kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicShiftPerformerFactory>();
             kernel.Bind<IGameFieldShuffler<int>>().To<ClassicGameFieldShuffler>();
 

@@ -6,23 +6,23 @@ namespace Puzzle15.Implementations
 {
     public class GameFactory<TCell> : IGameFactory<TCell>
     {
-        private readonly IGameFieldValidator<TCell> gameFieldValidator;
+        private readonly IFieldValidator<TCell> fieldValidator;
         private readonly IShiftPerformerFactory<TCell> shiftPerformerFactory;
 
-        public GameFactory(IGameFieldValidator<TCell> gameFieldValidator, IShiftPerformerFactory<TCell> shiftPerformerFactory)
+        public GameFactory(IFieldValidator<TCell> fieldValidator, IShiftPerformerFactory<TCell> shiftPerformerFactory)
         {
-            if (gameFieldValidator == null)
-                throw new ArgumentNullException(nameof(gameFieldValidator));
+            if (fieldValidator == null)
+                throw new ArgumentNullException(nameof(fieldValidator));
             if (shiftPerformerFactory == null)
                 throw new ArgumentNullException(nameof(shiftPerformerFactory));
 
-            this.gameFieldValidator = gameFieldValidator;
+            this.fieldValidator = fieldValidator;
             this.shiftPerformerFactory = shiftPerformerFactory;
         }
 
         public IGame<TCell> Create(IRectangularField<TCell> initialField, IRectangularField<TCell> target)
         {
-            var validationResult = gameFieldValidator.Validate(initialField, target);
+            var validationResult = fieldValidator.Validate(initialField, target);
             if (!validationResult.Successful)
                 throw new ArgumentException(validationResult.Cause);
 

@@ -3,7 +3,7 @@ using RectangularField.Core;
 
 namespace Puzzle15.Interfaces
 {
-    public interface IGameFieldValidator<TCell>
+    public interface IFieldValidator<TCell>
     {
         ValidationResult Validate(IRectangularField<TCell> initialField, IRectangularField<TCell> target);
     }
