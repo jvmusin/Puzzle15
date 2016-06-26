@@ -36,13 +36,31 @@ namespace Puzzle15ConsoleUI
 
             while (!game.Finished)
             {
+                DrawTurns(game.Turns);
                 DrawField(game.CurrentField);
+                Console.Write("Enter a number to shift: ");
+                while (true)
+                {
+                    try
+                    {
+                        game = game.Shift(int.Parse(Console.ReadLine()));
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Incorrect number. Please, repeat: ");
+                    }
+                }
             }
+
+            Console.WriteLine("YAHOOO!!!");
+            DrawTurns(game.Turns);
+            DrawField(game.CurrentField);
         }
 
         private void DrawTurns(int turns)
         {
-            
+            Console.WriteLine($"Turns: {turns}");
         }
 
         private void DrawField(IRectangularField<int> field)
@@ -55,7 +73,9 @@ namespace Puzzle15ConsoleUI
 
         private IRectangularField<int> GetDefaultField(Size size)
         {
-            var values = Enumerable.Range(0, size.Height * size.Width).ToArray();
+            var count = size.Height*size.Width;
+            var values = Enumerable.Range(0, count).Select(x => ++x%count).ToArray();
+            
             return rectangularFieldFactory.Create(size, values);
         }
     }
