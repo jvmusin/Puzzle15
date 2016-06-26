@@ -47,9 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\GameFactory.cs" />
     <Compile Include="Implementations\ClassicGameFieldValidator.cs" />
+    <Compile Include="Implementations\ClassicGameFieldShuffler.cs" />
+    <Compile Include="Interfaces\IGameFieldShuffler.cs" />
     <Compile Include="Interfaces\IShiftPerformerFactory.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\IGameFactory.cs" />
