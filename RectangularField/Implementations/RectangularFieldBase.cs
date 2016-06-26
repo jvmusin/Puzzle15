@@ -8,7 +8,7 @@ using RectangularField.Utils;
 
 namespace RectangularField.Implementations
 {
-    internal abstract class RectangularFieldBase<T> : IRectangularField<T>
+    public abstract class RectangularFieldBase<T> : IRectangularField<T>
     {
         public Size Size { get; }
         public int Height => Size.Height;

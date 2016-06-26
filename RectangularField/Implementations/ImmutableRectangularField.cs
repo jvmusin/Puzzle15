@@ -6,7 +6,7 @@ using RectangularField.Core;
 
 namespace RectangularField.Implementations
 {
-    internal class ImmutableRectangularField<T> : RectangularFieldBase<T>
+    public class ImmutableRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
@@ -15,7 +15,7 @@ namespace RectangularField.Implementations
 
         #region Constructors
 
-        public ImmutableRectangularField(Size size) : base(size)
+        internal ImmutableRectangularField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -25,7 +25,7 @@ namespace RectangularField.Implementations
                 locations[defaultValue] = EnumerateLocations().ToList();
         }
 
-        public ImmutableRectangularField(int height, int width) : this(new Size(width, height))
+        internal ImmutableRectangularField(int height, int width) : this(new Size(width, height))
         {
         }
 
