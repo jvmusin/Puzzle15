@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\IReadOnlyRectangularField.cs" />
     <Compile Include="Factories\ImmutableRectangularFieldFactory.cs" />
     <Compile Include="Factories\IRectangularFieldFactory.cs" />
     <Compile Include="Factories\RectangularFieldFactory.cs" />

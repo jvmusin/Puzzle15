@@ -38,25 +38,21 @@ namespace Puzzle15.Tests
         [Test]
         public void NotChangeInitialField_AfterActions()
         {
-            var field = CreateMutableField(new Size(3, 3),
+            var field = CreateImmutableField(new Size(3, 3),
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
-            var clonedField = field.Clone();
             var game = CreateGame(field);
-
-            field.Should().BeEquivalentTo(clonedField);
 
             game.Shift(5);
 
-            game.Should().NotBeEquivalentTo(field);
-            field.Should().BeEquivalentTo(clonedField);
+            game.Should().BeEquivalentTo(field);
         }
 
         [Test]
         public void HasZeroTurns_AfterCreating()
         {
-            var field = CreateMutableField(new Size(3, 3),
+            var field = CreateImmutableField(new Size(3, 3),
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
@@ -68,7 +64,7 @@ namespace Puzzle15.Tests
         [Test]
         public void IncrementTurns_OnShift()
         {
-            var field = CreateMutableField(new Size(3, 3),
+            var field = CreateImmutableField(new Size(3, 3),
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
@@ -85,46 +81,29 @@ namespace Puzzle15.Tests
         [Test]
         public void RememberTarget()
         {
-            var initialField = CreateImmutableField(new Size(3, 3),
+            var size = new Size(3, 3);
+            var initialField = CreateImmutableField(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
-            var target = CreateMutableField(new Size(3, 3),
+            var target = CreateImmutableField(size,
                 1, 0, 5,
                 6, 7, 2,
                 3, 4, 8);
             var game = gameFactory.Create(initialField, target);
             var shifts = new[] {2, 3, 4, 8, 8};
 
-            game.Target.Should().Be(target);
+            game.Target.Should().BeEquivalentTo(target);
             foreach (var valueToShift in shifts)
             {
                 game = game.Shift(valueToShift);
-                game.Target.Should().Be(target);
+                game.Target.Should().BeEquivalentTo(target);
             }
             for (var i = shifts.Length; i > 0; i--)
             {
                 game = game.PreviousState;
-                game.Target.Should().Be(target);
+                game.Target.Should().BeEquivalentTo(target);
             }
-        }
-
-        [Test]
-        public void FailOnGettingTarget_IfTargetIsNotReadOnlyRectangularField()
-        {
-            var initialField = CreateImmutableField(new Size(3, 3),
-                   1, 2, 3,
-                   6, 0, 4,
-                   7, 5, 8);
-            var target = StrictFake<IRectangularField<int>>();
-            A.CallTo(() => target.Clone()).Returns(target);
-            var game = gameFactory.Create(initialField, target);
-
-            new Action(() =>
-            {
-                // ReSharper disable once UnusedVariable
-                var x = game.Target;
-            }).ShouldThrow<Exception>();
         }
 
         #endregion
@@ -135,7 +114,7 @@ namespace Puzzle15.Tests
         public void CreateNewGameWithShiftedElement()
         {
             var size = new Size(3, 3);
-            var field = CreateMutableField(size,
+            var field = CreateImmutableField(size,
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
@@ -189,22 +168,14 @@ namespace Puzzle15.Tests
         }
 
         [Test]
-        public void MutateFirstCreatedGame_IfFieldNotImmutable()
+        public void FailCreating_IfFieldIsNotImmutable()
         {
             var size = new Size(3, 3);
             var initialField = CreateMutableField(size,
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
-            var game = CreateGame(initialField);
-            var shifts = new[] { 5, 8, 4, 3 };
-
-            var allGames = new List<IGame<int>> { game };
-            allGames.AddRange(shifts.Select(value => game = game.Shift(value)));
-
-            for (var i = 0; i < allGames.Count; i++)
-                for (var j = i + 1; j < allGames.Count; j++)
-                    allGames[i].Should().BeEquivalentTo(allGames[j]);
+            new Action(() => CreateGame(initialField)).ShouldThrow<Exception>();
         }
 
         #endregion
@@ -262,7 +233,7 @@ namespace Puzzle15.Tests
         public void ReturnNewGameOnShift()
         {
             var size = new Size(3, 3);
-            var field = CreateMutableField(size,
+            var field = CreateImmutableField(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);

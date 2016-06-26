@@ -8,8 +8,8 @@ namespace Puzzle15.Interfaces
         int Turns { get; }
         bool Finished { get; }
         IGame<TCell> PreviousState { get; }
-        IReadOnlyRectangularField<TCell> CurrentField { get; }
-        IReadOnlyRectangularField<TCell> Target { get; }
+        IRectangularField<TCell> CurrentField { get; }
+        IRectangularField<TCell> Target { get; }
 
         IGame<TCell> Shift(TCell value);
         IGame<TCell> Shift(CellLocation valueLocation);

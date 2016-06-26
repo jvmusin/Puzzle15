@@ -40,7 +40,12 @@ namespace Puzzle15ConsoleUI
             }
         }
 
-        private void DrawField(IReadOnlyRectangularField<int> field)
+        private void DrawTurns(int turns)
+        {
+            
+        }
+
+        private void DrawField(IRectangularField<int> field)
         {
             Console.WriteLine(field);
             Console.WriteLine();
