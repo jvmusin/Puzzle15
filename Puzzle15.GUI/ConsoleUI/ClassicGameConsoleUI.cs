@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
+using System.Drawing;
+using Ninject;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
-using RectangularField.Interfaces;
+using Puzzle15.UI.Modules;
 using Puzzle15.Utils;
 
-namespace Puzzle15.UI.ConsoleUI
+namespace Puzzle15.GUI.ConsoleUI
 {
     public class ClassicGameConsoleUI
     {
@@ -19,6 +20,11 @@ namespace Puzzle15.UI.ConsoleUI
             this.gameFactory = gameFactory;
         }
 
+        public static void MainX(string[] args)
+        {
+            new StandardKernel(new GameBaseModule(), new ClassicGameModule()).Get<ClassicGameConsoleUI>().Run();
+        }
+
         public void Run()
         {
             DrawGreetings(PlayGame(CreateGame()));
@@ -29,8 +35,8 @@ namespace Puzzle15.UI.ConsoleUI
         private IGame<int> CreateGame()
         {
             var size = new Size(3, 3);
-            var target = GetDefaultField(size);
-            var initialField = target;
+            var initialField = GetDefaultField(size);
+            var target = (IGameField<int>) initialField.Clone();
 
             var difficulity = InputDifficulity();
             initialField = initialField.Shuffle(difficulity);
@@ -91,21 +97,16 @@ namespace Puzzle15.UI.ConsoleUI
             Console.WriteLine(phrase);
             while (true)
             {
-                try
+                int value;
+                if (int.TryParse(Console.ReadLine(), out value) && isGood(value))
                 {
-                    int value;
-                    if (int.TryParse(Console.ReadLine(), out value) && isGood(value))
-                    {
-                        Console.WriteLine();
-                        return value;
-                    }
+                    Console.WriteLine();
+                    return value;
                 }
-                catch
-                {
-                    Console.Write("Incorrect value. Please, repeat: ");
-                }
+                Console.Write("Incorrect value. Please, repeat: ");
             }
         }
+
 
         #endregion
 
@@ -128,7 +129,7 @@ namespace Puzzle15.UI.ConsoleUI
             Console.WriteLine($"Turns: {turns}");
         }
 
-        private static void DrawField(IRectangularField<int> field)
+        private static void DrawField(IGameField<int> field)
         {
             Console.WriteLine(field.ToString().Replace("0", " "));
             Console.WriteLine();

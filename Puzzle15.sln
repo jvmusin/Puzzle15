@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField", "Rectang
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangularField.Tests", "RectangularField.Tests\RectangularField.Tests.csproj", "{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.UI", "Puzzle15.UI\Puzzle15.UI.csproj", "{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle15.GUI", "Puzzle15.GUI\Puzzle15.GUI.csproj", "{669B0FAC-3A21-4254-B78A-A581F2051A76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63530D3E-4DBB-4F76-B946-ECD79AB50D1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{669B0FAC-3A21-4254-B78A-A581F2051A76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{669B0FAC-3A21-4254-B78A-A581F2051A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{669B0FAC-3A21-4254-B78A-A581F2051A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{669B0FAC-3A21-4254-B78A-A581F2051A76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
