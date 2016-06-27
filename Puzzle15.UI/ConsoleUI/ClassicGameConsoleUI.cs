@@ -3,10 +3,9 @@ using System.Drawing;
 using System.Linq;
 using Puzzle15.Interfaces;
 using RectangularField.Core;
-using RectangularField.Factories;
 using RectangularField.Utils;
 
-namespace Puzzle15ConsoleUI
+namespace Puzzle15.UI.ConsoleUI
 {
     public class ClassicGameConsoleUI
     {
@@ -14,15 +13,15 @@ namespace Puzzle15ConsoleUI
         private readonly IGameFactory<int> gameFactory;
         private readonly IFieldValidator<int> fieldValidator;
         private readonly IShiftPerformerFactory<int> shiftPerformer;
-        private readonly IGameFieldShuffler<int> gameFieldShuffler;
+        private readonly IFieldShuffler<int> fieldShuffler;
 
-        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IFieldValidator<int> fieldValidator, IShiftPerformerFactory<int> shiftPerformer, IGameFieldShuffler<int> gameFieldShuffler)
+        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IFieldValidator<int> fieldValidator, IShiftPerformerFactory<int> shiftPerformer, IFieldShuffler<int> fieldShuffler)
         {
             this.rectangularFieldFactory = rectangularFieldFactory;
             this.gameFactory = gameFactory;
             this.fieldValidator = fieldValidator;
             this.shiftPerformer = shiftPerformer;
-            this.gameFieldShuffler = gameFieldShuffler;
+            this.fieldShuffler = fieldShuffler;
         }
 
         public void Run()
@@ -30,7 +29,7 @@ namespace Puzzle15ConsoleUI
             var size = new Size(3, 3);
 
             var target = GetDefaultField(size);
-            var initialField = gameFieldShuffler.Shuffle(target.Immutable ? target : target.Clone(), 5);
+            var initialField = fieldShuffler.Shuffle(target.Immutable ? target : target.Clone(), 5);
 
             var game = gameFactory.Create(initialField, target);
 
@@ -73,9 +72,9 @@ namespace Puzzle15ConsoleUI
 
         private IRectangularField<int> GetDefaultField(Size size)
         {
-            var count = size.Height*size.Width;
-            var values = Enumerable.Range(0, count).Select(x => ++x%count).ToArray();
-            
+            var count = size.Height * size.Width;
+            var values = Enumerable.Range(0, count).Select(x => (x + 1) % count).ToArray();
+
             return rectangularFieldFactory.Create(size, values);
         }
     }

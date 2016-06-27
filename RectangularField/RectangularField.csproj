@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\ImmutableRectangularFieldFactory.cs" />
-    <Compile Include="Factories\IRectangularFieldFactory.cs" />
+    <Compile Include="Core\IRectangularFieldFactory.cs" />
     <Compile Include="Factories\RectangularFieldFactory.cs" />
     <Compile Include="Factories\WrappingRectangularFieldFactory.cs" />
     <Compile Include="Utils\Direction.cs" />

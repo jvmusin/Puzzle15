@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{607D3BAB-5C75-493E-8407-6692728AA88E}</ProjectGuid>
+    <ProjectGuid>{A7113EA8-CBCA-47FD-92A3-F1FEAD8D769E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Puzzle15ConsoleUI</RootNamespace>
-    <AssemblyName>Puzzle15ConsoleUI</AssemblyName>
+    <RootNamespace>Puzzle15.UI</RootNamespace>
+    <AssemblyName>Puzzle15.UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassicGameConsoleUI.cs" />
+    <Compile Include="ConsoleUI\ClassicGameConsoleUI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

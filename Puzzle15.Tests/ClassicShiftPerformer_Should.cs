@@ -10,14 +10,14 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class ClassicShiftPerformer_Should : TestBase
     {
-        private ClassicShiftPerformerFactory shiftPerformerFactory;
-        private ClassicShiftPerformer shiftPerformer;
+        private ClassicGameShiftPerformerFactory shiftPerformerFactory;
+        private ClassicGameShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
-            shiftPerformerFactory = new ClassicShiftPerformerFactory();
-            shiftPerformer = (ClassicShiftPerformer) shiftPerformerFactory.Create();
+            shiftPerformerFactory = new ClassicGameShiftPerformerFactory();
+            shiftPerformer = (ClassicGameShiftPerformer) shiftPerformerFactory.Create();
         }
 
         #region Shift tests

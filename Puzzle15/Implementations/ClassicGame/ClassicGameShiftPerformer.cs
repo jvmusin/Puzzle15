@@ -5,9 +5,9 @@ using RectangularField.Core;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicShiftPerformer : IShiftPerformer<int>
+    public class ClassicGameShiftPerformer : IShiftPerformer<int>
     {
-        internal ClassicShiftPerformer() { }
+        internal ClassicGameShiftPerformer() { }
 
         public IRectangularField<int> PerformShift(IRectangularField<int> field, int value)
         {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Puzzle15ConsoleUI")]
+[assembly: AssemblyTitle("Puzzle15.UI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Puzzle15ConsoleUI")]
+[assembly: AssemblyProduct("Puzzle15.UI")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("607d3bab-5c75-493e-8407-6692728aa88e")]
+[assembly: Guid("a7113ea8-cbca-47fd-92a3-f1fead8d769e")]
 
 // Version information for an assembly consists of the following four values:
 //

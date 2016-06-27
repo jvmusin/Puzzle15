@@ -13,12 +13,12 @@ namespace Puzzle15.Tests
     [TestFixture]
     public class ClassicGameFieldValidator_Should : TestBase
     {
-        private ClassicFieldValidator validator;
+        private ClassicGameFieldValidator validator;
 
         [SetUp]
         public void SetUp()
         {
-            validator = new ClassicFieldValidator();
+            validator = new ClassicGameFieldValidator();
         }
 
         [Test]

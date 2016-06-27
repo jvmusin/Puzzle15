@@ -2,7 +2,7 @@
 
 namespace Puzzle15.Interfaces
 {
-    public interface IGameFieldShuffler<TCell>
+    public interface IFieldShuffler<TCell>
     {
         IRectangularField<TCell> Shuffle(IRectangularField<TCell> field, int quality);
     }

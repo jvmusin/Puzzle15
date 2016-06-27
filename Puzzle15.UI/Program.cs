@@ -2,9 +2,11 @@
 using Puzzle15.Implementations;
 using Puzzle15.Implementations.ClassicGame;
 using Puzzle15.Interfaces;
+using Puzzle15.UI.ConsoleUI;
+using RectangularField.Core;
 using RectangularField.Factories;
 
-namespace Puzzle15ConsoleUI
+namespace Puzzle15.UI
 {
     public class Program
     {
@@ -12,9 +14,9 @@ namespace Puzzle15ConsoleUI
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<IFieldValidator<int>>().To<ClassicFieldValidator>();
-            kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicShiftPerformerFactory>();
-            kernel.Bind<IGameFieldShuffler<int>>().To<ClassicGameFieldShuffler>();
+            kernel.Bind<IFieldValidator<int>>().To<ClassicGameFieldValidator>();
+            kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicGameShiftPerformerFactory>();
+            kernel.Bind<IFieldShuffler<int>>().To<ClassicGameFieldShuffler>();
 
             kernel.Bind(typeof(IGameFactory<>)).To(typeof(GameFactory<>));
             kernel.Bind(typeof(IRectangularFieldFactory<>)).To(typeof(WrappingRectangularFieldFactory<>));

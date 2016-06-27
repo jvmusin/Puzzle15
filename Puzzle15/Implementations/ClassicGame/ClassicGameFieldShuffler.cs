@@ -3,7 +3,7 @@ using RectangularField.Core;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicGameFieldShuffler: IGameFieldShuffler<int>
+    public class ClassicGameFieldShuffler: IFieldShuffler<int>
     {
         public IRectangularField<int> Shuffle(IRectangularField<int> field, int quality)
         {

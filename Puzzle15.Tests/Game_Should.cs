@@ -27,7 +27,7 @@ namespace Puzzle15.Tests
                 .WhenArgumentsMatch(x => true)
                 .Returns(ValidationResult.Success());
 
-            shiftPerformerFactory = new ClassicShiftPerformerFactory();
+            shiftPerformerFactory = new ClassicGameShiftPerformerFactory();
 
             gameFactory = new GameFactory<int>(fieldValidator, shiftPerformerFactory);
         }
