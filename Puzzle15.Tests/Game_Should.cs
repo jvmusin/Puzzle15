@@ -1,45 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using FakeItEasy;
 using FluentAssertions;
+using Ninject;
 using NUnit.Framework;
-using Puzzle15.Implementations;
-using Puzzle15.Implementations.ClassicGame;
 using Puzzle15.Interfaces;
-using RectangularField.Core;
+using Puzzle15.Interfaces.Factories;
+using Puzzle15.Tests.Modules;
+using Puzzle15.Utils;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
-    public class Game_Should : TestBase
+    public class Game_Should
     {
-        private IFieldValidator<int> fieldValidator;
-        private IShiftPerformerFactory<int> shiftPerformerFactory;
+        private IGameFieldFactory<int> gameFieldFactory;
         private IGameFactory<int> gameFactory;
 
         [SetUp]
         public void SetUp()
         {
-            fieldValidator = StrictFake<IFieldValidator<int>>();
-            A.CallTo(() => fieldValidator.Validate(null, null))
-                .WhenArgumentsMatch(x => true)
-                .Returns(ValidationResult.Success());
+            var kernel = new StandardKernel(new GameBaseModule(), new ClassicGameModule());
 
-            shiftPerformerFactory = new ClassicGameShiftPerformerFactory();
-
-            gameFactory = new GameFactory<int>(fieldValidator, shiftPerformerFactory);
+            gameFieldFactory = kernel.Get<IGameFieldFactory<int>>();
+            gameFactory = kernel.Get<IGameFactory<int>>();
         }
 
-        private IGame<int> CreateGame(IRectangularField<int> field) => gameFactory.Create(field, field);
+        private IGame<int> CreateGame(IGameField<int> field) => gameFactory.Create(field, field);
 
         #region Consistency tests
 
         [Test]
         public void NotChangeInitialField_AfterActions()
         {
-            var field = CreateImmutableField(new Size(3, 3),
+            var field = gameFieldFactory.Create(new Size(3, 3),
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
@@ -53,7 +47,7 @@ namespace Puzzle15.Tests
         [Test]
         public void HasZeroTurns_AfterCreating()
         {
-            var field = CreateImmutableField(new Size(3, 3),
+            var field = gameFieldFactory.Create(new Size(3, 3),
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
@@ -65,7 +59,7 @@ namespace Puzzle15.Tests
         [Test]
         public void IncrementTurns_OnShift()
         {
-            var field = CreateImmutableField(new Size(3, 3),
+            var field = gameFieldFactory.Create(new Size(3, 3),
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
@@ -83,11 +77,11 @@ namespace Puzzle15.Tests
         public void RememberTarget()
         {
             var size = new Size(3, 3);
-            var initialField = CreateImmutableField(size,
+            var initialField = gameFieldFactory.Create(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
-            var target = CreateImmutableField(size,
+            var target = gameFieldFactory.Create(size,
                 1, 0, 5,
                 6, 7, 2,
                 3, 4, 8);
@@ -115,14 +109,14 @@ namespace Puzzle15.Tests
         public void CreateNewGameWithShiftedElement()
         {
             var size = new Size(3, 3);
-            var field = CreateImmutableField(size,
+            var field = gameFieldFactory.Create(size,
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
             var game = CreateGame(field);
 
             var toShiftElement = 5;
-            var expectedField = CreateMutableField(size,
+            var expectedField = gameFieldFactory.Create(size,
                 1, 2, 3,
                 6, 5, 4,
                 7, 0, 8);
@@ -133,26 +127,26 @@ namespace Puzzle15.Tests
         public void CreateNewGamesWithShiftedElements()
         {
             var size = new Size(3, 3);
-            var initialField = CreateImmutableField(size,
+            var initialField = gameFieldFactory.Create(size,
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
             var allFields = new[]
             {
                 initialField,
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 4,
                     7, 0, 8),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 4,
                     7, 8, 0),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 0,
                     7, 8, 4),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 0,
                     6, 5, 3,
                     7, 8, 4)
@@ -168,17 +162,6 @@ namespace Puzzle15.Tests
                 results[i].Should().BeEquivalentTo(allFields[i]);
         }
 
-        [Test]
-        public void FailCreating_IfFieldIsNotImmutable()
-        {
-            var size = new Size(3, 3);
-            var initialField = CreateMutableField(size,
-                   1, 2, 3,
-                   6, 0, 4,
-                   7, 5, 8);
-            new Action(() => CreateGame(initialField)).ShouldThrow<Exception>();
-        }
-
         #endregion
 
         #region Returning previous game tests
@@ -187,26 +170,26 @@ namespace Puzzle15.Tests
         public void ReturnPreviousStatesCorrectly()
         {
             var size = new Size(3, 3);
-            var initialField = CreateImmutableField(size,
+            var initialField = gameFieldFactory.Create(size,
                    1, 2, 3,
                    6, 0, 4,
                    7, 5, 8);
             var allFields = new[]
             {
                 initialField,
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 4,
                     7, 0, 8),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 4,
                     7, 8, 0),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 3,
                     6, 5, 0,
                     7, 8, 4),
-                CreateImmutableField(size,
+                gameFieldFactory.Create(size,
                     1, 2, 0,
                     6, 5, 3,
                     7, 8, 4)
@@ -234,7 +217,7 @@ namespace Puzzle15.Tests
         public void ReturnNewGameOnShift()
         {
             var size = new Size(3, 3);
-            var field = CreateImmutableField(size,
+            var field = gameFieldFactory.Create(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);

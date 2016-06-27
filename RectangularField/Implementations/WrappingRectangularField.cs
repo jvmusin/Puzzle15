@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 using RectangularField.Utils;
 
 namespace RectangularField.Implementations
@@ -20,7 +21,7 @@ namespace RectangularField.Implementations
             this.changedCell = changedCell;
         }
 
-        internal WrappingRectangularField(IRectangularField<T> parent)
+        public WrappingRectangularField(IRectangularField<T> parent)
             : this(parent, null)
         {
             if (parent == null)

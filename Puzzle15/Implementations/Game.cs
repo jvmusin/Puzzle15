@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Puzzle15.Interfaces;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
 
 namespace Puzzle15.Implementations
 {
@@ -13,11 +13,10 @@ namespace Puzzle15.Implementations
         public int Turns { get; }
         public bool Finished => CurrentField.Equals(Target);
         public IGame<TCell> PreviousState { get; }
-        public IRectangularField<TCell> CurrentField { get; }
-        public IRectangularField<TCell> Target { get; }
+        public IGameField<TCell> CurrentField { get; }
+        public IGameField<TCell> Target { get; }
 
-        private Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer,
-            IGame<TCell> previousState)
+        private Game(IGameField<TCell> initialField, IGameField<TCell> target, IShiftPerformer<TCell> shiftPerformer, IGame<TCell> previousState)
         {
             if (!initialField.Immutable || !target.Immutable)
                 throw new ArgumentException("Sorry, only immutable fields allowed");
@@ -31,8 +30,8 @@ namespace Puzzle15.Implementations
             Turns = previousState?.Turns + 1 ?? 0;
         }
 
-        internal Game(IRectangularField<TCell> initialField, IRectangularField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
-            : this(initialField.Clone(), target.Clone(), shiftPerformer, null)
+        internal Game(IGameField<TCell> initialField, IGameField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
+            : this((IGameField<TCell>) initialField.Clone(), (IGameField<TCell>) target.Clone(), shiftPerformer, null)
         {
             if (shiftPerformer == null)
                 throw new ArgumentNullException(nameof(shiftPerformer));

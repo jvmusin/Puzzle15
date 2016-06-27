@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace RectangularField.Core
+namespace RectangularField.Interfaces.Factories
 {
     public interface IRectangularFieldFactory<T>
     {

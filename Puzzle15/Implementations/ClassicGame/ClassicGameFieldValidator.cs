@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using Puzzle15.Implementations.Base;
 using Puzzle15.Interfaces;
-using RectangularField.Core;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicGameFieldValidator : IFieldValidator<int>
+    public class ClassicGameFieldValidator : IGameFieldValidator<int>
     {
-        public ValidationResult Validate(IRectangularField<int> initialField, IRectangularField<int> target)
+        public ValidationResult Validate(IGameField<int> initialField, IGameField<int> target)
         {
             var errorMessage = GetErrorMessage(initialField, target);
 
@@ -15,7 +15,7 @@ namespace Puzzle15.Implementations.ClassicGame
                 : ValidationResult.Unsuccess(errorMessage);
         }
 
-        private static string GetErrorMessage(IRectangularField<int> initialField, IRectangularField<int> target)
+        private static string GetErrorMessage(IGameField<int> initialField, IGameField<int> target)
         {
             if (initialField == null)
                 return "Initial field shouldn't be null";
@@ -30,7 +30,7 @@ namespace Puzzle15.Implementations.ClassicGame
                    GetErrorMessageWithName(target, nameof(target));
         }
 
-        private static string GetErrorMessageWithName(IRectangularField<int> field, string fieldName)
+        private static string GetErrorMessageWithName(IGameField<int> field, string fieldName)
         {
             var errorMessage = GetErrorMessage(field);
             return errorMessage == null
@@ -38,14 +38,14 @@ namespace Puzzle15.Implementations.ClassicGame
                 : $"{fieldName}: {errorMessage}";
         }
 
-        private static string GetErrorMessage(IRectangularField<int> initialField)
+        private static string GetErrorMessage(IGameField<int> field)
         {
-            var fieldSize = initialField.Size;
+            var fieldSize = field.Size;
             if (fieldSize.Height <= 0 || fieldSize.Width <= 0)
                 return "Field should have positive size";
 
-            var elements = initialField.Select(x => x.Value).Distinct().ToList();
-            if (elements.Count != initialField.Count())
+            var elements = field.Select(x => x.Value).Distinct().ToList();
+            if (elements.Count != field.Count())
                 return "Not all elements are distinct";
 
             var min = elements.Min();

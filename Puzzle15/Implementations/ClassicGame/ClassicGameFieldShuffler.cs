@@ -1,24 +1,29 @@
-﻿using Puzzle15.Interfaces;
-using RectangularField.Core;
+﻿using System;
+using System.Linq;
+using Puzzle15.Interfaces;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicGameFieldShuffler: IFieldShuffler<int>
+    public class ClassicGameFieldShuffler: IGameFieldShuffler<int>
     {
-        public IRectangularField<int> Shuffle(IRectangularField<int> field, int quality)
+        private readonly Random random = new Random();
+
+        public IGameField<int> Shuffle(IGameField<int> field, int quality)
         {
             var zeroLocation = field.GetLocation(0);
+            var result = (IRectangularField<int>) field;
 
             for (var i = 0; i < quality; i++)
-                foreach (var neighbour in zeroLocation.ByEdgeNeighbours.Shuffle())
+                foreach (var neighbour in zeroLocation.ByEdgeNeighbours.OrderBy(x => random.Next()))
                     if (field.Contains(neighbour))
                     {
-                        field = field.Swap(zeroLocation, neighbour);
+                        result = result.Swap(zeroLocation, neighbour);
                         zeroLocation = neighbour;
                         break;
                     }
 
-            return field;
+            return (IGameField<int>) result;
         }
     }
 }

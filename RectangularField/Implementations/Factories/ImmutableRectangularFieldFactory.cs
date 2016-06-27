@@ -1,8 +1,8 @@
 using System.Drawing;
-using RectangularField.Core;
-using RectangularField.Implementations;
+using RectangularField.Interfaces;
+using RectangularField.Interfaces.Factories;
 
-namespace RectangularField.Factories
+namespace RectangularField.Implementations.Factories
 {
     public class ImmutableRectangularFieldFactory<T> : IRectangularFieldFactory<T>
     {

@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Drawing;
 using FluentAssertions;
+using Ninject;
 using NUnit.Framework;
-using Puzzle15.Implementations;
 using Puzzle15.Implementations.ClassicGame;
+using Puzzle15.Interfaces.Factories;
+using Puzzle15.Tests.Modules;
+using Puzzle15.Utils;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
-    public class ClassicShiftPerformer_Should : TestBase
+    public class ClassicGameShiftPerformer_Should
     {
-        private ClassicGameShiftPerformerFactory shiftPerformerFactory;
-        private ClassicGameShiftPerformer shiftPerformer;
+        private IGameFieldFactory<int> gameFieldFactory;
+        private ClassicShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
-            shiftPerformerFactory = new ClassicGameShiftPerformerFactory();
-            shiftPerformer = (ClassicGameShiftPerformer) shiftPerformerFactory.Create();
+            var kernel = new StandardKernel(new GameBaseModule(), new ClassicGameModule());
+
+            gameFieldFactory = kernel.Get<IGameFieldFactory<int>>();
+            shiftPerformer = new ClassicShiftPerformer();
         }
 
         #region Shift tests
@@ -26,17 +31,17 @@ namespace Puzzle15.Tests
         public void ShiftCorrectly_WhenValueOnFieldAndConnectedByEdge()
         {
             var size = new Size(3, 3);
-            var field = CreateMutableField(size,
+            var field = gameFieldFactory.Create(size,
                 1, 2, 3,
                 6, 0, 4,
                 7, 5, 8);
             var cloned = field.Clone();
 
-            var result = shiftPerformer.PerformShift(field.Clone(), 5);
+            var result = shiftPerformer.PerformShift(field, 5);
 
             field.Should().BeEquivalentTo(cloned);
 
-            var expectedField = CreateMutableField(size,
+            var expectedField = gameFieldFactory.Create(size,
                 1, 2, 3,
                 6, 5, 4,
                 7, 0, 8);
@@ -48,7 +53,7 @@ namespace Puzzle15.Tests
             [Values(-1, 10, 100, 8, 1, 2, 0)] int value)
         {
             var size = new Size(3, 3);
-            var field = CreateMutableField(size,
+            var field = gameFieldFactory.Create(size,
                 1, 2, 3,
                 7, 5, 8,
                 6, 0, 4);

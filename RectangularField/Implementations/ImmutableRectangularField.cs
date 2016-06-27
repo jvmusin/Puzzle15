@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 
 namespace RectangularField.Implementations
 {
@@ -15,7 +16,7 @@ namespace RectangularField.Implementations
 
         #region Constructors
 
-        internal ImmutableRectangularField(Size size) : base(size)
+        public ImmutableRectangularField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -23,10 +24,6 @@ namespace RectangularField.Implementations
             var defaultValue = default(T);
             if (defaultValue != null)
                 locations[defaultValue] = EnumerateLocations().ToList();
-        }
-
-        internal ImmutableRectangularField(int height, int width) : this(new Size(width, height))
-        {
         }
 
         #endregion

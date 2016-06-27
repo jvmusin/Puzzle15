@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RectangularField.Core
+namespace RectangularField.Implementations.Base
 {
     public class InvalidLocationException : ArgumentOutOfRangeException
     {

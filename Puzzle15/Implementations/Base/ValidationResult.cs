@@ -1,4 +1,4 @@
-﻿namespace Puzzle15.Implementations
+﻿namespace Puzzle15.Implementations.Base
 {
     public class ValidationResult
     {

@@ -1,10 +1,13 @@
 ﻿using Ninject;
 using Puzzle15.Implementations;
 using Puzzle15.Implementations.ClassicGame;
+using Puzzle15.Implementations.ClassicGame.Factories;
+using Puzzle15.Implementations.Factories;
 using Puzzle15.Interfaces;
+using Puzzle15.Interfaces.Factories;
 using Puzzle15.UI.ConsoleUI;
-using RectangularField.Core;
-using RectangularField.Factories;
+using RectangularField.Implementations.Factories;
+using RectangularField.Interfaces.Factories;
 
 namespace Puzzle15.UI
 {
@@ -14,14 +17,22 @@ namespace Puzzle15.UI
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<IFieldValidator<int>>().To<ClassicGameFieldValidator>();
-            kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicGameShiftPerformerFactory>();
-            kernel.Bind<IFieldShuffler<int>>().To<ClassicGameFieldShuffler>();
+            kernel.Bind<IGameFieldValidator<int>>().To<ClassicGameFieldValidator>();
+            kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicShiftPerformerFactory>();
+            kernel.Bind<IGameFieldShuffler<int>>().To<ClassicGameFieldShuffler>();
 
             kernel.Bind(typeof(IGameFactory<>)).To(typeof(GameFactory<>));
             kernel.Bind(typeof(IRectangularFieldFactory<>)).To(typeof(WrappingRectangularFieldFactory<>));
             
             kernel.Get<ClassicGameConsoleUI>().Run();
+
+
+
+            kernel.Bind<IGameFieldValidatorFactory<int>>().To<ClassicGameFieldValidatorFactory>();
+            kernel.Bind<IShiftPerformerFactory<int>>().To<ClassicShiftPerformerFactory>();
+
+            kernel.Bind(typeof(IGameFieldFactory<>)).To(typeof(GameFieldFactory<>));
+            kernel.Bind(typeof(IGameFactory<>)).To(typeof(GameFactory<>));
         }
     }
 }

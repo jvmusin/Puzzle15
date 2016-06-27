@@ -1,4 +1,4 @@
-﻿namespace Puzzle15.Interfaces
+﻿namespace Puzzle15.Interfaces.Factories
 {
     public interface IShiftPerformerFactory<TCell>
     {

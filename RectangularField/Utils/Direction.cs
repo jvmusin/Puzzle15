@@ -1,4 +1,4 @@
-﻿using RectangularField.Core;
+﻿using RectangularField.Implementations.Base;
 
 namespace RectangularField.Utils
 {

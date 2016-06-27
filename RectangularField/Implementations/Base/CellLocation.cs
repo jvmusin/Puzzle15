@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RectangularField.Utils;
 
-namespace RectangularField.Core
+namespace RectangularField.Implementations.Base
 {
     public class CellLocation : IComparable<CellLocation>
     {

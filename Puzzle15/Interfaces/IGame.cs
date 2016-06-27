@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
 
 namespace Puzzle15.Interfaces
 {
@@ -8,8 +8,8 @@ namespace Puzzle15.Interfaces
         int Turns { get; }
         bool Finished { get; }
         IGame<TCell> PreviousState { get; }
-        IRectangularField<TCell> CurrentField { get; }
-        IRectangularField<TCell> Target { get; }
+        IGameField<TCell> CurrentField { get; }
+        IGameField<TCell> Target { get; }
 
         IGame<TCell> Shift(TCell value);
         IGame<TCell> Shift(CellLocation valueLocation);

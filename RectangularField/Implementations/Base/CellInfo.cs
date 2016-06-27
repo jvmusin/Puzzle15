@@ -1,6 +1,6 @@
 ﻿using RectangularField.Utils;
 
-namespace RectangularField.Core
+namespace RectangularField.Implementations.Base
 {
     public class CellInfo<T>
     {

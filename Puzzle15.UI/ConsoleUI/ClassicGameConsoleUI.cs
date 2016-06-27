@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Linq;
 using Puzzle15.Interfaces;
-using RectangularField.Core;
+using Puzzle15.Interfaces.Factories;
+using RectangularField.Interfaces;
+using RectangularField.Interfaces.Factories;
 using RectangularField.Utils;
 
 namespace Puzzle15.UI.ConsoleUI
@@ -11,17 +13,17 @@ namespace Puzzle15.UI.ConsoleUI
     {
         private readonly IRectangularFieldFactory<int> rectangularFieldFactory;
         private readonly IGameFactory<int> gameFactory;
-        private readonly IFieldValidator<int> fieldValidator;
+        private readonly IGameFieldValidator<int> gameFieldValidator;
         private readonly IShiftPerformerFactory<int> shiftPerformer;
-        private readonly IFieldShuffler<int> fieldShuffler;
+        private readonly IGameFieldShuffler<int> gameFieldShuffler;
 
-        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IFieldValidator<int> fieldValidator, IShiftPerformerFactory<int> shiftPerformer, IFieldShuffler<int> fieldShuffler)
+        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IGameFieldValidator<int> gameFieldValidator, IShiftPerformerFactory<int> shiftPerformer, IGameFieldShuffler<int> gameFieldShuffler)
         {
             this.rectangularFieldFactory = rectangularFieldFactory;
             this.gameFactory = gameFactory;
-            this.fieldValidator = fieldValidator;
+            this.gameFieldValidator = gameFieldValidator;
             this.shiftPerformer = shiftPerformer;
-            this.fieldShuffler = fieldShuffler;
+            this.gameFieldShuffler = gameFieldShuffler;
         }
 
         public void Run()
@@ -29,7 +31,7 @@ namespace Puzzle15.UI.ConsoleUI
             var size = new Size(3, 3);
 
             var target = GetDefaultField(size);
-            var initialField = fieldShuffler.Shuffle(target.Immutable ? target : target.Clone(), 5);
+            var initialField = gameFieldShuffler.Shuffle(target, 5);
 
             var game = gameFactory.Create(initialField, target);
 

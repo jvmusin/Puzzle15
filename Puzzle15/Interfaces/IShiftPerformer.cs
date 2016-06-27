@@ -1,11 +1,11 @@
-﻿using RectangularField.Core;
+﻿using RectangularField.Implementations.Base;
 
 namespace Puzzle15.Interfaces
 {
     public interface IShiftPerformer<TCell>
     {
-        IRectangularField<TCell> PerformShift(IRectangularField<TCell> field, TCell value);
+        IGameField<TCell> PerformShift(IGameField<TCell> field, TCell value);
 
-        IRectangularField<TCell> PerformShift(IRectangularField<TCell> field, CellLocation valueLocation);
+        IGameField<TCell> PerformShift(IGameField<TCell> field, CellLocation valueLocation);
     }
 }

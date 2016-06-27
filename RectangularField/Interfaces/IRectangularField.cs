@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using RectangularField.Implementations.Base;
 
-namespace RectangularField.Core
+namespace RectangularField.Interfaces
 {
     public interface IRectangularField<T> : IEnumerable<CellInfo<T>>
     {

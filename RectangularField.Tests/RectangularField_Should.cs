@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using FluentAssertions;
+using Ninject;
 using NUnit.Framework;
-using RectangularField.Core;
-using RectangularField.Factories;
+using RectangularField.Implementations.Base;
+using RectangularField.Implementations.Factories;
+using RectangularField.Interfaces;
+using RectangularField.Interfaces.Factories;
 using RectangularField.Utils;
 
 namespace RectangularField.Tests
@@ -15,21 +18,19 @@ namespace RectangularField.Tests
     {
         #region Factories and fields
 
-        private static IEnumerable<IRectangularFieldFactory<T>> GetFactories<T>()
-        {
-            yield return new RectangularFieldFactory<T>();
-            yield return new ImmutableRectangularFieldFactory<T>();
-            yield return new WrappingRectangularFieldFactory<T>();
-        }
+        private static readonly IKernel Kernel = new StandardKernel(new RectangularFieldsModule());
 
-        private static IEnumerable<IRectangularFieldFactory<int>> Factories => GetFactories<int>();
+        private static IEnumerable<IRectangularFieldFactory<T>> GetFactories<T>()
+            => Kernel.GetAll<IRectangularFieldFactory<T>>();
+
+        private static IEnumerable<IRectangularFieldFactory<int>> IntFactories => GetFactories<int>();
 
         private static IEnumerable<IRectangularFieldFactory<string>> StringFactories => GetFactories<string>();
 
         private static IEnumerable<IRectangularFieldFactory<int[]>> ArrayFactories => GetFactories<int[]>();
 
         private static IEnumerable<IRectangularField<int>> Fields =>
-            Factories.Select(factory => factory.Create(DefaultFieldSize, DefaultFieldData));
+            IntFactories.Select(factory => factory.Create(DefaultFieldSize, DefaultFieldData));
 
         #endregion
 
@@ -37,7 +38,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void WorkWithDifferentSizesCorrectly(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory,
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory,
             [Values(-1232, 0, 133)] int width,
             [Values(-13123, 0, 2)] int height)
         {
@@ -63,7 +64,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void SwapElements(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
 
@@ -83,7 +84,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void SwapElementAtSamePlace(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
 
@@ -108,7 +109,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void SwapElementsOnClonedField(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -188,7 +189,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void EnumerateCorrectly_AfterChanges(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -255,7 +256,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnLocations_AfterChangesByIndex(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -299,7 +300,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnLocations_AfterSwaps(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var original = factory.Create(new Size(3,3),
                 1, 2, 3,
@@ -345,7 +346,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnLocations_WithoutChangingClonedField(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -381,7 +382,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnCorrectValues(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var values = new[]
@@ -398,7 +399,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnCorrectValuesByIndex_AfterChanges(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -424,7 +425,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnCorrectValuesByIndex_OnClonedField(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var original = factory.Create(size,
@@ -514,7 +515,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void BeEqual_ToEquivalentField(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var field1 = factory.Create(size,
@@ -531,7 +532,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void NotBeEqual_ToNotEquivalentField(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var size = new Size(3, 3);
             var field1 = factory.Create(size,
@@ -599,7 +600,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnSameHash_ForEqualFields(
-            [ValueSource(nameof(Factories))] IRectangularFieldFactory<int> factory)
+            [ValueSource(nameof(IntFactories))] IRectangularFieldFactory<int> factory)
         {
             var field1 = factory.Create(DefaultFieldSize, DefaultFieldData);
             var field2 = factory.Create(DefaultFieldSize, DefaultFieldData);

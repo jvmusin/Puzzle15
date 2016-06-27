@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 using RectangularField.Utils;
 
 namespace RectangularField.Implementations
@@ -19,7 +20,7 @@ namespace RectangularField.Implementations
         protected RectangularFieldBase(Size size)
         {
             if (size.Height < 0 || size.Width < 0)
-                throw new ArgumentException("Field should have positive size", nameof(size));
+                throw new ArgumentException("Field shouldn't have negative size", nameof(size));
             Size = size;
         }
 

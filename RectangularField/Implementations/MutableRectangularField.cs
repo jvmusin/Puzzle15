@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using RectangularField.Core;
+using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 
 namespace RectangularField.Implementations
 {
-    public class RectangularField<T> : RectangularFieldBase<T>
+    public class MutableRectangularField<T> : RectangularFieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
@@ -14,7 +15,7 @@ namespace RectangularField.Implementations
 
         #region Constructors
 
-        internal RectangularField(Size size) : base(size)
+        public MutableRectangularField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -22,10 +23,6 @@ namespace RectangularField.Implementations
             var defaultValue = default(T);
             if (defaultValue != null)
                 locations[defaultValue] = EnumerateLocations().ToList();
-        }
-
-        internal RectangularField(int height, int width) : this(new Size(width, height))
-        {
         }
 
         #endregion
@@ -51,7 +48,7 @@ namespace RectangularField.Implementations
 
         public override IRectangularField<T> Clone()
         {
-            return new RectangularField<T>(Size).Fill(cellInfo => this[cellInfo.Location]);
+            return new MutableRectangularField<T>(Size).Fill(cellInfo => this[cellInfo.Location]);
         }
 
         #endregion
