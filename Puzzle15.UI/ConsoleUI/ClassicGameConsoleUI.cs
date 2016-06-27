@@ -4,80 +4,138 @@ using System.Linq;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
 using RectangularField.Interfaces;
-using RectangularField.Interfaces.Factories;
-using RectangularField.Utils;
+using Puzzle15.Utils;
 
 namespace Puzzle15.UI.ConsoleUI
 {
     public class ClassicGameConsoleUI
     {
-        private readonly IRectangularFieldFactory<int> rectangularFieldFactory;
+        private readonly IGameFieldFactory<int> gameFieldFactory;
         private readonly IGameFactory<int> gameFactory;
-        private readonly IGameFieldValidator<int> gameFieldValidator;
-        private readonly IShiftPerformerFactory<int> shiftPerformer;
-        private readonly IGameFieldShuffler<int> gameFieldShuffler;
 
-        public ClassicGameConsoleUI(IRectangularFieldFactory<int> rectangularFieldFactory, IGameFactory<int> gameFactory, IGameFieldValidator<int> gameFieldValidator, IShiftPerformerFactory<int> shiftPerformer, IGameFieldShuffler<int> gameFieldShuffler)
+        public ClassicGameConsoleUI(IGameFieldFactory<int> gameFieldFactory, IGameFactory<int> gameFactory)
         {
-            this.rectangularFieldFactory = rectangularFieldFactory;
+            this.gameFieldFactory = gameFieldFactory;
             this.gameFactory = gameFactory;
-            this.gameFieldValidator = gameFieldValidator;
-            this.shiftPerformer = shiftPerformer;
-            this.gameFieldShuffler = gameFieldShuffler;
         }
 
         public void Run()
         {
+            DrawGreetings(PlayGame(CreateGame()));
+        }
+
+        #region Game build methods
+
+        private IGame<int> CreateGame()
+        {
             var size = new Size(3, 3);
-
             var target = GetDefaultField(size);
-            var initialField = gameFieldShuffler.Shuffle(target, 5);
+            var initialField = target;
 
-            var game = gameFactory.Create(initialField, target);
+            var difficulity = InputDifficulity();
+            initialField = initialField.Shuffle(difficulity);
 
+            return gameFactory.Create(initialField, target);
+        }
+
+        private IGameField<int> GetDefaultField(Size size)
+        {
+            var count = size.Height * size.Width;
+            var values = Enumerable.Range(0, count).Select(x => (x + 1) % count).ToArray();
+
+            return gameFieldFactory.Create(size, values);
+        }
+
+        #endregion
+
+        #region Play methods
+
+        private static IGame<int> PlayGame(IGame<int> game)
+        {
             while (!game.Finished)
             {
-                DrawTurns(game.Turns);
-                DrawField(game.CurrentField);
-                Console.Write("Enter a number to shift: ");
-                while (true)
+                DrawGame(game);
+                game = DoShift(game);
+            }
+            return game;
+        }
+
+        private static IGame<int> DoShift(IGame<int> game)
+        {
+            InputNumber("Input value to shift: ", x =>
+            {
+                try
                 {
-                    try
+                    game = game.Shift(x);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+            return game;
+        }
+
+        #endregion
+
+        #region Input methods
+
+        private static int InputDifficulity()
+        {
+            return InputNumber("Input difficulity: ", x => x > 0);
+        }
+
+        private static int InputNumber(string phrase, Predicate<int> isGood)
+        {
+            Console.WriteLine(phrase);
+            while (true)
+            {
+                try
+                {
+                    int value;
+                    if (int.TryParse(Console.ReadLine(), out value) && isGood(value))
                     {
-                        game = game.Shift(int.Parse(Console.ReadLine()));
-                        break;
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Incorrect number. Please, repeat: ");
+                        Console.WriteLine();
+                        return value;
                     }
                 }
+                catch
+                {
+                    Console.Write("Incorrect value. Please, repeat: ");
+                }
             }
+        }
 
+        #endregion
+
+        #region Draw methods
+
+        private static void DrawGreetings(IGame<int> game)
+        {
             Console.WriteLine("YAHOOO!!!");
+            DrawGame(game);
+        }
+
+        private static void DrawGame(IGame<int> game)
+        {
             DrawTurns(game.Turns);
             DrawField(game.CurrentField);
         }
 
-        private void DrawTurns(int turns)
+        private static void DrawTurns(int turns)
         {
             Console.WriteLine($"Turns: {turns}");
         }
 
-        private void DrawField(IRectangularField<int> field)
+        private static void DrawField(IRectangularField<int> field)
         {
-            Console.WriteLine(field);
+            Console.WriteLine(field.ToString().Replace("0", " "));
             Console.WriteLine();
             Console.WriteLine("------------------------------------");
             Console.WriteLine();
         }
 
-        private IRectangularField<int> GetDefaultField(Size size)
-        {
-            var count = size.Height * size.Width;
-            var values = Enumerable.Range(0, count).Select(x => (x + 1) % count).ToArray();
-
-            return rectangularFieldFactory.Create(size, values);
-        }
+        #endregion
     }
 }

@@ -6,7 +6,6 @@ using FluentAssertions;
 using Ninject;
 using NUnit.Framework;
 using RectangularField.Implementations.Base;
-using RectangularField.Implementations.Factories;
 using RectangularField.Interfaces;
 using RectangularField.Interfaces.Factories;
 using RectangularField.Utils;
@@ -29,7 +28,7 @@ namespace RectangularField.Tests
 
         private static IEnumerable<IRectangularFieldFactory<int[]>> ArrayFactories => GetFactories<int[]>();
 
-        private static IEnumerable<IRectangularField<int>> Fields =>
+        private static IEnumerable<IRectangularField<int>> IntFields =>
             IntFactories.Select(factory => factory.Create(DefaultFieldSize, DefaultFieldData));
 
         #endregion
@@ -101,7 +100,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void FailSwap_WhenElementNotOnField(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             new Action(() => field.Swap(new CellLocation(0, 0), new CellLocation(3, 0)))
                 .ShouldThrowExactly<InvalidLocationException>();
@@ -134,7 +133,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void CloneCorrectly(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var cloned = field.Clone();
 
@@ -144,7 +143,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void NotChangeOriginalField_AfterChangingClonedField(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var original = field.ToArray();
             var cloned = field.Clone();
@@ -164,7 +163,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void EnumerateLocationsCorrecly(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var expected = new List<CellLocation>();
             for (var row = 0; row < field.Height; row++)
@@ -175,7 +174,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void EnumerateCorrectly(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var expected = new List<CellInfo<int>>();
             for (var row = 0; row < field.Height; row++)
@@ -451,7 +450,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void FailSetIndexer_WhenFieldIsImmutable(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var cloned = field.Clone();
             var set = new Action(() => field[new CellLocation(0, 0)] = 123);
@@ -472,7 +471,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void FailSetValue_WhenLocationOutOfRange(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             var cloned = field.Clone();
             var size = field.Size;
@@ -500,7 +499,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void BeEqual_ToSelf(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             // ReSharper disable once EqualExpressionComparison
             field.Equals(field).Should().BeTrue();
@@ -508,7 +507,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void BeEqual_ToClonedField(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             field.Equals(field.Clone()).Should().BeTrue();
         }
@@ -549,7 +548,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void NotBeEqual_ToNull(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             field.Equals(null).Should().BeFalse();
         }
@@ -592,7 +591,7 @@ namespace RectangularField.Tests
 
         [Test]
         public void ReturnSameHash_WhenCalledTwice(
-            [ValueSource(nameof(Fields))] IRectangularField<int> field)
+            [ValueSource(nameof(IntFields))] IRectangularField<int> field)
         {
             field.GetHashCode().Should()
                 .Be(field.GetHashCode());
