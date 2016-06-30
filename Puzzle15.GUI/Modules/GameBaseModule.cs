@@ -1,17 +1,19 @@
-﻿using Ninject.Modules;
+﻿using Ninject;
+using Ninject.Modules;
 using Puzzle15.Implementations.Factories;
 using Puzzle15.Interfaces.Factories;
 using RectangularField.Implementations.Factories;
-using RectangularField.Interfaces.Factories;
+using RectangularField.Interfaces;
 
-namespace Puzzle15.UI.Modules
+namespace Puzzle15.GUI.Modules
 {
     public class GameBaseModule : NinjectModule
     {
         public override void Load()
         {
-            Bind(typeof(IRectangularFieldFactory<>)).To(typeof(WrappingRectangularFieldFactory<>));
-            Bind(typeof(IGameFieldFactory<>)).To(typeof(GameFieldFactory<>));
+            Bind(typeof(IFieldFactory<>)).To(typeof(GameFieldFactory<>))
+                .WithConstructorArgument("backingFieldFactory",
+                    c => c.Kernel.Get<ImmutableFieldFactory<int>>());    //TODO Fix this
             Bind(typeof(IGameFactory<>)).To(typeof(GameFactory<>));
         }
     }

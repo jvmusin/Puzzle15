@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Puzzle15.Interfaces;
 using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations
 {
@@ -13,10 +14,10 @@ namespace Puzzle15.Implementations
         public int Turns { get; }
         public bool Finished => CurrentField.Equals(Target);
         public IGame<TCell> PreviousState { get; }
-        public IGameField<TCell> CurrentField { get; }
-        public IGameField<TCell> Target { get; }
+        public IField<TCell> CurrentField { get; }
+        public IField<TCell> Target { get; }
 
-        private Game(IGameField<TCell> initialField, IGameField<TCell> target, IShiftPerformer<TCell> shiftPerformer, IGame<TCell> previousState)
+        private Game(IField<TCell> initialField, IField<TCell> target, IShiftPerformer<TCell> shiftPerformer, IGame<TCell> previousState)
         {
             if (!initialField.Immutable || !target.Immutable)
                 throw new ArgumentException("Sorry, only immutable fields allowed");
@@ -30,8 +31,8 @@ namespace Puzzle15.Implementations
             Turns = previousState?.Turns + 1 ?? 0;
         }
 
-        internal Game(IGameField<TCell> initialField, IGameField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
-            : this((IGameField<TCell>) initialField.Clone(), (IGameField<TCell>) target.Clone(), shiftPerformer, null)
+        internal Game(IField<TCell> initialField, IField<TCell> target, IShiftPerformer<TCell> shiftPerformer)
+            : this(initialField.Clone(), target.Clone(), shiftPerformer, null)
         {
             if (shiftPerformer == null)
                 throw new ArgumentNullException(nameof(shiftPerformer));
@@ -39,13 +40,13 @@ namespace Puzzle15.Implementations
 
         public IGame<TCell> Shift(TCell value)
         {
-            var newField = shiftPerformer.PerformShift(CurrentField, value);
+            var newField = shiftPerformer.Perform(CurrentField, value);
             return new Game<TCell>(newField, Target, shiftPerformer, this);
         }
 
         public IGame<TCell> Shift(CellLocation valueLocation)
         {
-            var newField = shiftPerformer.PerformShift(CurrentField, valueLocation);
+            var newField = shiftPerformer.Perform(CurrentField, valueLocation);
             return new Game<TCell>(newField, Target, shiftPerformer, this);
         }
 

@@ -49,25 +49,19 @@
   <ItemGroup>
     <Compile Include="Implementations\ClassicGame\Factories\ClassicGameFieldValidatorFactory.cs" />
     <Compile Include="Interfaces\Factories\IGameFieldValidatorFactory.cs" />
-    <Compile Include="Utils\GameFieldFactoryExtensions.cs" />
     <Compile Include="Implementations\Game.cs" />
     <Compile Include="Implementations\Factories\GameFactory.cs" />
     <Compile Include="Implementations\ClassicGame\ClassicGameFieldValidator.cs" />
     <Compile Include="Implementations\ClassicGame\ClassicGameFieldShuffler.cs" />
-    <Compile Include="Implementations\GameField.cs" />
     <Compile Include="Implementations\Factories\GameFieldFactory.cs" />
     <Compile Include="Implementations\ClassicGame\Factories\ClassicGameFieldShufflerFactory.cs" />
-    <Compile Include="Interfaces\Factories\IGameFieldFactory.cs" />
-    <Compile Include="Interfaces\IGameFieldShuffler.cs" />
-    <Compile Include="Interfaces\IGameField.cs" />
-    <Compile Include="Interfaces\Factories\IGameFieldShufflerFactory.cs" />
     <Compile Include="Interfaces\Factories\IShiftPerformerFactory.cs" />
     <Compile Include="Interfaces\IGame.cs" />
     <Compile Include="Interfaces\Factories\IGameFactory.cs" />
     <Compile Include="Interfaces\IGameFieldValidator.cs" />
     <Compile Include="Interfaces\IShiftPerformer.cs" />
-    <Compile Include="Implementations\ClassicGame\ClassicShiftPerformer.cs" />
-    <Compile Include="Implementations\ClassicGame\Factories\ClassicShiftPerformerFactory.cs" />
+    <Compile Include="Implementations\ClassicGame\ClassicGameShiftPerformer.cs" />
+    <Compile Include="Implementations\ClassicGame\Factories\ClassicGameShiftPerformerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Implementations\Base\ValidationResult.cs" />
   </ItemGroup>
@@ -79,6 +73,9 @@
       <Project>{0FAE1D49-D8B0-45F1-ABC0-E3F1951F317B}</Project>
       <Name>RectangularField</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

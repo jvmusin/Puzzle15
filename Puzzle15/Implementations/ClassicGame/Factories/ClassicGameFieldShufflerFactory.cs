@@ -1,11 +1,11 @@
-﻿using Puzzle15.Interfaces;
-using Puzzle15.Interfaces.Factories;
+﻿using RectangularField.Interfaces;
+using RectangularField.Interfaces.Factories;
 
 namespace Puzzle15.Implementations.ClassicGame.Factories
 {
-    public class ClassicGameFieldShufflerFactory : IGameFieldShufflerFactory<int>
+    public class ClassicGameFieldShufflerFactory : IFieldShufflerFactory<int>
     {
-        public IGameFieldShuffler<int> Create()
+        public IFieldShuffler<int> Create()
         {
             return new ClassicGameFieldShuffler();
         }

@@ -4,11 +4,11 @@ using RectangularField.Interfaces.Factories;
 
 namespace RectangularField.Implementations.Factories
 {
-    public class MutableRectangularFieldFactory<T> : IRectangularFieldFactory<T>
+    public class MutableFieldFactory<T> : IFieldFactory<T>
     {
-        public IRectangularField<T> Create(Size size)
+        public IField<T> Create(Size size)
         {
-            return new MutableRectangularField<T>(size);
+            return new MutableField<T>(size);
         }
     }
 }

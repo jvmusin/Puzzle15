@@ -7,14 +7,15 @@ using NUnit.Framework;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
 using Puzzle15.Tests.Modules;
-using Puzzle15.Utils;
+using RectangularField.Interfaces;
+using RectangularField.Utils;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
     public class Game_Should
     {
-        private IGameFieldFactory<int> gameFieldFactory;
+        private IFieldFactory<int> gameFieldFactory;
         private IGameFactory<int> gameFactory;
 
         [SetUp]
@@ -22,11 +23,11 @@ namespace Puzzle15.Tests
         {
             var kernel = new StandardKernel(new GameBaseModule(), new ClassicGameModule());
 
-            gameFieldFactory = kernel.Get<IGameFieldFactory<int>>();
+            gameFieldFactory = kernel.Get<IFieldFactory<int>>();
             gameFactory = kernel.Get<IGameFactory<int>>();
         }
 
-        private IGame<int> CreateGame(IGameField<int> field) => gameFactory.Create(field, field);
+        private IGame<int> CreateGame(IField<int> field) => gameFactory.Create(field, field);
 
         #region Consistency tests
 

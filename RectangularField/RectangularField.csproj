@@ -41,23 +41,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementations\Factories\ImmutableRectangularFieldFactory.cs" />
-    <Compile Include="Interfaces\Factories\IRectangularFieldFactory.cs" />
-    <Compile Include="Implementations\Factories\MutableRectangularFieldFactory.cs" />
-    <Compile Include="Implementations\Factories\WrappingRectangularFieldFactory.cs" />
+    <Compile Include="Implementations\Factories\ImmutableFieldFactory.cs" />
+    <Compile Include="Interfaces\Factories\IFieldShufflerFactory.cs" />
+    <Compile Include="Implementations\Factories\StandardFieldShufflerFactory.cs" />
+    <Compile Include="Interfaces\IFieldShuffler.cs" />
+    <Compile Include="Implementations\StandardFieldShuffler.cs" />
+    <Compile Include="Interfaces\IFieldFactory.cs" />
+    <Compile Include="Implementations\Factories\MutableFieldFactory.cs" />
+    <Compile Include="Implementations\Factories\WrappingFieldFactory.cs" />
     <Compile Include="Utils\Direction.cs" />
     <Compile Include="Implementations\Base\CellConverter.cs" />
     <Compile Include="Implementations\Base\CellInfo.cs" />
     <Compile Include="Implementations\Base\CellLocation.cs" />
-    <Compile Include="Implementations\ImmutableRectangularField.cs" />
+    <Compile Include="Implementations\ImmutableField.cs" />
     <Compile Include="Implementations\Base\InvalidLocationException.cs" />
-    <Compile Include="Interfaces\IRectangularField.cs" />
-    <Compile Include="Implementations\MutableRectangularField.cs" />
-    <Compile Include="Implementations\RectangularFieldBase.cs" />
-    <Compile Include="Implementations\WrappingRectangularField.cs" />
+    <Compile Include="Interfaces\IField.cs" />
+    <Compile Include="Implementations\MutableField.cs" />
+    <Compile Include="Implementations\FieldBase.cs" />
+    <Compile Include="Implementations\WrappingField.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\RectangularFieldFactoryExtensions.cs" />
+    <Compile Include="Utils\FieldFactoryExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

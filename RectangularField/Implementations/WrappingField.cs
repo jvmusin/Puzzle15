@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using RectangularField.Implementations.Base;
 using RectangularField.Interfaces;
-using RectangularField.Utils;
 
 namespace RectangularField.Implementations
 {
-    public class WrappingRectangularField<T> : RectangularFieldBase<T>
+    public class WrappingField<T> : FieldBase<T>
     {
-        private readonly IRectangularField<T> parent;
+        private readonly IField<T> parent;
         private readonly CellInfo<T> changedCell;
 
         public override bool Immutable => true;
 
-        private WrappingRectangularField(IRectangularField<T> parent, CellInfo<T> changedCell)
+        private WrappingField(IField<T> parent, CellInfo<T> changedCell)
             : base(parent.Size)
         {
             this.parent = parent;
             this.changedCell = changedCell;
         }
 
-        public WrappingRectangularField(IRectangularField<T> parent)
+        public WrappingField(IField<T> parent)
             : this(parent, null)
         {
             if (parent == null)
@@ -30,36 +27,17 @@ namespace RectangularField.Implementations
 
         #region Primary actions
 
-        public override IRectangularField<T> Swap(CellLocation location1, CellLocation location2)
+        public override IField<T> Clone()
         {
-            var value1 = this[location1];
-            var value2 = this[location2];
-
-            return this
-                .SetValue(value1, location2)
-                .SetValue(value2, location1);
-        }
-
-        public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
-        {
-            return this
-                .Aggregate(this as IRectangularField<T>,
-                    (field, cellInfo) => field.SetValue(getValue(cellInfo), cellInfo.Location));
-        }
-
-        public override IRectangularField<T> Clone()
-        {
-            return new WrappingRectangularField<T>(this);
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var field = new WrappingField<T>(this);
+            field.Shuffler = Shuffler;
+            return field;
         }
 
         #endregion
 
         #region Indexers
-
-        public override IEnumerable<CellLocation> GetLocations(T value)
-        {
-            return EnumerateLocations().Where(x => Helpers.Equals(this[x], value));
-        }
 
         public override CellLocation GetLocation(T value)
         {
@@ -87,10 +65,10 @@ namespace RectangularField.Implementations
             return parent.GetValue(location);
         }
 
-        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        public override IField<T> SetValue(T value, CellLocation location)
         {
             CheckLocation(location);
-            return new WrappingRectangularField<T>(this, new CellInfo<T>(location, value));
+            return new WrappingField<T>(this, new CellInfo<T>(location, value));
         }
 
         #endregion

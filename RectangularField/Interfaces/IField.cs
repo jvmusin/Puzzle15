@@ -4,17 +4,19 @@ using RectangularField.Implementations.Base;
 
 namespace RectangularField.Interfaces
 {
-    public interface IRectangularField<T> : IEnumerable<CellInfo<T>>
+    public interface IField<T> : IEnumerable<CellInfo<T>>
     {
         Size Size { get; }
         int Height { get; }
         int Width { get; }
 
         bool Immutable { get; }
+        IFieldShuffler<T> Shuffler { get; set; }
 
-        IRectangularField<T> Swap(CellLocation location1, CellLocation location2);
-        IRectangularField<T> Fill(CellConverter<T, T> getValue);
-        IRectangularField<T> Clone();
+        IField<T> Swap(CellLocation location1, CellLocation location2);
+        IField<T> Shuffle(int quality);
+        IField<T> Fill(CellConverter<T, T> getValue);
+        IField<T> Clone();
 
         bool Contains(CellLocation location);
 
@@ -25,6 +27,6 @@ namespace RectangularField.Interfaces
 
         T this[CellLocation location] { get; set; }
         T GetValue(CellLocation location);
-        IRectangularField<T> SetValue(T value, CellLocation location);
+        IField<T> SetValue(T value, CellLocation location);
     }
 }

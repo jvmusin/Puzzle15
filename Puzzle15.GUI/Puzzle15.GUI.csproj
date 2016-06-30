@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Puzzle15.GUI.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -60,6 +63,40 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ButtonPanel.xaml.cs">
+      <DependentUpon>ButtonPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClassicGameCell.xaml.cs">
+      <DependentUpon>ClassicGameCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GridExtensions.cs" />
+    <Compile Include="ClassicGameTable.xaml.cs">
+      <DependentUpon>ClassicGameTable.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ButtonPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClassicGameCell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClassicGameTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TimerPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Brushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InfoPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -69,6 +106,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConsoleUI\ClassicGameConsoleUI.cs" />
+    <Compile Include="TimerPanel.xaml.cs">
+      <DependentUpon>TimerPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InfoPanel.xaml.cs">
+      <DependentUpon>InfoPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -102,7 +145,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Puzzle15\Puzzle15.csproj">

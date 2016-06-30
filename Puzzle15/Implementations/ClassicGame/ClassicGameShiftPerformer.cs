@@ -2,17 +2,18 @@
 using System.Linq;
 using Puzzle15.Interfaces;
 using RectangularField.Implementations.Base;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicShiftPerformer : IShiftPerformer<int>
+    public class ClassicGameShiftPerformer : IShiftPerformer<int>
     {
-        public IGameField<int> PerformShift(IGameField<int> field, int value)
+        public IField<int> Perform(IField<int> field, int value)
         {
-            return PerformShift(field, field.GetLocation(value));
+            return Perform(field, field.GetLocation(value));
         }
 
-        public IGameField<int> PerformShift(IGameField<int> field, CellLocation valueLocation)
+        public IField<int> Perform(IField<int> field, CellLocation valueLocation)
         {
             var emptyLocation = field.GetLocation(0);
 
@@ -22,7 +23,7 @@ namespace Puzzle15.Implementations.ClassicGame
             if (!emptyLocation.ByEdgeNeighbours.Contains(valueLocation))
                 throw new ArgumentException("Requested cell is not a neighbour of empty cell");
 
-            return (IGameField<int>) field.Swap(emptyLocation, valueLocation);
+            return field.Swap(emptyLocation, valueLocation);
         }
     }
 }

@@ -34,6 +34,8 @@ namespace RectangularField.Implementations.Base
             return new CellLocation(row, column);
         }
 
+        public CellLocation Reverse() => new CellLocation(-Row, -Column);
+
         #region CompareTo, Equals, GetHashCode and ToString methods
 
         public int CompareTo(CellLocation other)

@@ -2,7 +2,7 @@
 using Puzzle15.Implementations.Factories;
 using Puzzle15.Interfaces.Factories;
 using RectangularField.Implementations.Factories;
-using RectangularField.Interfaces.Factories;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Tests.Modules
 {
@@ -10,8 +10,7 @@ namespace Puzzle15.Tests.Modules
     {
         public override void Load()
         {
-            Bind(typeof(IRectangularFieldFactory<>)).To(typeof(WrappingRectangularFieldFactory<>));
-            Bind(typeof(IGameFieldFactory<>)).To(typeof(GameFieldFactory<>));
+            Bind(typeof(IFieldFactory<>)).To(typeof(ImmutableFieldFactory<>));
             Bind(typeof(IGameFactory<>)).To(typeof(GameFactory<>));
         }
     }

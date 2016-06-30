@@ -1,26 +1,25 @@
 ﻿using System.Drawing;
-using Puzzle15.Interfaces;
-using Puzzle15.Interfaces.Factories;
+using RectangularField.Interfaces;
 using RectangularField.Interfaces.Factories;
 
 namespace Puzzle15.Implementations.Factories
 {
-    public class GameFieldFactory<T> : IGameFieldFactory<T>
+    public class GameFieldFactory<T> : IFieldFactory<T>
     {
-        private readonly IRectangularFieldFactory<T> backingFieldFactory;
-        private readonly IGameFieldShufflerFactory<T> gameFieldShufflerFactory;
+        private readonly IFieldFactory<T> backingFieldFactory;
+        private readonly IFieldShufflerFactory<T> shufflerFactory;
 
-        public GameFieldFactory(IRectangularFieldFactory<T> backingFieldFactory, IGameFieldShufflerFactory<T> gameFieldShufflerFactory)
+        public GameFieldFactory(IFieldFactory<T> backingFieldFactory, IFieldShufflerFactory<T> shufflerFactory)
         {
             this.backingFieldFactory = backingFieldFactory;
-            this.gameFieldShufflerFactory = gameFieldShufflerFactory;
+            this.shufflerFactory = shufflerFactory;
         }
 
-        public IGameField<T> Create(Size size)
+        public IField<T> Create(Size size)
         {
-            var rectangularField = backingFieldFactory.Create(size);
-            var gameFieldShuffler = gameFieldShufflerFactory.Create();
-            return new GameField<T>(rectangularField, gameFieldShuffler);
+            var field = backingFieldFactory.Create(size);
+            field.Shuffler = shufflerFactory.Create();
+            return field;
         }
     }
 }

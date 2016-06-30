@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Drawing;
-using Puzzle15.Interfaces;
-using Puzzle15.Interfaces.Factories;
+using RectangularField.Interfaces;
 
-namespace Puzzle15.Utils
+namespace RectangularField.Utils
 {
-    public static class GameFieldFactoryExtensions
+    public static class FieldFactoryExtensions
     {
-        public static IGameField<T> Create<T>(this IGameFieldFactory<T> factory, Size size, params T[] values)
+        public static IField<T> Create<T>(this IFieldFactory<T> factory, Size size, params T[] values)
         {
             var height = size.Height;
             var width = size.Width;
@@ -16,7 +15,7 @@ namespace Puzzle15.Utils
             if (values.Length != elementCount)
                 throw new ArgumentException("Values count should be size.Height * size.Width");
 
-            return (IGameField<T>) factory.Create(size).Fill(cellInfo =>
+            return factory.Create(size).Fill(cellInfo =>
             {
                 var location = cellInfo.Location;
                 var row = location.Row;

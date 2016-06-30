@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using Puzzle15.Implementations.Base;
 using Puzzle15.Interfaces;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
     public class ClassicGameFieldValidator : IGameFieldValidator<int>
     {
-        public ValidationResult Validate(IGameField<int> initialField, IGameField<int> target)
+        public ValidationResult Validate(IField<int> initialField, IField<int> target)
         {
             var errorMessage = GetErrorMessage(initialField, target);
 
@@ -15,7 +16,7 @@ namespace Puzzle15.Implementations.ClassicGame
                 : ValidationResult.Unsuccess(errorMessage);
         }
 
-        private static string GetErrorMessage(IGameField<int> initialField, IGameField<int> target)
+        private static string GetErrorMessage(IField<int> initialField, IField<int> target)
         {
             if (initialField == null)
                 return "Initial field shouldn't be null";
@@ -30,7 +31,7 @@ namespace Puzzle15.Implementations.ClassicGame
                    GetErrorMessageWithName(target, nameof(target));
         }
 
-        private static string GetErrorMessageWithName(IGameField<int> field, string fieldName)
+        private static string GetErrorMessageWithName(IField<int> field, string fieldName)
         {
             var errorMessage = GetErrorMessage(field);
             return errorMessage == null
@@ -38,7 +39,7 @@ namespace Puzzle15.Implementations.ClassicGame
                 : $"{fieldName}: {errorMessage}";
         }
 
-        private static string GetErrorMessage(IGameField<int> field)
+        private static string GetErrorMessage(IField<int> field)
         {
             var fieldSize = field.Size;
             if (fieldSize.Height <= 0 || fieldSize.Width <= 0)

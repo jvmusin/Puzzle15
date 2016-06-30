@@ -6,23 +6,24 @@ using NUnit.Framework;
 using Puzzle15.Implementations.ClassicGame;
 using Puzzle15.Interfaces.Factories;
 using Puzzle15.Tests.Modules;
-using Puzzle15.Utils;
+using RectangularField.Interfaces;
+using RectangularField.Utils;
 
 namespace Puzzle15.Tests
 {
     [TestFixture]
     public class ClassicGameShiftPerformer_Should
     {
-        private IGameFieldFactory<int> gameFieldFactory;
-        private ClassicShiftPerformer shiftPerformer;
+        private IFieldFactory<int> gameFieldFactory;
+        private ClassicGameShiftPerformer shiftPerformer;
 
         [SetUp]
         public void SetUp()
         {
             var kernel = new StandardKernel(new GameBaseModule(), new ClassicGameModule());
 
-            gameFieldFactory = kernel.Get<IGameFieldFactory<int>>();
-            shiftPerformer = new ClassicShiftPerformer();
+            gameFieldFactory = kernel.Get<IFieldFactory<int>>();
+            shiftPerformer = new ClassicGameShiftPerformer();
         }
 
         #region Shift tests
@@ -37,7 +38,7 @@ namespace Puzzle15.Tests
                 7, 5, 8);
             var cloned = field.Clone();
 
-            var result = shiftPerformer.PerformShift(field, 5);
+            var result = shiftPerformer.Perform(field, 5);
 
             field.Should().BeEquivalentTo(cloned);
 
@@ -59,7 +60,7 @@ namespace Puzzle15.Tests
                 6, 0, 4);
             var cloned = field.Clone();
 
-            new Action(() => shiftPerformer.PerformShift(field, value)).ShouldThrow<Exception>();
+            new Action(() => shiftPerformer.Perform(field, value)).ShouldThrow<Exception>();
             field.Should().BeEquivalentTo(cloned);
         }
 

@@ -9,7 +9,8 @@ using Puzzle15.Implementations.ClassicGame;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
 using Puzzle15.Tests.Modules;
-using Puzzle15.Utils;
+using RectangularField.Interfaces;
+using RectangularField.Utils;
 
 namespace Puzzle15.Tests
 {
@@ -19,13 +20,13 @@ namespace Puzzle15.Tests
         //TODO Two kernels or one static?
         private static readonly IKernel Kernel = new StandardKernel(new GameBaseModule(), new ClassicGameModule());
 
-        private IGameFieldFactory<int> gameFieldFactory;
+        private IFieldFactory<int> gameFieldFactory;
         private ClassicGameFieldValidator gameFieldValidator;
 
         [SetUp]
         public void SetUp()
         {
-            gameFieldFactory = Kernel.Get<IGameFieldFactory<int>>();
+            gameFieldFactory = Kernel.Get<IFieldFactory<int>>();
             gameFieldValidator = new ClassicGameFieldValidator();
         }
 
@@ -64,7 +65,7 @@ namespace Puzzle15.Tests
         }
 
         [Test, TestCaseSource(nameof(FailCreatingCases))]
-        public void Fail_WhenFieldIsIncorrect(IGameField<int> field)
+        public void Fail_WhenFieldIsIncorrect(IField<int> field)
         {
             var validationResult = gameFieldValidator.Validate(field, field);
 
@@ -76,17 +77,17 @@ namespace Puzzle15.Tests
         {
             get
             {
-                var fact = Kernel.Get<IGameFieldFactory<int>>();
+                var fact = Kernel.Get<IFieldFactory<int>>();
                 yield return new TestCaseData(fact.Create(new Size(2, 2), 1, 2, 1, 0)).SetName("Twice appeared value");
                 yield return new TestCaseData(fact.Create(new Size(2, 2), -1, 0, 1, 2)).SetName("Negative number");
                 yield return new TestCaseData(fact.Create(new Size(2, 2), 1, 2, 3, 4)).SetName("Without empty cell");
                 yield return new TestCaseData(fact.Create(new Size(2, 2), 0, 1, 2, 4)).SetName("Skipped value");
 
-                var empty = A.Fake<IGameField<int>>(x => x.Strict());
+                var empty = A.Fake<IField<int>>(x => x.Strict());
                 A.CallTo(() => empty.Size).Returns(new Size(5, 0));
                 yield return new TestCaseData(empty).SetName("Empty field");
 
-                var negative = A.Fake<IGameField<int>>(x => x.Strict());
+                var negative = A.Fake<IField<int>>(x => x.Strict());
                 A.CallTo(() => negative.Size).Returns(new Size(-5, 5));
                 yield return new TestCaseData(negative).SetName("Negative-size field");
             }

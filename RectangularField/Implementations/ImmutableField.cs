@@ -7,7 +7,7 @@ using RectangularField.Interfaces;
 
 namespace RectangularField.Implementations
 {
-    public class ImmutableRectangularField<T> : RectangularFieldBase<T>
+    public class ImmutableField<T> : FieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
@@ -16,7 +16,7 @@ namespace RectangularField.Implementations
 
         #region Constructors
 
-        public ImmutableRectangularField(Size size) : base(size)
+        public ImmutableField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -30,24 +30,25 @@ namespace RectangularField.Implementations
 
         #region Primary actions
 
-        public override IRectangularField<T> Swap(CellLocation location1, CellLocation location2)
+        public override IField<T> Swap(CellLocation location1, CellLocation location2)
         {
             var value1 = this[location1];
             var value2 = this[location2];
 
-            return ((ImmutableRectangularField<T>) Clone())
+            return ((ImmutableField<T>) Clone())
                 .SetValue0(value1, location2)
                 .SetValue0(value2, location1);
         }
 
-        public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
+        public override IField<T> Fill(CellConverter<T, T> getValue)
         {
-            return this
-                .Aggregate(new ImmutableRectangularField<T>(Size),
-                    (field, cellInfo) => field.SetValue0(getValue(cellInfo), cellInfo.Location));
+            var result = new ImmutableField<T>(Size);
+            result.Shuffler = Shuffler;
+            return this.Aggregate(result,
+                (field, cellInfo) => field.SetValue0(getValue(cellInfo), cellInfo.Location));
         }
 
-        public override IRectangularField<T> Clone()
+        public override IField<T> Clone()
         {
             return Fill(cellInfo => this[cellInfo.Location]);
         }
@@ -67,13 +68,9 @@ namespace RectangularField.Implementations
         public override IEnumerable<CellLocation> GetLocations(T value)
         {
             return value == null
-                ? this.Where(x => x.Value == null).Select(x => x.Location)
+                // ReSharper disable once ExpressionIsAlwaysNull
+                ? base.GetLocations(value)
                 : GetLocationsSafe(value);
-        }
-
-        public override CellLocation GetLocation(T value)
-        {
-            return GetLocations(value).FirstOrDefault();
         }
 
         public override T this[CellLocation location]
@@ -92,13 +89,13 @@ namespace RectangularField.Implementations
             return table[location.Row, location.Column];
         }
 
-        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        public override IField<T> SetValue(T value, CellLocation location)
         {
             CheckLocation(location);
-            return ((ImmutableRectangularField<T>) Clone()).SetValue0(value, location);
+            return ((ImmutableField<T>) Clone()).SetValue0(value, location);
         }
 
-        private ImmutableRectangularField<T> SetValue0(T value, CellLocation location)
+        private ImmutableField<T> SetValue0(T value, CellLocation location)
         {
             var valueToRemove = this[location];
             if (valueToRemove != null)

@@ -2,19 +2,21 @@
 using System.Linq;
 using System.Drawing;
 using Ninject;
+using Puzzle15.GUI.Modules;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
-using Puzzle15.UI.Modules;
-using Puzzle15.Utils;
+using RectangularField.Interfaces;
+using RectangularField.Interfaces.Factories;
+using RectangularField.Utils;
 
 namespace Puzzle15.GUI.ConsoleUI
 {
     public class ClassicGameConsoleUI
     {
-        private readonly IGameFieldFactory<int> gameFieldFactory;
+        private readonly IFieldFactory<int> gameFieldFactory;
         private readonly IGameFactory<int> gameFactory;
 
-        public ClassicGameConsoleUI(IGameFieldFactory<int> gameFieldFactory, IGameFactory<int> gameFactory)
+        public ClassicGameConsoleUI(IFieldFactory<int> gameFieldFactory, IGameFactory<int> gameFactory)
         {
             this.gameFieldFactory = gameFieldFactory;
             this.gameFactory = gameFactory;
@@ -36,7 +38,7 @@ namespace Puzzle15.GUI.ConsoleUI
         {
             var size = new Size(3, 3);
             var initialField = GetDefaultField(size);
-            var target = (IGameField<int>) initialField.Clone();
+            var target =initialField.Clone();
 
             var difficulity = InputDifficulity();
             initialField = initialField.Shuffle(difficulity);
@@ -44,11 +46,10 @@ namespace Puzzle15.GUI.ConsoleUI
             return gameFactory.Create(initialField, target);
         }
 
-        private IGameField<int> GetDefaultField(Size size)
+        private IField<int> GetDefaultField(Size size)
         {
             var count = size.Height * size.Width;
             var values = Enumerable.Range(0, count).Select(x => (x + 1) % count).ToArray();
-
             return gameFieldFactory.Create(size, values);
         }
 
@@ -129,7 +130,7 @@ namespace Puzzle15.GUI.ConsoleUI
             Console.WriteLine($"Turns: {turns}");
         }
 
-        private static void DrawField(IGameField<int> field)
+        private static void DrawField(IField<int> field)
         {
             Console.WriteLine(field.ToString().Replace("0", " "));
             Console.WriteLine();

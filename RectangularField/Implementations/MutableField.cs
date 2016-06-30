@@ -6,7 +6,7 @@ using RectangularField.Interfaces;
 
 namespace RectangularField.Implementations
 {
-    public class MutableRectangularField<T> : RectangularFieldBase<T>
+    public class MutableField<T> : FieldBase<T>
     {
         private readonly T[,] table;
         private readonly Dictionary<T, List<CellLocation>> locations;
@@ -15,7 +15,7 @@ namespace RectangularField.Implementations
 
         #region Constructors
 
-        public MutableRectangularField(Size size) : base(size)
+        public MutableField(Size size) : base(size)
         {
             table = new T[Height, Width];
             locations = new Dictionary<T, List<CellLocation>>();
@@ -29,26 +29,12 @@ namespace RectangularField.Implementations
 
         #region Primary actions
 
-        public override IRectangularField<T> Swap(CellLocation location1, CellLocation location2)
+        public override IField<T> Clone()
         {
-            var temp = this[location1];
-            this[location1] = this[location2];
-            this[location2] = temp;
-
-            return this;
-        }
-
-        public override IRectangularField<T> Fill(CellConverter<T, T> getValue)
-        {
-            foreach (var cellInfo in this)
-                this[cellInfo.Location] = getValue(cellInfo);
-
-            return this;
-        }
-
-        public override IRectangularField<T> Clone()
-        {
-            return new MutableRectangularField<T>(Size).Fill(cellInfo => this[cellInfo.Location]);
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var field = new MutableField<T>(Size);
+            field.Shuffler = Shuffler;
+            return field.Fill(cellInfo => this[cellInfo.Location]);
         }
 
         #endregion
@@ -66,13 +52,9 @@ namespace RectangularField.Implementations
         public override IEnumerable<CellLocation> GetLocations(T value)
         {
             return value == null
-                ? this.Where(x => x.Value == null).Select(x => x.Location)
+                // ReSharper disable once ExpressionIsAlwaysNull
+                ? base.GetLocations(value)
                 : GetLocationsSafe(value);
-        }
-
-        public override CellLocation GetLocation(T value)
-        {
-            return GetLocations(value).FirstOrDefault();
         }
 
         public override T GetValue(CellLocation location)
@@ -81,7 +63,7 @@ namespace RectangularField.Implementations
             return table[location.Row, location.Column];
         }
 
-        public override IRectangularField<T> SetValue(T value, CellLocation location)
+        public override IField<T> SetValue(T value, CellLocation location)
         {
             CheckLocation(location);
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using Puzzle15.Implementations.Base;
 using Puzzle15.Interfaces;
 using Puzzle15.Interfaces.Factories;
+using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations.Factories
 {
@@ -21,7 +21,7 @@ namespace Puzzle15.Implementations.Factories
             this.shiftPerformerFactory = shiftPerformerFactory;
         }
 
-        public IGame<TCell> Create(IGameField<TCell> initialField, IGameField<TCell> target)
+        public IGame<TCell> Create(IField<TCell> initialField, IField<TCell> target)
         {
             var gameFieldValidator = gameFieldValidatorFactory.Create();
 

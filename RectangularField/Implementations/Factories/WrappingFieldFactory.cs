@@ -4,12 +4,12 @@ using RectangularField.Interfaces.Factories;
 
 namespace RectangularField.Implementations.Factories
 {
-    public class WrappingRectangularFieldFactory<T> : IRectangularFieldFactory<T>
+    public class WrappingFieldFactory<T> : IFieldFactory<T>
     {
         //TODO Make with Ninject
-        private readonly IRectangularFieldFactory<T> wrappingFieldFactory = new ImmutableRectangularFieldFactory<T>();
+        private readonly IFieldFactory<T> wrappingFieldFactory = new ImmutableFieldFactory<T>();
 
-//        public WrappingRectangularFieldFactory(IRectangularFieldFactory<T> wrappingFieldFactory)
+//        public WrappingFieldFactory(IFieldFactory<T> wrappingFieldFactory)
 //        {
 //            if (wrappingFieldFactory == null)
 //                throw new ArgumentNullException(nameof(wrappingFieldFactory));
@@ -17,9 +17,9 @@ namespace RectangularField.Implementations.Factories
 //            this.wrappingFieldFactory = wrappingFieldFactory;
 //        }
 
-        public IRectangularField<T> Create(Size size)
+        public IField<T> Create(Size size)
         {
-            return new WrappingRectangularField<T>(wrappingFieldFactory.Create(size));
+            return new WrappingField<T>(wrappingFieldFactory.Create(size));
         }
     }
 }

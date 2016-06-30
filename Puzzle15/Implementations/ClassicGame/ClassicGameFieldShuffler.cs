@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Linq;
-using Puzzle15.Interfaces;
 using RectangularField.Interfaces;
 
 namespace Puzzle15.Implementations.ClassicGame
 {
-    public class ClassicGameFieldShuffler: IGameFieldShuffler<int>
+    public class ClassicGameFieldShuffler : IFieldShuffler<int>
     {
         private readonly Random random = new Random();
 
-        public IGameField<int> Shuffle(IGameField<int> field, int quality)
+        public IField<int> Shuffle(IField<int> field, int quality)
         {
             var zeroLocation = field.GetLocation(0);
-            var result = (IRectangularField<int>) field;
+            var result = field;
 
-            for (var i = 0; i < quality; i++)
+            var count = 1 << quality;
+            for (var i = 0; i < count; i++)
                 foreach (var neighbour in zeroLocation.ByEdgeNeighbours.OrderBy(x => random.Next()))
                     if (field.Contains(neighbour))
                     {
@@ -23,7 +23,7 @@ namespace Puzzle15.Implementations.ClassicGame
                         break;
                     }
 
-            return (IGameField<int>) result;
+            return result;
         }
     }
 }

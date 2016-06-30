@@ -3,11 +3,11 @@ using Puzzle15.Interfaces.Factories;
 
 namespace Puzzle15.Implementations.ClassicGame.Factories
 {
-    public class ClassicShiftPerformerFactory : IShiftPerformerFactory<int>
+    public class ClassicGameShiftPerformerFactory : IShiftPerformerFactory<int>
     {
         public IShiftPerformer<int> Create()
         {
-            return new ClassicShiftPerformer();
+            return new ClassicGameShiftPerformer();
         }
     }
 }

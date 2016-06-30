@@ -1,6 +1,6 @@
 ﻿using Ninject.Modules;
 using RectangularField.Implementations.Factories;
-using RectangularField.Interfaces.Factories;
+using RectangularField.Interfaces;
 
 namespace RectangularField.Tests
 {
@@ -8,9 +8,9 @@ namespace RectangularField.Tests
     {
         public override void Load()
         {
-            Bind(typeof(IRectangularFieldFactory<>)).To(typeof(MutableRectangularFieldFactory<>));
-            Bind(typeof(IRectangularFieldFactory<>)).To(typeof(ImmutableRectangularFieldFactory<>));
-            Bind(typeof(IRectangularFieldFactory<>)).To(typeof(WrappingRectangularFieldFactory<>));
+            Bind(typeof(IFieldFactory<>)).To(typeof(MutableFieldFactory<>));
+            Bind(typeof(IFieldFactory<>)).To(typeof(ImmutableFieldFactory<>));
+            Bind(typeof(IFieldFactory<>)).To(typeof(WrappingFieldFactory<>));
         }
     }
 }
